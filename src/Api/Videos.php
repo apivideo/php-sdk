@@ -246,7 +246,7 @@ class Videos
 
         return $this->unmarshal(
             $this->browser->patch(
-                "/videos/$videoId/thumbnail",
+                "/videos/$videoId/snapshot",
                 array(),
                 json_encode(array('timecode' => $timecode))
             )
