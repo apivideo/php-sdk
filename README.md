@@ -37,8 +37,15 @@ $client->videos->get($videoId);
 $client->videos->search(array $parameters = array(), $callback = null);
 $client->videos->create($title, $properties = array());
 $client->videos->upload($source, array $properties = array(), $videoId = null);
+$client->videos->uploadThumbnail($source, $videoId);
 $client->videos->update($videoId, array $properties);
+$client->videos->updateThumbnailWithTimeCode($videoId, $timecode);
 $client->videos->delete($videoId);
+
+$client->players->get($playerId);
+$client->players->search(array $parameters = array(), $callback = null);
+$client->players->create(array $properties = array());
+$client->players->update($playerId, array $properties);
 ```
 
 ## More on api.video
