@@ -1,5 +1,8 @@
 # api.video PHP client
 
+The [api.video](https://api.video/) web-service helps you put video on the web without the hassle. 
+This documentation helps you use the corresponding PHP client.
+ 
 ## Quick start
 
 Install:
@@ -37,3 +40,7 @@ $client->videos->upload($source, array $properties = array(), $videoId = null);
 $client->videos->update($videoId, array $properties);
 $client->videos->delete($videoId);
 ```
+
+## More on api.video
+
+A full technical documentation is available on https://docs.api.video/
