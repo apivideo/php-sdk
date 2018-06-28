@@ -2,18 +2,18 @@
 
 namespace ApiVideo\Client\Api;
 
-use Buzz\Message\MessageInterface;
-use Buzz\Message\Form\FormUpload;
-use Buzz\Exception\RequestException;
 use ApiVideo\Client\Buzz\FormByteRangeUpload;
-use ApiVideo\Client\Model\Video;
 use ApiVideo\Client\Buzz\OAuthBrowser;
+use ApiVideo\Client\Model\Video;
+use Buzz\Exception\RequestException;
+use Buzz\Message\Form\FormUpload;
+use Buzz\Message\MessageInterface;
 use Buzz\Message\RequestInterface;
 
 class Videos
 {
     /** @var int Upload chunk size in bytes */
-    public $chunkSize = 64 * 1024 * 1024; // 64 MiB;
+    public $chunkSize; // 64 MiB;
 
     /** @var OAuthBrowser */
     private $browser;
@@ -23,7 +23,8 @@ class Videos
      */
     public function __construct(OAuthBrowser $browser)
     {
-        $this->browser = $browser;
+        $this->browser   = $browser;
+        $this->chunkSize = 64 * 1024 * 1024;
     }
 
     /**
@@ -64,8 +65,8 @@ class Videos
             $response              = $this->browser->get('/videos?'.http_build_query($parameters));
             $json                  = json_decode($response->getContent(), true);
             $videos                = $json['data'];
-            if (is_null($callback)) {
-                $allVideos = array_merge($allVideos, $this->castAll($videos));
+            if (null === $callback) {
+                $allVideos[] = $this->castAll($videos);
             } else {
                 foreach ($videos as $video) {
                     call_user_func($callback, $this->unmarshal($video));
@@ -80,7 +81,9 @@ class Videos
             $pagination['currentPage']++;
         } while ($pagination['pagesTotal'] > $pagination['currentPage']);
 
-        if (is_null($callback)) {
+        $allVideos = call_user_func_array('array_merge', $allVideos);
+
+        if (null === $callback) {
             return $allVideos;
         }
 
@@ -92,7 +95,7 @@ class Videos
      * @param array $properties
      * @return Video
      */
-    public function create($title, $properties = array())
+    public function create($title, array $properties = array())
     {
         return $this->unmarshal(
             $this->browser->post(
@@ -149,7 +152,7 @@ class Videos
         }
 
         // Split content to upload big files in multiple requests
-        $i = $copiedBytes = 0;
+        $copiedBytes = 0;
         stream_set_chunk_size($resource, $this->chunkSize);
         $lastResponse = null;
         do {
@@ -186,6 +189,35 @@ class Videos
     }
 
     /**
+     * @param string $source Path to the file to upload
+     * @param string $videoId
+     * @return Video
+     * @throws \Buzz\Exception\RequestException
+     * @throws \UnexpectedValueException
+     */
+    public function uploadThumbnail($source, $videoId)
+    {
+        if (!is_readable($source)) {
+            throw new \UnexpectedValueException("'$source' must be a readable source file.");
+        }
+
+        $resource = fopen($source, 'rb');
+
+        $stats  = fstat($resource);
+        $length = $stats['size'];
+        if (0 >= $length) {
+            throw new \UnexpectedValueException("'$source' is empty.");
+        }
+
+        return $this->unmarshal(
+            $this->browser->submit(
+                "/videos/$videoId/thumbnail",
+                array('file' => new FormUpload($source))
+            )
+        );
+    }
+
+    /**
      * @param string $videoId
      * @param array $properties
      * @return Video
@@ -197,6 +229,26 @@ class Videos
                 "/videos/$videoId",
                 array(),
                 json_encode($properties)
+            )
+        );
+    }
+
+    /**
+     * @param string $videoId
+     * @param array $timecode
+     * @return Video
+     */
+    public function updateThumbnailWithTimeCode($videoId, $timecode)
+    {
+        if (empty($timecode)) {
+            throw new \UnexpectedValueException('Timecode is empty.');
+        }
+
+        return $this->unmarshal(
+            $this->browser->patch(
+                "/videos/$videoId/thumbnail",
+                array(),
+                json_encode(array('timecode' => $timecode))
             )
         );
     }
