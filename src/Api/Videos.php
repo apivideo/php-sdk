@@ -211,7 +211,7 @@ class Videos
 
         return $this->unmarshal(
             $this->browser->submit(
-                "/videos/$videoId/thumbnail",
+                "/videos/$videoId/snapshot",
                 array('file' => new FormUpload($source))
             )
         );
@@ -235,7 +235,7 @@ class Videos
 
     /**
      * @param string $videoId
-     * @param array $timecode
+     * @param string $timecode
      * @return Video
      */
     public function updateThumbnailWithTimeCode($videoId, $timecode)

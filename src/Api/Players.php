@@ -1,12 +1,12 @@
 <?php
 
 
-namespace Libcast\Client\Api;
+namespace ApiVideo\Client\Api;
 
 
 use ApiVideo\Client\Buzz\OAuthBrowser;
 use Buzz\Message\MessageInterface;
-use Libcast\Client\Model\Player;
+use ApiVideo\Client\Model\Player;
 
 class Players
 {
@@ -45,7 +45,7 @@ class Players
      * @param callable $callback
      * @return Player[]|null
      */
-    public function getList(array $parameters = array(), $callback = null)
+    public function search(array $parameters = array(), $callback = null)
     {
         $params             = $parameters;
         $currentPage        = isset($parameters['currentPage']) ? $parameters['currentPage'] : 1;

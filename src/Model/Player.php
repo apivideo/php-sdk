@@ -1,6 +1,6 @@
 <?php
 
-namespace Libcast\Client\Model;
+namespace ApiVideo\Client\Model;
 
 final class Player
 {
