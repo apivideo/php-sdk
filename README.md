@@ -18,13 +18,27 @@ Usage:
 
 require_once dirname(__FILE__) . '/vendor/autoload.php';
 
-$client = new ApiVideo\Client\Client('john.doe@api.video', 'jOhnDo3_', 'johndoe.api.video');
+// Create the client using your credentials
+$client = new ApiVideo\Client\Client('john.doe@api.video', 'jOhnDo3_ApiKey');
 
-$video = $client->videos->upload('/path/to/video.mp4', ['title' => 'Course #4 - Part B']);
-$client->videos->update($video->videoId, array('tags' => array('course', 'economics', 'finance')));
-foreach ($client->videos->search(array('tags' => array('finance'))) as $video) {
+// Upload a video
+$video = $client->videos->upload('/path/to/video.mp4', array(
+  'title' => 'Course #4 - Part B'
+));
+
+// Edit video properties
+$client->videos->update($video->videoId, array(
+  'tags' => array('course', 'economics', 'finance')
+));
+
+// Search through videos
+foreach ($client->videos->search(array(
+  'tags' => array('finance')
+)) as $video) {
     echo $video->title."\n";
 }
+
+// Delete a video
 $client->videos->delete($video->videoId);
 ```
 
