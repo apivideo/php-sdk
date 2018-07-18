@@ -4,6 +4,7 @@ namespace ApiVideo\Client;
 
 use ApiVideo\Client\Api\Players;
 use ApiVideo\Client\Api\Videos;
+use ApiVideo\Client\Api\Tokens;
 use ApiVideo\Client\Buzz\OAuthBrowser;
 use Buzz\Client\Curl;
 use Buzz\Client\FileGetContents;
@@ -15,6 +16,9 @@ final class Client
 
     /** @var Players */
     public $players;
+
+    /** @var Tokens */
+    public $tokens;
 
     /**
      *
@@ -36,5 +40,6 @@ final class Client
 
         $this->videos  = new Videos($browser);
         $this->players = new Players($browser);
+        $this->tokens  = new Tokens($browser);
     }
 }

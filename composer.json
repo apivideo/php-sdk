@@ -9,6 +9,7 @@
         }
     },
     "require": {
+        "php": ">=5.3",
         "kriswallsmith/buzz": "^0.15"
     },
     "require-dev": {
