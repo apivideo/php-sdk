@@ -1,15 +1,16 @@
 <?php
 
 
+use ApiVideo\Client\Api\Players;
 use ApiVideo\Client\Model\Player;
 use Buzz\Message\Response;
-use ApiVideo\Client\Api\Players;
 use PHPUnit\Framework\TestCase;
 
 class PlayersTest extends TestCase
 {
     /**
      * @test
+     * @throws ReflectionException
      */
     public function getSucceed()
     {
@@ -49,7 +50,13 @@ class PlayersTest extends TestCase
         }';
 
         $response = new Response();
-        $response->setContent($playerReturn);
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode        = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response, 200);
+        $setContent = $responseReflected->getMethod('setContent');
+        $setContent->invokeArgs($response, array($playerReturn));
 
         $playerArray = json_decode($playerReturn, true);
 
@@ -159,14 +166,19 @@ class PlayersTest extends TestCase
             }
         }';
 
-        $response = new Response();
-        $response->setContent($playerReturn);
+        $response          = new Response();
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode        = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response, 200);
+        $setContent = $responseReflected->getMethod('setContent');
+        $setContent->invokeArgs($response, array($playerReturn));
 
         $oAuthBrowser = $this->getMockedOAuthBrowser();
 
         $oAuthBrowser->method('get')->willReturn($response);
 
-        $players  = new Players($oAuthBrowser);
+        $players = new Players($oAuthBrowser);
         $results = $players->search(
             array(
                 'currentPage' => 1,
@@ -175,7 +187,7 @@ class PlayersTest extends TestCase
         );
 
         $playersReflected = new ReflectionClass('ApiVideo\Client\Api\Players');
-        $castAll         = $playersReflected->getMethod('castAll');
+        $castAll          = $playersReflected->getMethod('castAll');
         $castAll->setAccessible(true);
 
         $playersReturn = json_decode($playerReturn, true);
@@ -218,13 +230,19 @@ class PlayersTest extends TestCase
         }';
 
         $response = new Response();
-        $response->setContent($playerReturn);
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode        = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response, 200);
+        $setContent = $responseReflected->getMethod('setContent');
+        $setContent->invokeArgs($response, array($playerReturn));
 
         $oAuthBrowser = $this->getMockedOAuthBrowser();
 
         $oAuthBrowser->method('get')->willReturn($response);
 
-        $players  = new Players($oAuthBrowser);
+        $players = new Players($oAuthBrowser);
         $results = $players->search(
             array(
                 'currentPage' => 1,
@@ -235,7 +253,7 @@ class PlayersTest extends TestCase
         );
 
         $playersReflected = new ReflectionClass('ApiVideo\Client\Api\Players');
-        $castAll         = $playersReflected->getMethod('castAll');
+        $castAll          = $playersReflected->getMethod('castAll');
         $castAll->setAccessible(true);
 
         $playersReturn = json_decode($playerReturn, true);
@@ -245,6 +263,7 @@ class PlayersTest extends TestCase
 
     /**
      * @test
+     * @throws ReflectionException
      */
     public function createSucceed()
     {
@@ -285,7 +304,13 @@ class PlayersTest extends TestCase
         }';
 
         $response = new Response();
-        $response->setContent($playerReturn);
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode        = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response, 200);
+        $setContent = $responseReflected->getMethod('setContent');
+        $setContent->invokeArgs($response, array($playerReturn));
 
         $playerArray = json_decode($playerReturn, true);
         $mockedBrowser->method('post')->willReturn($response);
@@ -329,6 +354,7 @@ class PlayersTest extends TestCase
 
     /**
      * @test
+     * @throws ReflectionException
      */
     public function createWithropertiesSucceed()
     {
@@ -369,18 +395,25 @@ class PlayersTest extends TestCase
         }';
 
         $response = new Response();
-        $response->setContent($playerReturn);
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode        = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response, 200);
+        $setContent = $responseReflected->getMethod('setContent');
+        $setContent->invokeArgs($response, array($playerReturn));
 
         $mockedBrowser->method('post')->willReturn($response);
 
         $players = new Players($mockedBrowser);
         /** @var Player $result */
-        $player = $players->create(array("forceAutoplay" => true));
+        $player = $players->create(array('forceAutoplay' => true));
         $this->assertTrue($player->forceAutoplay);
     }
 
     /**
      * @test
+     * @throws ReflectionException
      */
     public function updateSucceed()
     {
@@ -455,12 +488,26 @@ class PlayersTest extends TestCase
         }';
 
         $response = new Response();
-        $response->setContent($playerReturn);
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode        = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response, 200);
+        $setContent = $responseReflected->getMethod('setContent');
+        $setContent->invokeArgs($response, array($playerReturn));
+
 
         $responsePatch = new Response();
+
+        $responsePatchReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCodePatch        = $responsePatchReflected->getProperty('statusCode');
+        $statusCodePatch->setAccessible(true);
+        $statusCodePatch->setValue($responsePatch, 200);
+        $setContentPatch = $responsePatchReflected->getMethod('setContent');
+        $setContentPatch->invokeArgs($responsePatch, array($playerPatch));
         $responsePatch->setContent($playerPatch);
 
-        $player = json_decode($playerReturn, true);
+        $player           = json_decode($playerReturn, true);
         $playerProperties = json_decode($playerReturn, true);
 
         $mockedBrowser->method('post')->willReturn($response);
@@ -478,50 +525,31 @@ class PlayersTest extends TestCase
 
     /**
      * @test
+     * @throws ReflectionException
      */
-    public function createWithTitleAndPropertiesSucceed()
+    public function deleteSucceed()
     {
         $mockedBrowser = $this->getMockedOAuthBrowser();
 
-        $videoReturn = '
-        {
-            "videoId": "vi55mglWKqgywdX8Yu8WgDZ0",
-            "title": "test.mp4",
-            "description": "DescrptionTest",
-            "publishedAt": "2018-05-18T17:21:11+02:00",
-            "tags": ["tag1", "tag2"],
-            "metadata": [],
-            "source": {
-                "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
-            },
-            "assets": {
-                "hls": "https://localhost/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8"
-            }
-        }';
-
         $response = new Response();
-        $response->setContent($videoReturn);
 
-        $video = json_decode($videoReturn, true);
-        $mockedBrowser->method('post')->willReturn($response);
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode        = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response, 204);
 
-        $videos = new Videos($mockedBrowser);
-        /** @var Video $result */
-        $result = $videos->create($video['title'], array('description' => $video['title'], 'tags' => $video['tags']));
-        $this->assertSame($video['videoId'], $result->videoId);
-        $this->assertSame($video['title'], $result->title);
-        $this->assertSame($video['description'], $result->description);
-        $this->assertSame($video['publishedAt'], $result->publishedAt->format(\DATE_ATOM));
-        $this->assertSame($video['tags'], $result->tags);
-        $this->assertSame($video['metadata'], $result->metadata);
-        $this->assertSame($video['source'], $result->source);
-        $this->assertSame($video['assets'], $result->assets);
+        $mockedBrowser->method('delete')->willReturn($response);
+
+        $players = new Players($mockedBrowser);
+
+        $status = $players->delete('pl55mglWKqgywdX8Yu8WgDZ0');
+        $this->assertSame(204, $status);
     }
 
     private function getMockedOAuthBrowser()
     {
         return $this->getMockBuilder('ApiVideo\Client\Buzz\OAuthBrowser')
-                    ->setMethods(array('get', 'submit', 'post', 'patch'))
+                    ->setMethods(array('get', 'submit', 'post', 'patch', 'delete'))
                     ->getMock();
     }
 }

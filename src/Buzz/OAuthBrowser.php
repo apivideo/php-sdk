@@ -2,15 +2,11 @@
 
 namespace ApiVideo\Client\Buzz;
 
+use ApiVideo\Client\Exception\AuthenticationFailed;
 use Buzz\Browser;
-use Buzz\Client\ClientInterface;
-use Buzz\Message\Factory\FactoryInterface;
 use Buzz\Message\MessageInterface;
 use Buzz\Message\RequestInterface;
 use Buzz\Message\Response;
-use ApiVideo\Client\Exception\AuthenticationFailed;
-use ApiVideo\Client\Exception\GenericClientException;
-use ApiVideo\Client\Exception\GenericServerException;
 
 class OAuthBrowser extends Browser
 {
@@ -48,7 +44,7 @@ class OAuthBrowser extends Browser
             'password' => $password,
         );
 
-        if (!is_null($domainName)) {
+        if (null !== $domainName) {
             $this->authPayload['domain'] = $domainName;
         }
 
@@ -62,23 +58,23 @@ class OAuthBrowser extends Browser
     private function getAccessToken()
     {
         if (!$this->authPayload) {
-            throw new AuthenticationFailed;
+            throw new AuthenticationFailed('Authentication failed');
         }
 
         /* @var $response \Buzz\Message\Response */
         $response =
             parent::post(
-                $this->baseUri . '/token',
+                $this->baseUri.'/token',
                 array(),
                 json_encode($this->authPayload)
             );
 
         if ($response->getStatusCode() >= 400) {
-            throw new AuthenticationFailed;
+            throw new AuthenticationFailed('Authentication failed');
         }
 
-        $this->headers['Authorization'] = 'Bearer ' . json_decode($response->getContent())->access_token;
-        $this->isAuthenticated = true;
+        $this->headers['Authorization'] = 'Bearer '.json_decode($response->getContent())->access_token;
+        $this->isAuthenticated          = true;
     }
 
     /**
@@ -92,8 +88,8 @@ class OAuthBrowser extends Browser
 
         // Refresh access token automatically and transparently
         if (
-            401 == $status &&
-            array('application/problem+json') == $response->getHeader('Content-Type', false) &&
+            401 === $status &&
+            array('application/problem+json') === $response->getHeader('Content-Type', false) &&
             false !== strpos($response->getContent(), 'access_denied')
         ) {
             $lastRequest = $this->getLastRequest();
@@ -108,38 +104,26 @@ class OAuthBrowser extends Browser
                     unset($headers[$key]);
                 }
             }
-            $headers[] = 'Authorization: '. $this->headers['Authorization'];
+            $headers[] = 'Authorization: '.$this->headers['Authorization'];
             $lastRequest->setHeaders($headers);
+            /** @var Response $response */
             $response = $this->send($lastRequest);
-            $status = $response->getStatusCode();
         }
 
-        if ($status < 400) {
-            return $response;
-        }
-
-        if (400 <= $status && $status < 500) {
-            throw new GenericClientException($response->getReasonPhrase(), $status);
-        }
-
-        if (500 <= $status && $status < 600) {
-            throw new GenericServerException($response->getReasonPhrase(), $status);
-        }
-
-        throw new \RuntimeException($response->getReasonPhrase(), $status);
+        return $response;
     }
 
     /**
      *
      * @param string $path
-     * @param array  $headers
+     * @param array $headers
      * @return Response
      */
     public function get($path, $headers = array())
     {
         return $this->check(
             parent::get(
-                $this->baseUri . $path,
+                $this->baseUri.$path,
                 array_merge($this->headers, $headers)
             )
         );
@@ -148,7 +132,7 @@ class OAuthBrowser extends Browser
     /**
      *
      * @param string $path
-     * @param array  $headers
+     * @param array $headers
      * @param string $content
      * @return Response
      */
@@ -156,7 +140,7 @@ class OAuthBrowser extends Browser
     {
         return $this->check(
             parent::post(
-                $this->baseUri . $path,
+                $this->baseUri.$path,
                 array_merge($this->headers, $headers),
                 $content
             )
@@ -167,16 +151,16 @@ class OAuthBrowser extends Browser
      * Submit a form (upload file for example)
      *
      * @param string $path
-     * @param array  $fields
+     * @param array $fields
      * @param string $method
-     * @param array  $headers
+     * @param array $headers
      * @return Response
      */
     public function submit($path, array $fields = array(), $method = RequestInterface::METHOD_POST, $headers = array())
     {
         return $this->check(
             parent::submit(
-                $this->baseUri . $path,
+                $this->baseUri.$path,
                 $fields,
                 $method,
                 array_merge($this->headers, $headers)
@@ -187,7 +171,7 @@ class OAuthBrowser extends Browser
     /**
      *
      * @param string $path
-     * @param array  $headers
+     * @param array $headers
      * @param string $content
      * @return Response
      */
@@ -195,7 +179,7 @@ class OAuthBrowser extends Browser
     {
         return $this->check(
             parent::put(
-                $this->baseUri . $path,
+                $this->baseUri.$path,
                 array_merge($this->headers, $headers),
                 $content
             )
@@ -205,7 +189,7 @@ class OAuthBrowser extends Browser
     /**
      *
      * @param string $path
-     * @param array  $headers
+     * @param array $headers
      * @param string $content
      * @return Response
      */
@@ -213,7 +197,7 @@ class OAuthBrowser extends Browser
     {
         return $this->check(
             parent::patch(
-                $this->baseUri . $path,
+                $this->baseUri.$path,
                 array_merge($this->headers, $headers),
                 $content
             )
@@ -223,7 +207,7 @@ class OAuthBrowser extends Browser
     /**
      *
      * @param string $path
-     * @param array  $headers
+     * @param array $headers
      * @param string $content
      * @return Response
      */
@@ -231,7 +215,7 @@ class OAuthBrowser extends Browser
     {
         return $this->check(
             parent::delete(
-                $this->baseUri . $path,
+                $this->baseUri.$path,
                 array_merge($this->headers, $headers),
                 $content
             )
@@ -241,14 +225,14 @@ class OAuthBrowser extends Browser
     /**
      *
      * @param string $path
-     * @param array  $headers
+     * @param array $headers
      * @return Response
      */
     public function head($path, $headers = array())
     {
         return $this->check(
             parent::head(
-                $this->baseUri . $path,
+                $this->baseUri.$path,
                 array_merge($this->headers, $headers)
             )
         );
@@ -257,14 +241,14 @@ class OAuthBrowser extends Browser
     /**
      *
      * @param string $path
-     * @param array  $headers
+     * @param array $headers
      * @return Response
      */
-    public function options($path, $headers = array())
+    public function options($path, array $headers = array())
     {
         return $this->check(
             $this->call(
-                $this->baseUri . $path,
+                $this->baseUri.$path,
                 'OPTIONS',
                 array_merge($this->headers, $headers)
             )

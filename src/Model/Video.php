@@ -30,4 +30,7 @@ final class Video
 
     /** @var \DateTimeImmutable */
     public $deletedAt;
+
+    /** @var Caption[] */
+    public $captions;
 }

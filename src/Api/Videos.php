@@ -5,35 +5,37 @@ namespace ApiVideo\Client\Api;
 use ApiVideo\Client\Buzz\FormByteRangeUpload;
 use ApiVideo\Client\Buzz\OAuthBrowser;
 use ApiVideo\Client\Model\Video;
-use Buzz\Exception\RequestException;
 use Buzz\Message\Form\FormUpload;
-use Buzz\Message\MessageInterface;
 use Buzz\Message\RequestInterface;
 
-class Videos
+class Videos extends BaseApi
 {
     /** @var int Upload chunk size in bytes */
     public $chunkSize; // 64 MiB;
 
-    /** @var OAuthBrowser */
-    private $browser;
+    /** @var Captions */
+    public $captions;
 
-    /**
-     * @param OAuthBrowser $browser
-     */
     public function __construct(OAuthBrowser $browser)
     {
-        $this->browser   = $browser;
+        parent::__construct($browser);
         $this->chunkSize = 64 * 1024 * 1024;
     }
 
     /**
      * @param string $videoId
-     * @return Video
+     * @return Video|null
      */
     public function get($videoId)
     {
-        return $this->unmarshal($this->browser->get("/videos/$videoId"));
+        $response = $this->browser->get("/videos/$videoId");
+        if (!$response->isSuccessful()) {
+            $this->registerLastError($response);
+
+            return null;
+        }
+
+        return $this->unmarshal($response);
     }
 
     /**
@@ -63,8 +65,16 @@ class Videos
         do {
             $params['currentPage'] = $currentPage;
             $response              = $this->browser->get('/videos?'.http_build_query($parameters));
-            $json                  = json_decode($response->getContent(), true);
-            $videos                = $json['data'];
+
+            if (!$response->isSuccessful()) {
+                $this->registerLastError($response);
+
+                return null;
+            }
+
+            $json   = json_decode($response->getContent(), true);
+            $videos = $json['data'];
+
             if (null === $callback) {
                 $allVideos[] = $this->castAll($videos);
             } else {
@@ -93,29 +103,34 @@ class Videos
     /**
      * @param string $title
      * @param array $properties
-     * @return Video
+     * @return Video|null
      */
     public function create($title, array $properties = array())
     {
-        return $this->unmarshal(
-            $this->browser->post(
-                '/videos',
-                array(),
-                json_encode(
-                    array_merge(
-                        $properties,
-                        array('title' => $title)
-                    )
+        $response = $this->browser->post(
+            '/videos',
+            array(),
+            json_encode(
+                array_merge(
+                    $properties,
+                    array('title' => $title)
                 )
             )
         );
+        if (!$response->isSuccessful()) {
+            $this->registerLastError($response);
+
+            return null;
+        }
+
+        return $this->unmarshal($response);
     }
 
     /**
      * @param string $source Path to the file to upload
      * @param array $properties
      * @param string $videoId
-     * @return Video
+     * @return Video|null
      * @throws \Buzz\Exception\RequestException
      * @throws \UnexpectedValueException
      */
@@ -140,15 +155,20 @@ class Videos
         if (0 >= $length) {
             throw new \UnexpectedValueException("'$source' is empty.");
         }
-
         // Complete upload in a single request when file is small enough
         if ($this->chunkSize > $length) {
-            return $this->unmarshal(
-                $this->browser->submit(
-                    "/videos/$videoId/source",
-                    array('file' => new FormUpload($source))
-                )
+            $response = $this->browser->submit(
+                "/videos/$videoId/source",
+                array('file' => new FormUpload($source))
             );
+
+            if (!$response->isSuccessful()) {
+                $this->registerLastError($response);
+
+                return null;
+            }
+
+            return $this->unmarshal($response);
         }
 
         // Split content to upload big files in multiple requests
@@ -161,22 +181,23 @@ class Videos
             $from        = $copiedBytes;
             $copiedBytes += stream_copy_to_stream($resource, $chunk, $this->chunkSize, $copiedBytes);
 
-            try {
-                $response     = $this->browser->submit(
-                    "/videos/$videoId/source",
-                    array('file' => new FormByteRangeUpload($chunkPath, $from, $copiedBytes, $length)),
-                    RequestInterface::METHOD_POST,
-                    array(
-                        'Content-Range' => 'bytes '.$from.'-'.($copiedBytes - 1).'/'.$length,
-                        'Expect'        => '',
-                    )
-                );
-                $lastResponse = $this->unmarshal($response);
-            } catch (RequestException $e) {
-                if ($e->getCode() !== 100 && $e->getCode() >= 400) {
-                    throw $e;
-                }
+            $response = $this->browser->submit(
+                "/videos/$videoId/source",
+                array('file' => new FormByteRangeUpload($chunkPath, $from, $copiedBytes, $length)),
+                RequestInterface::METHOD_POST,
+                array(
+                    'Content-Range' => 'bytes '.$from.'-'.($copiedBytes - 1).'/'.$length,
+                    'Expect'        => '',
+                )
+            );
+
+            if ($response->getStatusCode() >= 400) {
+                $this->registerLastError($response);
+
+                return null;
             }
+
+            $lastResponse = $this->unmarshal($response);
 
             fclose($chunk);
             unlink($chunkPath);
@@ -191,7 +212,7 @@ class Videos
     /**
      * @param string $source Path to the file to upload
      * @param string $videoId
-     * @return Video
+     * @return Video|null
      * @throws \Buzz\Exception\RequestException
      * @throws \UnexpectedValueException
      */
@@ -209,34 +230,46 @@ class Videos
             throw new \UnexpectedValueException("'$source' is empty.");
         }
 
-        return $this->unmarshal(
-            $this->browser->submit(
-                "/videos/$videoId/snapshot",
-                array('file' => new FormUpload($source))
-            )
+        $response = $this->browser->submit(
+            "/videos/$videoId/thumbnail",
+            array('file' => new FormUpload($source))
         );
+
+        if (!$response->isSuccessful()) {
+            $this->registerLastError($response);
+
+            return null;
+        }
+
+        return $this->unmarshal($response);
     }
 
     /**
      * @param string $videoId
      * @param array $properties
-     * @return Video
+     * @return Video|null
      */
     public function update($videoId, array $properties)
     {
-        return $this->unmarshal(
-            $this->browser->patch(
-                "/videos/$videoId",
-                array(),
-                json_encode($properties)
-            )
+        $response = $this->browser->patch(
+            "/videos/$videoId",
+            array(),
+            json_encode($properties)
         );
+
+        if (!$response->isSuccessful()) {
+            $this->registerLastError($response);
+
+            return null;
+        }
+
+        return $this->unmarshal($response);
     }
 
     /**
      * @param string $videoId
      * @param string $timecode
-     * @return Video
+     * @return Video|null
      */
     public function updateThumbnailWithTimeCode($videoId, $timecode)
     {
@@ -244,99 +277,43 @@ class Videos
             throw new \UnexpectedValueException('Timecode is empty.');
         }
 
-        return $this->unmarshal(
-            $this->browser->patch(
-                "/videos/$videoId/snapshot",
-                array(),
-                json_encode(array('timecode' => $timecode))
-            )
+        $response = $this->browser->patch(
+            "/videos/$videoId/thumbnail",
+            array(),
+            json_encode(array('timecode' => $timecode))
         );
+
+        if (!$response->isSuccessful()) {
+            $this->registerLastError($response);
+
+            return null;
+        }
+
+        return $this->unmarshal($response);
     }
 
     /**
      * @param string $videoId
-     * @return void
+     * @return int|null
      */
     public function delete($videoId)
     {
-        $this->browser->delete("/videos/$videoId");
-    }
+        $response = $this->browser->delete("/videos/$videoId");
 
-    /**
-     * @param string $videoId
-     * @return Video
-     */
-    public function publish($videoId)
-    {
-        return $this->schedule($videoId, new \DateTime);
-    }
+        if (!$response->isSuccessful()) {
+            $this->registerLastError($response);
 
-    /**
-     * @param string $videoId
-     * @param string|\DateTimeInterface $scheduledAt
-     * @return Video
-     */
-    public function schedule($videoId, $scheduledAt)
-    {
-        $dateTime = $scheduledAt instanceof \DateTimeInterface ?
-            $scheduledAt :
-            new \DateTime($scheduledAt);
+            return null;
+        }
 
-        return $this->unmarshal(
-            $this->browser->patch(
-                "/videos/$videoId",
-                array(),
-                json_encode(
-                    array(
-                        'scheduledAt' => $dateTime->format(\DateTime::ATOM),
-                    )
-                )
-            )
-        );
-    }
-
-    /**
-     * @param string $videoId
-     * @return Video
-     */
-    public function unschedule($videoId)
-    {
-        return $this->unmarshal(
-            $this->browser->patch(
-                "/videos/$videoId",
-                array(),
-                json_encode(
-                    array(
-                        'scheduledAt' => null,
-                    )
-                )
-            )
-        );
-    }
-
-    /**
-     * @param \Buzz\Message\MessageInterface $message
-     * @return Video
-     */
-    private function unmarshal(MessageInterface $message)
-    {
-        return $this->cast(json_decode($message->getContent(), true));
-    }
-
-    /**
-     * @param array $videos
-     * @return Video[]
-     */
-    private function castAll(array $videos)
-    {
-        return array_map(array($this, 'cast'), $videos);
+        return $response->getStatusCode();
     }
 
     /**
      * @param array $data
      * @return Video
      */
-    private function cast(array $data)
+    protected function cast(array $data)
     {
         $video              = new Video;
         $video->videoId     = $data['videoId'];

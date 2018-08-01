@@ -4,30 +4,25 @@
 namespace ApiVideo\Client\Api;
 
 
-use ApiVideo\Client\Buzz\OAuthBrowser;
-use Buzz\Message\MessageInterface;
 use ApiVideo\Client\Model\Player;
 
-class Players
+class Players extends BaseApi
 {
-    /** @var OAuthBrowser */
-    private $browser;
-
-    /**
-     * @param OAuthBrowser $browser
-     */
-    public function __construct(OAuthBrowser $browser)
-    {
-        $this->browser = $browser;
-    }
 
     /**
      * @param string $playerId
-     * @return Player
+     * @return Player|null
      */
     public function get($playerId)
     {
-        return $this->unmarshal($this->browser->get("/players/$playerId"));
+        $response = $this->browser->get("/players/$playerId");
+        if (!$response->isSuccessful()) {
+            $this->registerLastError($response);
+
+            return null;
+        }
+
+        return $this->unmarshal($response);
     }
 
     /**
@@ -50,13 +45,20 @@ class Players
         $params             = $parameters;
         $currentPage        = isset($parameters['currentPage']) ? $parameters['currentPage'] : 1;
         $params['pageSize'] = isset($parameters['pageSize']) ? $parameters['pageSize'] : 100;
-        $allPlayers          = array();
+        $allPlayers         = array();
 
         do {
             $params['currentPage'] = $currentPage;
             $response              = $this->browser->get('/players?'.http_build_query($parameters));
-            $json                  = json_decode($response->getContent(), true);
-            $players                = $json['data'];
+            if (!$response->isSuccessful()) {
+                $this->registerLastError($response);
+
+                return null;
+            }
+
+            $json    = json_decode($response->getContent(), true);
+            $players = $json['data'];
+
             if (null === $callback) {
                 $allPlayers[] = $this->castAll($players);
             } else {
@@ -88,15 +90,20 @@ class Players
      */
     public function create(array $properties = array())
     {
-        return $this->unmarshal(
-            $this->browser->post(
-                '/players',
-                array(),
-                json_encode(
-                    $properties
-                )
+        $response = $this->browser->post(
+            '/players',
+            array(),
+            json_encode(
+                $properties
             )
         );
+        if (!$response->isSuccessful()) {
+            $this->registerLastError($response);
+
+            return null;
+        }
+
+        return $this->unmarshal($response);
     }
 
     /**
@@ -106,38 +113,42 @@ class Players
      */
     public function update($playerId, array $properties)
     {
-        return $this->unmarshal(
-            $this->browser->patch(
-                "/players/$playerId",
-                array(),
-                json_encode($properties)
-            )
+        $response = $this->browser->patch(
+            "/players/$playerId",
+            array(),
+            json_encode($properties)
         );
+        if (!$response->isSuccessful()) {
+            $this->registerLastError($response);
+
+            return null;
+        }
+
+        return $this->unmarshal($response);
     }
 
     /**
-     * @param \Buzz\Message\MessageInterface $message
-     * @return Player
+     * @param string $playerId
+     * @return int|null
      */
-    private function unmarshal(MessageInterface $message)
+    public function delete($playerId)
     {
-        return $this->cast(json_decode($message->getContent(), true));
-    }
+        $response = $this->browser->delete("/players/$playerId");
 
-    /**
-     * @param array $videos
-     * @return Players[]
-     */
-    private function castAll(array $videos)
-    {
-        return array_map(array($this, 'cast'), $videos);
+        if (!$response->isSuccessful()) {
+            $this->registerLastError($response);
+
+            return null;
+        }
+
+        return $response->getStatusCode();
     }
 
     /**
      * @param array $data
      * @return Player
      */
-    private function cast(array $data)
+    protected function cast(array $data)
     {
         $player                           = new Player();
         $player->playerId                 = $data['playerId'];

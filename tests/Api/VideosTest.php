@@ -33,10 +33,10 @@ class VideosTest extends TestCase
 
     /**
      * @test
+     * @throws ReflectionException
      */
     public function getSucceed()
     {
-        $videoId     = 'vi55mglWKqgywdX8Yu8WgDZ0';
         $videoReturn = '
         {
             "videoId": "vi55mglWKqgywdX8Yu8WgDZ0",
@@ -49,19 +49,30 @@ class VideosTest extends TestCase
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
             },
             "assets": {
-                "hls": "https://localhost/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8"
+                "iframe": "<iframe src=\'https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3\' width=\'100%\' height=\'100%\' frameborder=\'0\' scrolling=\'no\' allowfullscreen=\'\'></iframe>",
+                "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
+                "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
+                "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
             }
         }';
 
+
+
         $response = new Response();
-        $response->setContent($videoReturn);
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response,200);
+        $setContent = $responseReflected->getMethod('setContent');
+        $setContent->invokeArgs($response, array($videoReturn));
 
 
         $oAuthBrowser = $this->getMockedOAuthBrowser();
         $oAuthBrowser->method('get')->willReturn($response);
 
         $videos = new Videos($oAuthBrowser);
-        $video  = $videos->get($videoId);
+        $video  = $videos->get('vi55mglWKqgywdX8Yu8WgDZ0');
 
         $this->assertInstanceOf('ApiVideo\Client\Model\Video', $video);
         $this->assertSame('vi55mglWKqgywdX8Yu8WgDZ0', $video->videoId);
@@ -75,10 +86,9 @@ class VideosTest extends TestCase
         $this->assertEmpty($video->metadata);
         $this->assertSame('/videos/vi55mglWKqgywdX8Yu8WgDZ0/source', $video->source['uri']);
         $this->assertSame(
-            'https://localhost/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8',
+            'https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8',
             $video->assets['hls']
         );
-
     }
 
     /**
@@ -171,7 +181,13 @@ class VideosTest extends TestCase
         }';
 
         $response = new Response();
-        $response->setContent($videoReturn);
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response,200);
+        $setContent = $responseReflected->getMethod('setContent');
+        $setContent->invokeArgs($response, array($videoReturn));
 
         $oAuthBrowser = $this->getMockedOAuthBrowser();
 
@@ -227,7 +243,13 @@ class VideosTest extends TestCase
         }';
 
         $response = new Response();
-        $response->setContent($videoReturn);
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response,200);
+        $setContent = $responseReflected->getMethod('setContent');
+        $setContent->invokeArgs($response, array($videoReturn));
 
         $oAuthBrowser = $this->getMockedOAuthBrowser();
 
@@ -344,7 +366,13 @@ class VideosTest extends TestCase
         }';
 
         $response = new Response();
-        $response->setContent($videoReturn);
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response,200);
+        $setContent = $responseReflected->getMethod('setContent');
+        $setContent->invokeArgs($response, array($videoReturn));
 
         $oAuthBrowser = $this->getMockedOAuthBrowser();
 
@@ -372,6 +400,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
+     * @throws ReflectionException
      */
     public function createWithTitleSucceed()
     {
@@ -394,7 +423,13 @@ class VideosTest extends TestCase
         }';
 
         $response = new Response();
-        $response->setContent($videoReturn);
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response,200);
+        $setContent = $responseReflected->getMethod('setContent');
+        $setContent->invokeArgs($response, array($videoReturn));
 
         $video = json_decode($videoReturn, true);
         $mockedBrowser->method('post')->willReturn($response);
@@ -414,6 +449,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
+     * @throws ReflectionException
      */
     public function createWithTitleAndPropertiesSucceed()
     {
@@ -436,7 +472,13 @@ class VideosTest extends TestCase
         }';
 
         $response = new Response();
-        $response->setContent($videoReturn);
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response,200);
+        $setContent = $responseReflected->getMethod('setContent');
+        $setContent->invokeArgs($response, array($videoReturn));
 
         $video = json_decode($videoReturn, true);
         $mockedBrowser->method('post')->willReturn($response);
@@ -456,6 +498,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
+     * @throws ReflectionException
      */
     public function updateSucceed()
     {
@@ -495,10 +538,22 @@ class VideosTest extends TestCase
         }';
 
         $response = new Response();
-        $response->setContent($videoReturn);
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response,200);
+        $setContent = $responseReflected->getMethod('setContent');
+        $setContent->invokeArgs($response, array($videoReturn));
 
         $responsePatch = new Response();
-        $responsePatch->setContent($videoPatch);
+
+        $responsePatchReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCodePatch = $responsePatchReflected->getProperty('statusCode');
+        $statusCodePatch->setAccessible(true);
+        $statusCodePatch->setValue($responsePatch,200);
+        $setContentPatch = $responsePatchReflected->getMethod('setContent');
+        $setContentPatch->invokeArgs($responsePatch, array($videoPatch));
 
         $video = json_decode($videoReturn, true);
 
@@ -516,6 +571,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
+     * @throws ReflectionException
      */
     public function updateThumbnailWithTimeCodeSucceed()
     {
@@ -555,10 +611,22 @@ class VideosTest extends TestCase
         }';
 
         $response = new Response();
-        $response->setContent($videoReturn);
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response,200);
+        $setContent = $responseReflected->getMethod('setContent');
+        $setContent->invokeArgs($response, array($videoReturn));
 
         $responsePatch = new Response();
-        $responsePatch->setContent($videoPatch);
+
+        $responsePatchReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCodePatch = $responsePatchReflected->getProperty('statusCode');
+        $statusCodePatch->setAccessible(true);
+        $statusCodePatch->setValue($responsePatch,200);
+        $setContentPatch = $responsePatchReflected->getMethod('setContent');
+        $setContentPatch->invokeArgs($responsePatch, array($videoPatch));
 
         $video = json_decode($videoReturn, true);
         $videoPatch = json_decode($videoPatch, true);
@@ -576,6 +644,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
+     * @throws ReflectionException
      */
     public function uploadSucceed()
     {
@@ -598,7 +667,13 @@ class VideosTest extends TestCase
         }';
 
         $response = new Response();
-        $response->setContent($videoReturn);
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response,200);
+        $setContent = $responseReflected->getMethod('setContent');
+        $setContent->invokeArgs($response, array($videoReturn));
 
         $video = json_decode($videoReturn, true);
         $mockedBrowser->method('post')->willReturn($response);
@@ -619,6 +694,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
+     * @throws ReflectionException
      */
     public function uploadLargeFileSucceed()
     {
@@ -641,15 +717,22 @@ class VideosTest extends TestCase
         }';
 
         $response = new Response();
-        $response->setContent($videoReturn);
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response,200);
+        $setContent = $responseReflected->getMethod('setContent');
+        $setContent->invokeArgs($response, array($videoReturn));
 
         $video = json_decode($videoReturn, true);
         $mockedBrowser->method('post')->willReturn($response);
         $mockedBrowser->method('submit')->willReturn($response);
 
         $videos = new Videos($mockedBrowser);
+        $videos->chunkSize = 10 * 1024 * 1024;
         /** @var Video $result */
-        $result = $videos->upload($this->getValideLargeVideo()->url());
+        $result = $videos->upload($this->getValideVideo()->url());
         $this->assertSame($video['videoId'], $result->videoId);
         $this->assertSame($video['title'], $result->title);
         $this->assertSame($video['description'], $result->description);
@@ -678,6 +761,7 @@ class VideosTest extends TestCase
      * @test
      * @expectedException UnexpectedValueException
      * @expectedExceptionMessage 'vfs://root/testempty.mp4' is empty.
+     * @throws ReflectionException
      */
     public function uploadWithEmptySourceShouldFail()
     {
@@ -700,7 +784,13 @@ class VideosTest extends TestCase
         }';
 
         $response = new Response();
-        $response->setContent($videoReturn);
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response,200);
+        $setContent = $responseReflected->getMethod('setContent');
+        $setContent->invokeArgs($response, array($videoReturn));
 
 
         $mockedBrowser->method('post')->willReturn($response);
@@ -712,6 +802,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
+     * @throws ReflectionException
      */
     public function uploadThumbnailSucceed()
     {
@@ -735,7 +826,13 @@ class VideosTest extends TestCase
         }';
 
         $response = new Response();
-        $response->setContent($videoReturn);
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response,200);
+        $setContent = $responseReflected->getMethod('setContent');
+        $setContent->invokeArgs($response, array($videoReturn));
 
         $video = json_decode($videoReturn, true);
         $mockedBrowser->method('submit')->willReturn($response);
@@ -787,6 +884,7 @@ class VideosTest extends TestCase
      * @test
      * @expectedException UnexpectedValueException
      * @expectedExceptionMessage 'vfs://root/testempty.jpg' is empty.
+     * @throws ReflectionException
      */
     public function uploadThumbnailWithEmptySourceShouldFail()
     {
@@ -809,7 +907,13 @@ class VideosTest extends TestCase
         }';
 
         $response = new Response();
-        $response->setContent($videoReturn);
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response,200);
+        $setContent = $responseReflected->getMethod('setContent');
+        $setContent->invokeArgs($response, array($videoReturn));
 
         $video = json_decode($videoReturn, true);
 
@@ -820,10 +924,33 @@ class VideosTest extends TestCase
         $videos->uploadThumbnail($this->getInvalidThumbnail()->url(), $video['videoId']);
     }
 
+    /**
+     * @test
+     * @throws ReflectionException
+     */
+    public function deleteSucceed()
+    {
+        $mockedBrowser = $this->getMockedOAuthBrowser();
+
+        $response = new Response();
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode        = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response, 204);
+
+        $mockedBrowser->method('delete')->willReturn($response);
+
+        $videos = new Videos($mockedBrowser);
+
+        $status = $videos->delete('vi55mglWKqgywdX8Yu8WgDZ0');
+        $this->assertSame(204, $status);
+    }
+
     private function getMockedOAuthBrowser()
     {
         return $this->getMockBuilder('ApiVideo\Client\Buzz\OAuthBrowser')
-                    ->setMethods(array('get', 'submit', 'post', 'patch'))
+                    ->setMethods(array('get', 'submit', 'post', 'patch', 'delete'))
                     ->getMock();
     }
 
@@ -832,14 +959,6 @@ class VideosTest extends TestCase
 
         return vfsStream::newFile('test.mp4')
                         ->withContent(LargeFileContent::withMegabytes(30))
-                        ->at($this->filesystem);
-    }
-
-    private function getValideLargeVideo()
-    {
-
-        return vfsStream::newFile('testlarge.mp4')
-                        ->withContent(LargeFileContent::withMegabytes(70))
                         ->at($this->filesystem);
     }
 
