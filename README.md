@@ -64,6 +64,11 @@ $client->videos->update($videoId, array $properties);
 // Delete video (file and data)
 $client->videos->delete($videoId);
 
+// Delegated upload (generate a token for someone to upload a video into your account)
+$token = $client->tokens->generate(); // string(3): "xyz"
+// ...then upload from anywhere without authentication:
+// $ curl https://ws.api.video/upload?token=xyz -F file=@video.mp4
+
 /*
  *********************************
  *********************************
