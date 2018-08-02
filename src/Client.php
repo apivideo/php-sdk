@@ -2,6 +2,7 @@
 
 namespace ApiVideo\Client;
 
+use ApiVideo\Client\Api\Analytics;
 use ApiVideo\Client\Api\Players;
 use ApiVideo\Client\Api\Videos;
 use ApiVideo\Client\Buzz\OAuthBrowser;
@@ -15,6 +16,9 @@ final class Client
 
     /** @var Players */
     public $players;
+
+    /** @var Analytics */
+    public $analytics;
 
     /**
      *
@@ -36,5 +40,6 @@ final class Client
 
         $this->videos  = new Videos($browser);
         $this->players = new Players($browser);
+        $this->analytics = new Analytics($browser);
     }
 }

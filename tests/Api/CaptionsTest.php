@@ -17,6 +17,7 @@ class CaptionsTest extends TestCase
         parent::setUp();
         $directory = array(
             'video' => array(),
+            'caption' => array(),
         );
 
         $this->filesystem = vfsStream::setup('root', 660, $directory);
@@ -75,6 +76,34 @@ class CaptionsTest extends TestCase
      * @test
      * @throws ReflectionException
      */
+    public function getWithBadVideoIdFailed()
+    {
+        $response = new Response();
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode        = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response, 404);
+
+
+        $oAuthBrowser = $this->getMockedOAuthBrowser();
+        $oAuthBrowser->method('get')->willReturn($response);
+
+        $captions = new Captions($oAuthBrowser);
+        $caption  = $captions->get('vilWKqgy55mgwdX8Yu8WgDZ0', 'en');
+
+        $this->assertNull($caption);
+        $error = $captions->getLastError();
+
+        $this->assertSame(404, $error['status']);
+        $this->assertEmpty($error['message']);
+
+    }
+
+    /**
+     * @test
+     * @throws ReflectionException
+     */
     public function getAll()
     {
         $captionReturn = array(
@@ -110,6 +139,34 @@ class CaptionsTest extends TestCase
         );
         $this->assertSame('en', $caption->srclang);
         $this->assertFalse($caption->default);
+    }
+
+    /**
+     * @test
+     * @throws ReflectionException
+     */
+    public function getAllWithBadVideoIdFailed()
+    {
+        $response = new Response();
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode        = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response, 404);
+
+
+        $oAuthBrowser = $this->getMockedOAuthBrowser();
+        $oAuthBrowser->method('get')->willReturn($response);
+
+        $captions = new Captions($oAuthBrowser);
+        $caption  = $captions->getAll('vilWKqgy55mgwdX8Yu8WgDZ0');
+
+        $this->assertNull($caption);
+        $error = $captions->getLastError();
+
+        $this->assertSame(404, $error['status']);
+        $this->assertEmpty($error['message']);
+
     }
 
     /**
@@ -154,6 +211,92 @@ class CaptionsTest extends TestCase
 
     /**
      * @test
+     * @expectedException UnexpectedValueException
+     * @expectedExceptionMessage 'vfs://root/captions/test.vtt' must be a readable source file.
+     */
+    public function uploadWithBadSourceShouldFail()
+    {
+        $mockedBrowser = $this->getMockedOAuthBrowser();
+
+        $captions = new Captions($mockedBrowser);
+
+        $captions->upload($this->filesystem->url().'/captions/test.vtt');
+    }
+
+    /**
+     * @test
+     * @throws ReflectionException
+     */
+    public function uploadWithBadVideoIdShouldFail()
+    {
+
+        $response = new Response();
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode        = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response, 404);
+
+        $mockedBrowser = $this->getMockedOAuthBrowser();
+
+        $mockedBrowser->method('submit')->willReturn($response);
+
+        $captions = new Captions($mockedBrowser);
+
+        $result = $captions->upload($this->getValideCaption()->url(), array('videoId' => 'viglWK55mqgywdX8Yu8WgDZ0', 'language' => 'en'));
+
+        $this->assertNull($result);
+        $error = $captions->getLastError();
+
+        $this->assertSame(404, $error['status']);
+    }
+
+    /**
+     * @test
+     * @expectedException UnexpectedValueException
+     * @expectedExceptionMessage "videoId" property must be set for upload caption.
+     */
+    public function uploadWithMissingVideoIdShouldFail()
+    {
+
+        $mockedBrowser = $this->getMockedOAuthBrowser();
+
+        $captions = new Captions($mockedBrowser);
+
+        $captions->upload($this->getValideCaption()->url(), array('language' => 'en'));
+    }
+
+    /**
+     * @test
+     * @expectedException UnexpectedValueException
+     * @expectedExceptionMessage "language" property must be set for upload caption.
+     */
+    public function uploadWithMissingLanguageShouldFail()
+    {
+
+        $mockedBrowser = $this->getMockedOAuthBrowser();
+
+        $captions = new Captions($mockedBrowser);
+
+        $captions->upload($this->getValideCaption()->url(), array('videoId' => 'viglWK55mqgywdX8Yu8WgDZ0'));
+    }
+
+    /**
+     * @test
+     * @expectedException UnexpectedValueException
+     * @expectedExceptionMessage 'vfs://root/testempty.vtt' is empty.
+     */
+    public function uploadWithEmptySourceShouldFail()
+    {
+        $mockedBrowser = $this->getMockedOAuthBrowser();
+
+        $captions = new Captions($mockedBrowser);
+
+        $captions->upload($this->getInvalidCaption()->url(), array('videoId' => 'viglWK55mqgywdX8Yu8WgDZ0', 'language' => 'en'));
+    }
+
+    /**
+     * @test
      * @throws ReflectionException
      */
     public function updateDefaultSucceed()
@@ -185,6 +328,33 @@ class CaptionsTest extends TestCase
         $this->assertTrue($patchedCaption->default);
     }
 
+    /**
+     * @test
+     * @throws ReflectionException
+     */
+    public function updateDefaultFailed()
+    {
+        $response = new Response();
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode        = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response, 404);
+
+
+        $oAuthBrowser = $this->getMockedOAuthBrowser();
+        $oAuthBrowser->method('patch')->willReturn($response);
+
+        $captions = new Captions($oAuthBrowser);
+        $caption  = $captions->updateDefault('vilWKqgy55mgwdX8Yu8WgDZ0', 'en', true);
+
+        $this->assertNull($caption);
+        $error = $captions->getLastError();
+
+        $this->assertSame(404, $error['status']);
+        $this->assertEmpty($error['message']);
+    }
+
 
     /**
      * @test
@@ -209,6 +379,31 @@ class CaptionsTest extends TestCase
         $this->assertSame(204, $status);
     }
 
+    /**
+     * @test
+     * @throws ReflectionException
+     */
+    public function deleteWithBadVideoIdFailed()
+    {
+        $response = new Response();
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode        = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response, 404);
+
+        $mockedBrowser = $this->getMockedOAuthBrowser();
+        $mockedBrowser->method('delete')->willReturn($response);
+
+        $captions = new Captions($mockedBrowser);
+        $result = $captions->delete('vi5Kqg5mgywdX8Yu8WgDZ0', 'en');
+
+        $this->assertNull($result);
+        $error = $captions->getLastError();
+
+        $this->assertSame(404, $error['status']);
+    }
+
     private function getMockedOAuthBrowser()
     {
         return $this->getMockBuilder('ApiVideo\Client\Buzz\OAuthBrowser')
@@ -221,6 +416,14 @@ class CaptionsTest extends TestCase
 
         return vfsStream::newFile('caption.vtt')
                         ->withContent(LargeFileContent::withKilobytes(2))
+                        ->at($this->filesystem);
+    }
+
+    private function getInvalidCaption()
+    {
+
+        return vfsStream::newFile('testempty.vtt')
+                        ->withContent(LargeFileContent::withKilobytes(0))
                         ->at($this->filesystem);
     }
 }

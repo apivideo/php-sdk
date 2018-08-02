@@ -2,6 +2,7 @@
 
 namespace ApiVideo\Client\Buzz;
 
+use ApiVideo\Client\Exception\FileNotFoundException;
 use Buzz\Message\Form\FormUpload;
 
 class FormByteRangeUpload extends FormUpload
@@ -51,7 +52,7 @@ class FormByteRangeUpload extends FormUpload
         $headers = parent::getHeaders();
 
         if (!$file = $this->getFile()) {
-            throw new \Exception('Missing file');
+            throw new \RuntimeException('Missing file');
         }
 
         $headers[] = sprintf('Content-Range: %d-%d/%d',
