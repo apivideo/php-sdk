@@ -58,6 +58,9 @@ $client->videos->create($title, $properties = array());
 // Create a video, if videoId is null
 $client->videos->upload($source, array $properties = array(), $videoId = null);
 
+// Create a video by downloading it from a third party
+$client->videos->download($source, $title, array $properties = array());
+
 // Update video properties
 $client->videos->update($videoId, array $properties);
 

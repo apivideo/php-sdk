@@ -5,6 +5,7 @@ namespace ApiVideo\Client\Tests\Api;
 use PHPUnit\Framework\TestCase;
 use Buzz\Message\Response;
 use ApiVideo\Client\Api\Tokens;
+use ReflectionClass;
 
 final class TokensTest extends TestCase
 {

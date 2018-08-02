@@ -8,6 +8,7 @@ use Buzz\Message\Response;
 use org\bovigo\vfs\content\LargeFileContent;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 
 class VideosTest extends TestCase
 {
@@ -946,6 +947,55 @@ class VideosTest extends TestCase
 
         $status = $videos->delete('vi55mglWKqgywdX8Yu8WgDZ0');
         $this->assertSame(204, $status);
+    }
+
+    /**
+     * @test
+     * @throws ReflectionException
+     */
+    public function downloadSucceed()
+    {
+        $mockedBrowser = $this->getMockedOAuthBrowser();
+
+        $videoReturn = '
+        {
+            "videoId": "vi55mglWKqgywdX8Yu8WgDZ0",
+            "title": "test.mp4",
+            "description": null,
+            "publishedAt": "2018-05-18T17:21:11+02:00",
+            "tags": [],
+            "metadata": [],
+            "source": {
+                "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
+            },
+            "assets": {
+                "hls": "https://localhost/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8"
+            }
+        }';
+
+        $response = new Response();
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response,200);
+        $setContent = $responseReflected->getMethod('setContent');
+        $setContent->invokeArgs($response, array($videoReturn));
+
+        $video = json_decode($videoReturn, true);
+        $mockedBrowser->method('post')->willReturn($response);
+
+        $videos = new Videos($mockedBrowser);
+        /** @var Video $result */
+        $result = $videos->download('http://path/to/video.mp4', $video['title']);
+        $this->assertSame($video['videoId'], $result->videoId);
+        $this->assertSame($video['title'], $result->title);
+        $this->assertSame($video['description'], $result->description);
+        $this->assertSame($video['publishedAt'], $result->publishedAt->format(\DATE_ATOM));
+        $this->assertSame($video['tags'], $result->tags);
+        $this->assertSame($video['metadata'], $result->metadata);
+        $this->assertSame($video['source'], $result->source);
+        $this->assertSame($video['assets'], $result->assets);
     }
 
     private function getMockedOAuthBrowser()

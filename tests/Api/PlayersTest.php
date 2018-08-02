@@ -6,6 +6,7 @@ use ApiVideo\Client\Api\Players;
 use ApiVideo\Client\Model\Player;
 use Buzz\Message\Response;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 
 class PlayersTest extends TestCase
 {

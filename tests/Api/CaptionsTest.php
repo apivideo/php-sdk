@@ -8,6 +8,7 @@ use Buzz\Message\Response;
 use org\bovigo\vfs\content\LargeFileContent;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 
 class CaptionsTest extends TestCase
 {

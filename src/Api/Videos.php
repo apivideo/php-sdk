@@ -126,6 +126,13 @@ class Videos extends BaseApi
         return $this->unmarshal($response);
     }
 
+    public function download($source, $title, array $properties = array())
+    {
+        $properties['source'] = $source;
+
+        return $this->create($title, $properties);
+    }
+
     /**
      * @param string $source Path to the file to upload
      * @param array $properties
