@@ -1,5 +1,6 @@
 <?php
 
+namespace ApiVideo\Client\Tests\Api;
 
 use ApiVideo\Client\Api\Videos;
 use ApiVideo\Client\Model\Video;

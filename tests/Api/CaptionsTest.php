@@ -1,5 +1,6 @@
 <?php
 
+namespace ApiVideo\Client\Tests\Api;
 
 use ApiVideo\Client\Api\Captions;
 use ApiVideo\Client\Model\Caption;

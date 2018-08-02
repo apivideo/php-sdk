@@ -1,5 +1,7 @@
 <?php
 
+namespace ApiVideo\Client\Tests\Api;
+
 use PHPUnit\Framework\TestCase;
 use Buzz\Message\Response;
 use ApiVideo\Client\Api\Tokens;
