@@ -12,7 +12,7 @@ class Analytics extends BaseApi
 {
     /**
      * @param $videoId
-     * @param null $period
+     * @param string|null $period
      * @return Analytic|null
      */
     public function get($videoId, $period = null)
