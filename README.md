@@ -269,7 +269,7 @@ $client->analytics->getLastError();
 |    **-**                            |   videoId(string)     |    Video identifier       |   :heavy_check_mark:   |      **-**             |
 |    **updateThumbnailWithTimeCode**  |   **-**               |    **-**                  |   **-**                |      **-**             |
 |    **-**                            |   videoId(string)     |    Video identifier       |   :heavy_check_mark:   |      **-**             |
-|    **-**                            |   timecode(string)    |    Video timecode         |   :heavy_check_mark:   |      00:00:00.00(hours:minutes:seconds.frames)       |
+|    **-**                            |   timecode(string)    |    Video timecode         |   :heavy_check_mark:   |      00:00:00.00<br/>(hours:minutes:seconds.frames)       |
 |    **update**                       |   **-**               |    **-**                  |   **-**                |      **-**             |
 |    **-**                            |   videoId()string     |    Video identifier       |   :heavy_check_mark:   |      **-**             |
 |    **-**                            |   properties(array)   |    Video properties       |   :heavy_check_mark:   |      <ul><li>title(string)</li><li>description(string)</li><li>tags(array(string))</li><li>playerId(string)</li><li>metadata(array(<br/>array(<br/>'key' => 'Key1', <br/>'value' => 'value1'<br/>), <br/>array(<br/>'key' => 'Key2',<br/> 'value' => 'value2'<br/>)<br/>)</li></ul>  |
