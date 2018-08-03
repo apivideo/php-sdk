@@ -51,7 +51,7 @@ class FormByteRangeUpload extends FormUpload
     {
         $headers = parent::getHeaders();
 
-        if (!$file = $this->getFile()) {
+        if (!$this->getFile()) {
             throw new \RuntimeException('Missing file');
         }
 
