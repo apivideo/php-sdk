@@ -38,7 +38,7 @@ class Analytics extends BaseApi
      */
     public function search(array $parameters = array())
     {
-        $params = $parameters;
+        $params             = $parameters;
         $currentPage        = isset($parameters['currentPage']) ? $parameters['currentPage'] : 1;
         $params['pageSize'] = isset($parameters['pageSize']) ? $parameters['pageSize'] : 100;
         $allAnalytics       = array();
@@ -53,8 +53,8 @@ class Analytics extends BaseApi
                 return null;
             }
 
-            $json   = json_decode($response->getContent(), true);
-            $analytics = $json['data'];
+            $json           = json_decode($response->getContent(), true);
+            $analytics      = $json['data'];
             $allAnalytics[] = $this->castAll($analytics);
 
             if (isset($parameters['currentPage'])) {
