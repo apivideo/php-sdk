@@ -1,5 +1,8 @@
 # api.video PHP SDK
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ApiVideo/php-sdk/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ApiVideo/php-sdk/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/ApiVideo/php-sdk/badges/build.png?b=master)](https://scrutinizer-ci.com/g/ApiVideo/php-sdk/build-status/master)
+
 The [api.video](https://api.video/) web-service helps you put video on the web without the hassle. 
 This documentation helps you use the corresponding PHP client.
  
