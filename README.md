@@ -16,7 +16,7 @@ Usage:
 ```php
 <?php
 
-require_once dirname(__FILE__) . '/vendor/autoload.php';
+require_once __DIR__ . 'vendor/autoload.php';
 
 $client = new ApiVideo\Client\Client('john.doe@api.video', 'jOhnDo3_');
 
@@ -64,11 +64,12 @@ $client->videos->update($videoId, array $properties);
 // Delete video (file and data)
 $client->videos->delete($videoId);
 
+// Get last video request Error
+$client->videos->getLastError();
+
 /*
  *********************************
- *********************************
  *         VIDEO THUMBNAIL       *
- *********************************
  *********************************
 */
 
@@ -78,11 +79,12 @@ $client->videos->uploadThumbnail($source, $videoId);
 // Update video's thumbnail by picking timecode
 $client->videos->updateThumbnailWithTimeCode($videoId, $timecode);
 
+// Get last video request Error
+$client->videos->getLastError();
+
 /*
  *********************************
- *********************************
  *         VIDEO CAPTIONS        *
- *********************************
  *********************************
 */
 
@@ -102,12 +104,13 @@ $client->videos->captions->updateDefault($videoId, $language, $isDefault);
 // Delete video's caption
 $client->videos->captions->delete($videoId, $language);
 
+// Get last video captions request Error
+$client->videos->captions->getLastError();
+
 
 /*
  *********************************
- *********************************
  *         PLAYERS               *
- *********************************
  *********************************
 */
 
@@ -125,12 +128,35 @@ $client->players->update($playerId, array $properties);
 
 // Delete a player
 $client->players->delete($playerId);
+
+// Get last players request Error
+$client->players->getLastError();
+
+
+/*
+ *********************************
+ *         ANALYTICS             *
+ *********************************
+*/
+
+// Get video analytics between period
+$client->analytics->get($videoId, $period);
+
+// Search videos analytics between period, filter with tags or metadata
+$client->analytics->search($parameters);
+
+// Get last analytics request Error
+$client->analytics->getLastError();
+
+
 ```
+
+
 
 ## Full API Details Implementation
 
 
-### Video
+### Videos
 
 |     **Function**      |   **Parameters**      |      **Description**      |      **Required**      |   **Allowed Values**   |         
 | :-------------------: | :-------------------: | :-----------------------: | :--------------------: | :--------------------- |
@@ -180,6 +206,14 @@ $client->players->delete($playerId);
 |    **-**              |   videoId             |    Video identifier       |   :heavy_check_mark:   |      **-**             |
 |    **-**              |   language  (string)  |    Language identifier    |   :heavy_check_mark:   |      2 letters (ex: en, fr)  |
 
+### Analytics
+
+|     **Function**      |   **Parameters**      |      **Description**      |      **Required**      |   **Allowed Values/Format**   |         
+| :-------------------: | :-------------------: | :-----------------------: | :--------------------: | :--------------------- |
+|    **get**            |   **-**               |    **-**                  |   **-**                |      **-**             |
+|    **-**              |   videoId(string)     |    Video identifier       |   :heavy_check_mark:   |      **-**             |
+|    **-**              |   period (string)     |    Period research        |   :x:                  |      <ul><li>For a day : 2018-01-01</li><li>For a week: 2018-W01</li><li>For a month: 2018-01</li><li>For a year: 2018</li><li>Date range: 2018-01-01/2018-01-15</li><li>Week range: 2018-W01/2018-W03</li><li>Month range: 2018-01/2018-03</li><li>Year range: 2018/2020</li></ul>             |
+|    **search**         |   parameters(array)   |    Search parameters      |   :x:                  |      <ul><li>Pagination/Filters:</li><li>currentPage(int)</li><li>pageSize(int)</li><li>sortBy(string)</li><li>sortOrder(string)</li><li>tags(string&#124;array(string))</li><li>metadata(array(string))</li><li>Period:</li><li>For a day : 2018-01-01</li><li>For a week: 2018-W01</li><li>For a month: 2018-01</li><li>For a year: 2018</li><li>Date range: 2018-01-01/2018-01-15</li><li>Week range: 2018-W01/2018-W03</li><li>Month range: 2018-01/2018-03</li><li>Year range: 2018/2020</li></ul>             |
 
 ## More on api.video
 
