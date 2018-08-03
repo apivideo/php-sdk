@@ -179,7 +179,6 @@ class Videos extends BaseApi
         // Split content to upload big files in multiple requests
         $copiedBytes = 0;
         stream_set_chunk_size($resource, $this->chunkSize);
-        $lastResponse = null;
         do {
             $chunkPath   = tempnam(sys_get_temp_dir(), 'upload-chunk-');
             $chunk       = fopen($chunkPath, 'w+b');
