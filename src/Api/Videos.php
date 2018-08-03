@@ -327,10 +327,7 @@ class Videos extends BaseApi
         $video->metadata    = $data['metadata'];
         $video->source      = $data['source'];
         $video->assets      = $data['assets'];
-        $video->publishedAt = \DateTimeImmutable::createFromFormat(
-            \DateTime::ATOM,
-            $data['publishedAt']
-        );
+        $video->publishedAt = new \DateTimeImmutable($data['publishedAt']);
 
         return $video;
     }
