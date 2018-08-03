@@ -75,11 +75,10 @@ class Videos extends BaseApi
             $json   = json_decode($response->getContent(), true);
             $videos = $json['data'];
 
-            if (null === $callback) {
-                $allVideos[] = $this->castAll($videos);
-            } else {
-                foreach ($videos as $video) {
-                    call_user_func($callback, $this->unmarshal($video));
+            $allVideos[] = $this->castAll($videos);
+            if (null !== $callback) {
+                foreach (current($allVideos) as $video) {
+                    call_user_func($callback, $video);
                 }
             }
 
@@ -90,7 +89,6 @@ class Videos extends BaseApi
             $pagination = $json['pagination'];
             $pagination['currentPage']++;
         } while ($pagination['pagesTotal'] > $pagination['currentPage']);
-
         $allVideos = call_user_func_array('array_merge', $allVideos);
 
         if (null === $callback) {
@@ -330,14 +328,10 @@ class Videos extends BaseApi
         $video->metadata    = $data['metadata'];
         $video->source      = $data['source'];
         $video->assets      = $data['assets'];
-        $video->publishedAt = isset($data['publishedAt']) ? \DateTimeImmutable::createFromFormat(
+        $video->publishedAt = \DateTimeImmutable::createFromFormat(
             \DateTime::ATOM,
             $data['publishedAt']
-        ) : null;
-        $video->deletedAt   = isset($data['deletedAt']) ? \DateTimeImmutable::createFromFormat(
-            \DateTime::ATOM,
-            $data['deletedAt']
-        ) : null;
+        );
 
         return $video;
     }

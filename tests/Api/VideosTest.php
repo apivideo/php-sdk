@@ -59,13 +59,12 @@ class VideosTest extends TestCase
         }';
 
 
-
         $response = new Response();
 
         $responseReflected = new ReflectionClass('Buzz\Message\Response');
-        $statusCode = $responseReflected->getProperty('statusCode');
+        $statusCode        = $responseReflected->getProperty('statusCode');
         $statusCode->setAccessible(true);
-        $statusCode->setValue($response,200);
+        $statusCode->setValue($response, 200);
         $setContent = $responseReflected->getMethod('setContent');
         $setContent->invokeArgs($response, array($videoReturn));
 
@@ -97,7 +96,168 @@ class VideosTest extends TestCase
      * @test
      * @throws ReflectionException
      */
+    public function getFailed()
+    {
+        $response = new Response();
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode        = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response, 404);
+
+
+        $oAuthBrowser = $this->getMockedOAuthBrowser();
+        $oAuthBrowser->method('get')->willReturn($response);
+
+        $videos = new Videos($oAuthBrowser);
+        $video  = $videos->get('viWKqgywdX55mgl8Yu8WgDZ0');
+
+        $this->assertNull($video);
+        $error = $videos->getLastError();
+
+        $this->assertSame(404, $error['status']);
+        $this->assertEmpty($error['message']);
+
+    }
+
+    /**
+     * @test
+     * @throws ReflectionException
+     */
     public function searchSucceed()
+    {
+        $videoReturn1 = '
+        {
+            "data": [
+                {
+                    "videoId": "vi55mglWKqgywdX8Yu8WgDZ0",
+                    "title": "Rosetta",
+                    "description": null,
+                    "publishedAt": "2018-05-03T17:21:11+02:00",
+                    "tags": [],
+                    "metadata": [],
+                    "source": {
+                        "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
+                    },
+                    "assets": {
+                        "iframe": "<iframe src=\'https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3\' width=\'100%\' height=\'100%\' frameborder=\'0\' scrolling=\'no\' allowfullscreen=\'\'></iframe>",
+                        "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
+                        "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
+                        "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
+                    }
+                }
+            ],
+            "pagination": {
+                "currentPage": 1,
+                "pageSize": 1,
+                "pagesTotal": 10,
+                "itemsTotal": 10,
+                "currentPageItems": 1,
+                "links": [
+                     {
+                        "rel": "self",
+                        "uri": "/videos?pageSize=1&sortBy=title&sortOrder=asc"
+                     },
+                     {
+                        "rel": "first",
+                        "uri": "/videos?pageSize=1&sortBy=title&sortOrder=asc"
+                     },
+                     {
+                        "rel": "next",
+                        "uri": "/videos?currentPage=2&pageSize=1&sortBy=title&sortOrder=asc"
+                     },
+                     {
+                        "rel": "last",
+                        "uri": "/videos?currentPage=10&pageSize=1&sortBy=title&sortOrder=asc"
+                     }
+                ]
+            }
+        }';
+        $response = new Response();
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode        = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response, 200);
+        $setContent = $responseReflected->getMethod('setContent');
+        $setContent->invokeArgs($response, array($videoReturn1));
+
+        $oAuthBrowser = $this->getMockedOAuthBrowser();
+
+        $oAuthBrowser->method('get')->willReturn($response);
+
+        $videos  = new Videos($oAuthBrowser);
+        $results = $videos->search(
+            array(
+                'currentPage' => 1,
+                'pageSize'    => 1,
+                'sortBy'      => 'title',
+                'sortOrder'   => 'asc',
+            )
+        );
+
+        $videosReflected = new ReflectionClass('ApiVideo\Client\Api\Videos');
+        $castAll         = $videosReflected->getMethod('castAll');
+        $castAll->setAccessible(true);
+
+        $videosReturn = json_decode($videoReturn1, true);
+
+        $this->assertEquals(array_merge(array(), $castAll->invokeArgs($videos, $videosReturn)), $results);
+
+
+    }
+
+    /**
+     * @test
+     * @throws ReflectionException
+     */
+    public function searchWithBadSortByParametersShouldFailed()
+    {
+        $return = '{
+            "status": 400,
+            "type": "https://docs.api.video/problems/attribute.invalid",
+            "title": "An attribute is invalid.",
+            "name": "",
+            "details": "Sorting by \'toto\' is not allowed. Allowed values: title, publishedAt"
+        }';
+
+        $response = new Response();
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode        = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response, 400);
+        $setContent = $responseReflected->getMethod('setContent');
+        $setContent->invokeArgs($response, array($return));
+
+        $oAuthBrowser = $this->getMockedOAuthBrowser();
+
+        $oAuthBrowser->method('get')->willReturn($response);
+
+        $videos  = new Videos($oAuthBrowser);
+        $results = $videos->search(
+            array(
+                'currentPage' => 1,
+                'pageSize'    => 25,
+                'sortBy'      => 'toto',
+                'sortOrder'   => 'asc',
+            )
+        );
+        $this->assertNull($results);
+        $error = $videos->getLastError();
+
+        $this->assertSame(400, $error['status']);
+        $return = json_decode($return, true);
+        $this->assertSame($return, $error['message']);
+    }
+
+
+
+    /**
+     * @test
+     * @throws ReflectionException
+     */
+    public function searchWithCallback()
     {
         $videoReturn = '
         {
@@ -113,7 +273,10 @@ class VideosTest extends TestCase
                         "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
                     },
                     "assets": {
-                        "hls": "https://localhost/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8"
+                        "iframe": "<iframe src=\'https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3\' width=\'100%\' height=\'100%\' frameborder=\'0\' scrolling=\'no\' allowfullscreen=\'\'></iframe>",
+                        "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
+                        "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
+                        "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
                     }
                 },
                 {
@@ -134,7 +297,10 @@ class VideosTest extends TestCase
                         "uri": "/videos/viABC/source"
                     },
                     "assets": {
-                        "hls": "https://localhost/stream/33baeccf-587d-4407-97d0-78ea8ca7f8e2/hls/manifest.m3u8"
+                        "iframe": "<iframe src=\'https://embed.api.video/viABC?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3\' width=\'100%\' height=\'100%\' frameborder=\'0\' scrolling=\'no\' allowfullscreen=\'\'></iframe>",
+                        "player": "https://embed.api.video/viABC?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
+                        "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
+                        "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
                     }
                 },
                 {
@@ -155,7 +321,10 @@ class VideosTest extends TestCase
                         "uri": "/videos/viDEF/source"
                     },
                     "assets": {
-                        "hls": "https://localhost/stream/f1fc9970-c8b0-4cb0-8a3e-daffcfb6ff8d/hls/manifest.m3u8"
+                        "iframe": "<iframe src=\'https://embed.api.video/viDEF?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3\' width=\'100%\' height=\'100%\' frameborder=\'0\' scrolling=\'no\' allowfullscreen=\'\'></iframe>",
+                        "player": "https://embed.api.video/viDEF?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
+                        "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
+                        "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
                     }
                 }
             ],
@@ -168,15 +337,15 @@ class VideosTest extends TestCase
                 "links": [
                     {
                         "rel": "self",
-                        "uri": "http://localhost:8000/videos?pageSize=25&sortBy=title&sortOrder=asc"
+                        "uri": "/videos?pageSize=25&sortBy=title&sortOrder=asc"
                     },
                     {
                         "rel": "first",
-                        "uri": "http://localhost:8000/videos?pageSize=25&sortBy=title&sortOrder=asc"
+                        "uri": "/videos?pageSize=25&sortBy=title&sortOrder=asc"
                     },
                     {
                         "rel": "last",
-                        "uri": "http://localhost:8000/videos?pageSize=25&sortBy=title&sortOrder=asc"
+                        "uri": "/videos?pageSize=25&sortBy=title&sortOrder=asc"
                     }
                 ]
             }
@@ -185,9 +354,9 @@ class VideosTest extends TestCase
         $response = new Response();
 
         $responseReflected = new ReflectionClass('Buzz\Message\Response');
-        $statusCode = $responseReflected->getProperty('statusCode');
+        $statusCode        = $responseReflected->getProperty('statusCode');
         $statusCode->setAccessible(true);
-        $statusCode->setValue($response,200);
+        $statusCode->setValue($response, 200);
         $setContent = $responseReflected->getMethod('setContent');
         $setContent->invokeArgs($response, array($videoReturn));
 
@@ -196,23 +365,21 @@ class VideosTest extends TestCase
         $oAuthBrowser->method('get')->willReturn($response);
 
         $videos  = new Videos($oAuthBrowser);
-        $results = $videos->search(
+
+        $class = $this;
+        $callback = function($video) use ($class){
+            $class->assertNotNull($video->videoId);
+        };
+
+        $videos->search(
             array(
                 'currentPage' => 1,
                 'pageSize'    => 25,
-                'sortBy'      => 'title',
+                'sortBy'      => 'toto',
                 'sortOrder'   => 'asc',
-            )
+            ),
+            $callback
         );
-
-        $videosReflected = new ReflectionClass('ApiVideo\Client\Api\Videos');
-        $castAll         = $videosReflected->getMethod('castAll');
-        $castAll->setAccessible(true);
-
-        $videosReturn = json_decode($videoReturn, true);
-
-        $this->assertEquals(array_merge(array(), $castAll->invokeArgs($videos, $videosReturn)), $results);
-
 
     }
 
@@ -234,11 +401,11 @@ class VideosTest extends TestCase
                 "links": [
                     {
                         "rel": "first",
-                        "uri": "http://localhost:8000/videos?pageSize=25&sortBy=title&sortOrder=asc"
+                        "uri": "/videos?pageSize=25&sortBy=title&sortOrder=asc"
                     },
                     {
                         "rel": "last",
-                        "uri": "http://localhost:8000/videos?pageSize=25&sortBy=title&sortOrder=asc"
+                        "uri": "/videos?pageSize=25&sortBy=title&sortOrder=asc"
                     }
                 ]
             }
@@ -247,9 +414,9 @@ class VideosTest extends TestCase
         $response = new Response();
 
         $responseReflected = new ReflectionClass('Buzz\Message\Response');
-        $statusCode = $responseReflected->getProperty('statusCode');
+        $statusCode        = $responseReflected->getProperty('statusCode');
         $statusCode->setAccessible(true);
-        $statusCode->setValue($response,200);
+        $statusCode->setValue($response, 200);
         $setContent = $responseReflected->getMethod('setContent');
         $setContent->invokeArgs($response, array($videoReturn));
 
@@ -298,7 +465,10 @@ class VideosTest extends TestCase
                         "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
                     },
                     "assets": {
-                        "hls": "https://localhost/stream/d69d7dad-143c-49d4-a585-2a0591ed6a56/hls/manifest.m3u8"
+                        "iframe": "<iframe src=\'https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3\' width=\'100%\' height=\'100%\' frameborder=\'0\' scrolling=\'no\' allowfullscreen=\'\'></iframe>",
+                        "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
+                        "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
+                        "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
                     }
                 },
                 {
@@ -319,7 +489,10 @@ class VideosTest extends TestCase
                         "uri": "/videos/viABC/source"
                     },
                     "assets": {
-                        "hls": "https://localhost/stream/c76c3856-7516-4b03-a94d-d76dce509a7d/hls/manifest.m3u8"
+                        "iframe": "<iframe src=\'https://embed.api.video/viABC?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3\' width=\'100%\' height=\'100%\' frameborder=\'0\' scrolling=\'no\' allowfullscreen=\'\'></iframe>",
+                        "player": "https://embed.api.video/viABC?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
+                        "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
+                        "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
                     }
                 },
                 {
@@ -340,7 +513,10 @@ class VideosTest extends TestCase
                         "uri": "/videos/viDEF/source"
                     },
                     "assets": {
-                        "hls": "https://localhost/stream/d28e4321-42dd-4dd3-b817-646ed0362f8e/hls/manifest.m3u8"
+                        "iframe": "<iframe src=\'https://embed.api.video/viDEF?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3\' width=\'100%\' height=\'100%\' frameborder=\'0\' scrolling=\'no\' allowfullscreen=\'\'></iframe>",
+                        "player": "https://embed.api.video/viDEF?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
+                        "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
+                        "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
                     }
                 }
             ],
@@ -353,15 +529,15 @@ class VideosTest extends TestCase
                 "links": [
                     {
                         "rel": "self",
-                        "uri": "http://localhost:8000/videos?pageSize=100&sortBy=title&sortOrder=asc"
+                        "uri": "/videos?pageSize=100&sortBy=title&sortOrder=asc"
                     },
                     {
                         "rel": "first",
-                        "uri": "http://localhost:8000/videos?pageSize=100&sortBy=title&sortOrder=asc"
+                        "uri": "/videos?pageSize=100&sortBy=title&sortOrder=asc"
                     },
                     {
                         "rel": "last",
-                        "uri": "http://localhost:8000/videos?pageSize=100&sortBy=title&sortOrder=asc"
+                        "uri": "/videos?pageSize=100&sortBy=title&sortOrder=asc"
                     }
                 ]
             }
@@ -370,9 +546,9 @@ class VideosTest extends TestCase
         $response = new Response();
 
         $responseReflected = new ReflectionClass('Buzz\Message\Response');
-        $statusCode = $responseReflected->getProperty('statusCode');
+        $statusCode        = $responseReflected->getProperty('statusCode');
         $statusCode->setAccessible(true);
-        $statusCode->setValue($response,200);
+        $statusCode->setValue($response, 200);
         $setContent = $responseReflected->getMethod('setContent');
         $setContent->invokeArgs($response, array($videoReturn));
 
@@ -381,14 +557,7 @@ class VideosTest extends TestCase
         $oAuthBrowser->method('get')->willReturn($response);
 
         $videos  = new Videos($oAuthBrowser);
-        $results = $videos->search(
-            array(
-                'currentPage' => 1,
-                'pageSize'    => 25,
-                'sortBy'      => 'title',
-                'sortOrder'   => 'asc',
-            )
-        );
+        $results = $videos->search();
 
         $videosReflected = new ReflectionClass('ApiVideo\Client\Api\Videos');
         $castAll         = $videosReflected->getMethod('castAll');
@@ -420,16 +589,19 @@ class VideosTest extends TestCase
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
             },
             "assets": {
-                "hls": "https://localhost/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8"
+                "iframe": "<iframe src=\'https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3\' width=\'100%\' height=\'100%\' frameborder=\'0\' scrolling=\'no\' allowfullscreen=\'\'></iframe>",
+                "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
+                "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
+                "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
             }
         }';
 
         $response = new Response();
 
         $responseReflected = new ReflectionClass('Buzz\Message\Response');
-        $statusCode = $responseReflected->getProperty('statusCode');
+        $statusCode        = $responseReflected->getProperty('statusCode');
         $statusCode->setAccessible(true);
-        $statusCode->setValue($response,200);
+        $statusCode->setValue($response, 200);
         $setContent = $responseReflected->getMethod('setContent');
         $setContent->invokeArgs($response, array($videoReturn));
 
@@ -453,6 +625,44 @@ class VideosTest extends TestCase
      * @test
      * @throws ReflectionException
      */
+    public function createWithBadPublishedAtShouldFailed()
+    {
+        $mockedBrowser = $this->getMockedOAuthBrowser();
+
+        $return = '{
+            "status": 400,
+            "type": "https://docs.api.video/problems/attribute.invalid",
+            "title": "The attribute must be a ISO8601 date.",
+            "name": "publishedAt"
+        }';
+
+        $response = new Response();
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode        = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response, 400);
+        $setContent = $responseReflected->getMethod('setContent');
+        $setContent->invokeArgs($response, array($return));
+
+        $mockedBrowser->method('post')->willReturn($response);
+
+        $videos = new Videos($mockedBrowser);
+        /** @var Video $result */
+        $result = $videos->create('test', array('publishedAt' => 'salut'));
+
+        $this->assertNull($result);
+        $error = $videos->getLastError();
+
+        $this->assertSame(400, $error['status']);
+        $return = json_decode($return, true);
+        $this->assertSame($return, $error['message']);
+    }
+
+    /**
+     * @test
+     * @throws ReflectionException
+     */
     public function createWithTitleAndPropertiesSucceed()
     {
         $mockedBrowser = $this->getMockedOAuthBrowser();
@@ -469,16 +679,19 @@ class VideosTest extends TestCase
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
             },
             "assets": {
-                "hls": "https://localhost/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8"
+                "iframe": "<iframe src=\'https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3\' width=\'100%\' height=\'100%\' frameborder=\'0\' scrolling=\'no\' allowfullscreen=\'\'></iframe>",
+                "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
+                "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
+                "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
             }
         }';
 
         $response = new Response();
 
         $responseReflected = new ReflectionClass('Buzz\Message\Response');
-        $statusCode = $responseReflected->getProperty('statusCode');
+        $statusCode        = $responseReflected->getProperty('statusCode');
         $statusCode->setAccessible(true);
-        $statusCode->setValue($response,200);
+        $statusCode->setValue($response, 200);
         $setContent = $responseReflected->getMethod('setContent');
         $setContent->invokeArgs($response, array($videoReturn));
 
@@ -518,7 +731,10 @@ class VideosTest extends TestCase
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
             },
             "assets": {
-                "hls": "https://localhost/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8"
+                "iframe": "<iframe src=\'https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3\' width=\'100%\' height=\'100%\' frameborder=\'0\' scrolling=\'no\' allowfullscreen=\'\'></iframe>",
+                "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
+                "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
+                "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
             }
         }';
 
@@ -534,26 +750,28 @@ class VideosTest extends TestCase
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
             },
             "assets": {
-                "hls": "https://localhost/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
-                "snapshot": "https://localhost/stream/64b3c497-c576-4b90-8d97-9c39fdbf727d/snapshot.jpg"
+                "iframe": "<iframe src=\'https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3\' width=\'100%\' height=\'100%\' frameborder=\'0\' scrolling=\'no\' allowfullscreen=\'\'></iframe>",
+                "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
+                "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
+                "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
             }
         }';
 
         $response = new Response();
 
         $responseReflected = new ReflectionClass('Buzz\Message\Response');
-        $statusCode = $responseReflected->getProperty('statusCode');
+        $statusCode        = $responseReflected->getProperty('statusCode');
         $statusCode->setAccessible(true);
-        $statusCode->setValue($response,200);
+        $statusCode->setValue($response, 200);
         $setContent = $responseReflected->getMethod('setContent');
         $setContent->invokeArgs($response, array($videoReturn));
 
         $responsePatch = new Response();
 
         $responsePatchReflected = new ReflectionClass('Buzz\Message\Response');
-        $statusCodePatch = $responsePatchReflected->getProperty('statusCode');
+        $statusCodePatch        = $responsePatchReflected->getProperty('statusCode');
         $statusCodePatch->setAccessible(true);
-        $statusCodePatch->setValue($responsePatch,200);
+        $statusCodePatch->setValue($responsePatch, 200);
         $setContentPatch = $responsePatchReflected->getMethod('setContent');
         $setContentPatch->invokeArgs($responsePatch, array($videoPatch));
 
@@ -566,9 +784,47 @@ class VideosTest extends TestCase
         /** @var Video $result */
         $result = $videos->create($video['title']);
         $this->assertEmpty($result->description);
-        $properties =  array('description' => 'Description test');
+        $properties = array('description' => 'Description test');
         $resultPath = $videos->update($result->videoId, $properties);
         $this->assertSame('Description test', $resultPath->description);
+    }
+
+    /**
+     * @test
+     * @throws ReflectionException
+     */
+    public function updateWihBadPublishedAtFailed()
+    {
+        $mockedBrowser = $this->getMockedOAuthBrowser();
+
+        $return = '{
+            "status": 400,
+            "type": "https://docs.api.video/problems/attribute.invalid",
+            "title": "The attribute must be a ISO8601 date.",
+            "name": "publishedAt"
+        }';
+
+        $response = new Response();
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode        = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response, 400);
+        $setContent = $responseReflected->getMethod('setContent');
+        $setContent->invokeArgs($response, array($return));
+
+        $mockedBrowser->method('patch')->willReturn($response);
+
+        $videos = new Videos($mockedBrowser);
+        /** @var Video $result */
+        $result = $videos->update('vi55mglWKqgywdX8Yu8WgDZ0', array('publishedAt' => 'salut'));
+
+        $this->assertNull($result);
+        $error = $videos->getLastError();
+
+        $this->assertSame(400, $error['status']);
+        $return = json_decode($return, true);
+        $this->assertSame($return, $error['message']);
     }
 
     /**
@@ -591,7 +847,10 @@ class VideosTest extends TestCase
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
             },
             "assets": {
-                "hls": "https://localhost/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8"
+                "iframe": "<iframe src=\'https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3\' width=\'100%\' height=\'100%\' frameborder=\'0\' scrolling=\'no\' allowfullscreen=\'\'></iframe>",
+                "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
+                "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
+                "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
             }
         }';
 
@@ -607,30 +866,32 @@ class VideosTest extends TestCase
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
             },
             "assets": {
-                "hls": "https://localhost/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
-                "snapshot": "https://localhost/stream/64b3c497-c576-4b90-8d97-9c39fdbf727d/snapshot.jpg"
+                "iframe": "<iframe src=\'https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3\' width=\'100%\' height=\'100%\' frameborder=\'0\' scrolling=\'no\' allowfullscreen=\'\'></iframe>",
+                "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
+                "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
+                "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
             }
         }';
 
         $response = new Response();
 
         $responseReflected = new ReflectionClass('Buzz\Message\Response');
-        $statusCode = $responseReflected->getProperty('statusCode');
+        $statusCode        = $responseReflected->getProperty('statusCode');
         $statusCode->setAccessible(true);
-        $statusCode->setValue($response,200);
+        $statusCode->setValue($response, 200);
         $setContent = $responseReflected->getMethod('setContent');
         $setContent->invokeArgs($response, array($videoReturn));
 
         $responsePatch = new Response();
 
         $responsePatchReflected = new ReflectionClass('Buzz\Message\Response');
-        $statusCodePatch = $responsePatchReflected->getProperty('statusCode');
+        $statusCodePatch        = $responsePatchReflected->getProperty('statusCode');
         $statusCodePatch->setAccessible(true);
-        $statusCodePatch->setValue($responsePatch,200);
+        $statusCodePatch->setValue($responsePatch, 200);
         $setContentPatch = $responsePatchReflected->getMethod('setContent');
         $setContentPatch->invokeArgs($responsePatch, array($videoPatch));
 
-        $video = json_decode($videoReturn, true);
+        $video      = json_decode($videoReturn, true);
         $videoPatch = json_decode($videoPatch, true);
 
         $mockedBrowser->method('post')->willReturn($response);
@@ -641,7 +902,57 @@ class VideosTest extends TestCase
         $result = $videos->create($video['title']);
 
         $resultPath = $videos->updateThumbnailWithTimeCode($result->videoId, '00:00:12.4');
-        $this->assertSame($videoPatch['assets']['snapshot'], $resultPath->assets['snapshot']);
+        $this->assertSame($videoPatch['assets']['thumbnail'], $resultPath->assets['thumbnail']);
+    }
+
+    /**
+     * @test
+     * @expectedException UnexpectedValueException
+     * @expectedExceptionMessage Timecode is empty.
+     */
+    public function updateThumbnailWithEmptyTimeCodeFailed()
+    {
+        $mockedBrowser = $this->getMockedOAuthBrowser();
+
+        $videos = new Videos($mockedBrowser);
+        $videos->updateThumbnailWithTimeCode('vi55mglWKqgywdX8Yu8WgDZ0', null);
+
+    }
+
+    /**
+     * @test
+     * @throws ReflectionException
+     */
+    public function updateThumbnailWithBadTimeCodeFailed()
+    {
+        $return = '{
+            "status": 400,
+            "type": "https://docs.api.video/problems/attribute.invalid",
+            "title": "The attribute is not a valid Libcast\\Shared\\ValueObject\\Timecode.",
+            "name": "timecode"
+        }';
+
+        $response = new Response();
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode        = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response, 400);
+        $setContent = $responseReflected->getMethod('setContent');
+        $setContent->invokeArgs($response, array($return));
+
+        $mockedBrowser = $this->getMockedOAuthBrowser();
+        $mockedBrowser->method('patch')->willReturn($response);
+
+        $videos = new Videos($mockedBrowser);
+        $result = $videos->updateThumbnailWithTimeCode('vi55mglWKqgywdX8Yu8WgDZ0', 'salut');
+
+        $this->assertNull($result);
+        $error = $videos->getLastError();
+
+        $this->assertSame(400, $error['status']);
+        $return = json_decode($return, true);
+        $this->assertSame($return, $error['message']);
     }
 
     /**
@@ -664,16 +975,19 @@ class VideosTest extends TestCase
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
             },
             "assets": {
-                "hls": "https://localhost/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8"
+                "iframe": "<iframe src=\'https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3\' width=\'100%\' height=\'100%\' frameborder=\'0\' scrolling=\'no\' allowfullscreen=\'\'></iframe>",
+                "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
+                "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
+                "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
             }
         }';
 
         $response = new Response();
 
         $responseReflected = new ReflectionClass('Buzz\Message\Response');
-        $statusCode = $responseReflected->getProperty('statusCode');
+        $statusCode        = $responseReflected->getProperty('statusCode');
         $statusCode->setAccessible(true);
-        $statusCode->setValue($response,200);
+        $statusCode->setValue($response, 200);
         $setContent = $responseReflected->getMethod('setContent');
         $setContent->invokeArgs($response, array($videoReturn));
 
@@ -700,6 +1014,7 @@ class VideosTest extends TestCase
      */
     public function uploadLargeFileSucceed()
     {
+        $this->markTestSkipped();
         $mockedBrowser = $this->getMockedOAuthBrowser();
 
         $videoReturn = '
@@ -714,16 +1029,19 @@ class VideosTest extends TestCase
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
             },
             "assets": {
-                "hls": "https://localhost/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8"
+                "iframe": "<iframe src=\'https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3\' width=\'100%\' height=\'100%\' frameborder=\'0\' scrolling=\'no\' allowfullscreen=\'\'></iframe>",
+                "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
+                "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
+                "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
             }
         }';
 
         $response = new Response();
 
         $responseReflected = new ReflectionClass('Buzz\Message\Response');
-        $statusCode = $responseReflected->getProperty('statusCode');
+        $statusCode        = $responseReflected->getProperty('statusCode');
         $statusCode->setAccessible(true);
-        $statusCode->setValue($response,200);
+        $statusCode->setValue($response, 200);
         $setContent = $responseReflected->getMethod('setContent');
         $setContent->invokeArgs($response, array($videoReturn));
 
@@ -731,7 +1049,7 @@ class VideosTest extends TestCase
         $mockedBrowser->method('post')->willReturn($response);
         $mockedBrowser->method('submit')->willReturn($response);
 
-        $videos = new Videos($mockedBrowser);
+        $videos            = new Videos($mockedBrowser);
         $videos->chunkSize = 10 * 1024 * 1024;
         /** @var Video $result */
         $result = $videos->upload($this->getValideVideo()->url());
@@ -747,6 +1065,34 @@ class VideosTest extends TestCase
 
     /**
      * @test
+     * @throws ReflectionException
+     */
+    public function uploadLargeFileWithBadVideoIdFailed()
+    {
+        $this->markTestSkipped();
+        $mockedBrowser = $this->getMockedOAuthBrowser();
+
+        $response = new Response();
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode        = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response, 404);
+
+        $mockedBrowser->method('submit')->willReturn($response);
+
+        $videos            = new Videos($mockedBrowser);
+        $videos->chunkSize = 10 * 1024 * 1024;
+        $result = $videos->upload($this->getValideVideo()->url(), array(), 'vilWKqgywdX55mg8Yu8WgDZ0');
+
+        $this->assertNull($result);
+        $error = $videos->getLastError();
+
+        $this->assertSame(404, $error['status']);
+    }
+
+    /**
+     * @test
      * @expectedException UnexpectedValueException
      * @expectedExceptionMessage 'vfs://root/video/testfail.mp4' must be a readable source file.
      */
@@ -757,6 +1103,45 @@ class VideosTest extends TestCase
         $videos = new Videos($mockedBrowser);
 
         $videos->upload($this->filesystem->url().'/video/testfail.mp4');
+    }
+
+    /**
+     * @test
+     * @throws ReflectionException
+     */
+    public function uploadWithAlreadyVideoExistedShouldFail()
+    {
+        $return = '{
+            "status": 400,
+            "type": "https://docs.api.video/problems/file.already.uploaded",
+            "title": "The source of the video is already uploaded.",
+            "name": "file"
+        }';
+
+        $response = new Response();
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode        = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response, 400);
+        $setContent = $responseReflected->getMethod('setContent');
+        $setContent->invokeArgs($response, array($return));
+
+        $mockedBrowser = $this->getMockedOAuthBrowser();
+
+        $mockedBrowser->method('post')->willReturn($response);
+        $mockedBrowser->method('submit')->willReturn($response);
+
+        $videos = new Videos($mockedBrowser);
+
+        $result = $videos->upload($this->getValideImage()->url(), array(), 'vi55mglWKqgywdX8Yu8WgDZ0');
+
+        $this->assertNull($result);
+        $error = $videos->getLastError();
+
+        $this->assertSame(400, $error['status']);
+        $return = json_decode($return, true);
+        $this->assertSame($return, $error['message']);
     }
 
     /**
@@ -781,16 +1166,19 @@ class VideosTest extends TestCase
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
             },
             "assets": {
-                "hls": "https://localhost/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8"
+                "iframe": "<iframe src=\'https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3\' width=\'100%\' height=\'100%\' frameborder=\'0\' scrolling=\'no\' allowfullscreen=\'\'></iframe>",
+                "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
+                "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
+                "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
             }
         }';
 
         $response = new Response();
 
         $responseReflected = new ReflectionClass('Buzz\Message\Response');
-        $statusCode = $responseReflected->getProperty('statusCode');
+        $statusCode        = $responseReflected->getProperty('statusCode');
         $statusCode->setAccessible(true);
-        $statusCode->setValue($response,200);
+        $statusCode->setValue($response, 200);
         $setContent = $responseReflected->getMethod('setContent');
         $setContent->invokeArgs($response, array($videoReturn));
 
@@ -822,17 +1210,19 @@ class VideosTest extends TestCase
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
             },
             "assets": {
-                "hls": "https://localhost/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
-                "snapshot": "https://localhost/stream/64b3c497-c576-4b90-8d97-9c39fdbf727d/snapshot.jpg"
+                "iframe": "<iframe src=\'https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3\' width=\'100%\' height=\'100%\' frameborder=\'0\' scrolling=\'no\' allowfullscreen=\'\'></iframe>",
+                "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
+                "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
+                "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
             }
         }';
 
         $response = new Response();
 
         $responseReflected = new ReflectionClass('Buzz\Message\Response');
-        $statusCode = $responseReflected->getProperty('statusCode');
+        $statusCode        = $responseReflected->getProperty('statusCode');
         $statusCode->setAccessible(true);
-        $statusCode->setValue($response,200);
+        $statusCode->setValue($response, 200);
         $setContent = $responseReflected->getMethod('setContent');
         $setContent->invokeArgs($response, array($videoReturn));
 
@@ -851,6 +1241,42 @@ class VideosTest extends TestCase
         $this->assertSame($video['source'], $result->source);
         $this->assertSame($video['assets'], $result->assets);
     }
+    /**
+     * @test
+     * @throws ReflectionException
+     */
+    public function uploadThumbnailPngFailed()
+    {
+        $return = '{
+            "status": 400,
+            "type": "https://docs.api.video/problems/file.extension",
+            "title": "Only [jpeg, jpg, JPG, JPEG] extensions are supported.",
+            "name": "file"
+        }';
+
+        $response = new Response();
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode        = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response, 400);
+        $setContent = $responseReflected->getMethod('setContent');
+        $setContent->invokeArgs($response, array($return));
+
+        $mockedBrowser = $this->getMockedOAuthBrowser();
+
+        $mockedBrowser->method('submit')->willReturn($response);
+
+        $videos = new Videos($mockedBrowser);
+        /** @var Video $result */
+        $result = $videos->uploadThumbnail($this->getInvalideImage()->url(), 'vi55mglWKqgywdX8Yu8WgDZ0');
+        $this->assertNull($result);
+        $error = $videos->getLastError();
+
+        $this->assertSame(400, $error['status']);
+        $return = json_decode($return, true);
+        $this->assertSame($return, $error['message']);
+    }
 
     /**
      * @test
@@ -860,7 +1286,7 @@ class VideosTest extends TestCase
     public function uploadThumbnailWithBadSourceShouldFail()
     {
         $mockedBrowser = $this->getMockedOAuthBrowser();
-        $videoReturn = '
+        $videoReturn   = '
         {
             "videoId": "vi55mglWKqgywdX8Yu8WgDZ0",
             "title": "test.mp4",
@@ -872,12 +1298,14 @@ class VideosTest extends TestCase
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
             },
             "assets": {
-                "hls": "https://localhost/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
-                "snapshot": "https://localhost/stream/64b3c497-c576-4b90-8d97-9c39fdbf727d/snapshot.jpg"
+                "iframe": "<iframe src=\'https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3\' width=\'100%\' height=\'100%\' frameborder=\'0\' scrolling=\'no\' allowfullscreen=\'\'></iframe>",
+                "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
+                "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
+                "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
             }
         }';
-        $video = json_decode($videoReturn, true);
-        $videos = new Videos($mockedBrowser);
+        $video         = json_decode($videoReturn, true);
+        $videos        = new Videos($mockedBrowser);
 
         $videos->uploadThumbnail($this->filesystem->url().'/image/testfail.jpg', $video['videoId']);
     }
@@ -904,16 +1332,19 @@ class VideosTest extends TestCase
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
             },
             "assets": {
-                "hls": "https://localhost/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8"
+                "iframe": "<iframe src=\'https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3\' width=\'100%\' height=\'100%\' frameborder=\'0\' scrolling=\'no\' allowfullscreen=\'\'></iframe>",
+                "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
+                "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
+                "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
             }
         }';
 
         $response = new Response();
 
         $responseReflected = new ReflectionClass('Buzz\Message\Response');
-        $statusCode = $responseReflected->getProperty('statusCode');
+        $statusCode        = $responseReflected->getProperty('statusCode');
         $statusCode->setAccessible(true);
-        $statusCode->setValue($response,200);
+        $statusCode->setValue($response, 200);
         $setContent = $responseReflected->getMethod('setContent');
         $setContent->invokeArgs($response, array($videoReturn));
 
@@ -947,6 +1378,33 @@ class VideosTest extends TestCase
 
         $status = $videos->delete('vi55mglWKqgywdX8Yu8WgDZ0');
         $this->assertSame(204, $status);
+    }
+
+
+
+    /**
+     * @test
+     * @throws ReflectionException
+     */
+    public function deleteWithBadVideoIdFailed()
+    {
+        $response = new Response();
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode        = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response, 404);
+
+        $mockedBrowser = $this->getMockedOAuthBrowser();
+        $mockedBrowser->method('delete')->willReturn($response);
+
+        $videos = new Videos($mockedBrowser);
+        $result = $videos->delete('vigywdX8Yu855mglWKqWgDZ0');
+
+        $this->assertNull($result);
+        $error = $videos->getLastError();
+
+        $this->assertSame(404, $error['status']);
     }
 
     /**
@@ -1009,7 +1467,23 @@ class VideosTest extends TestCase
     {
 
         return vfsStream::newFile('test.mp4')
-                        ->withContent(LargeFileContent::withMegabytes(30))
+                        ->withContent(LargeFileContent::withMegabytes(10))
+                        ->at($this->filesystem);
+    }
+
+    private function getValideImage()
+    {
+
+        return vfsStream::newFile('test.jpg')
+                        ->withContent(LargeFileContent::withMegabytes(2))
+                        ->at($this->filesystem);
+    }
+
+    private function getInvalideImage()
+    {
+
+        return vfsStream::newFile('test.png')
+                        ->withContent(LargeFileContent::withKilobytes(200))
                         ->at($this->filesystem);
     }
 
@@ -1020,7 +1494,6 @@ class VideosTest extends TestCase
                         ->withContent(LargeFileContent::withMegabytes(0))
                         ->at($this->filesystem);
     }
-
 
 
     private function getValideThumbnail()

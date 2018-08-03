@@ -28,7 +28,7 @@ class Players extends BaseApi
     /**
      * Incrementally iterate over a collection of elements.
      * By default the elements are returned in an array, unless you pass a
-     * $callback which will be called for each instance of Video.
+     * $callback which will be called for each instance of Player.
      * Available parameters:
      *   - currentPage (int)   current pagination page
      *   - pageSize    (int)   number of elements per page
@@ -59,11 +59,11 @@ class Players extends BaseApi
             $json    = json_decode($response->getContent(), true);
             $players = $json['data'];
 
-            if (null === $callback) {
-                $allPlayers[] = $this->castAll($players);
-            } else {
-                foreach ($players as $player) {
-                    $callback($this->unmarshal($player));
+            $allPlayers[] = $this->castAll($players);
+
+            if (null !== $callback) {
+                foreach (current($allPlayers) as $player) {
+                    call_user_func($callback, $player);
                 }
             }
 
