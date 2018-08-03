@@ -9,6 +9,7 @@ use org\bovigo\vfs\content\LargeFileContent;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use UnexpectedValueException;
 
 class VideosTest extends TestCase
 {
@@ -35,7 +36,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function getSucceed()
     {
@@ -94,7 +95,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function getFailed()
     {
@@ -122,7 +123,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function searchSucceed()
     {
@@ -209,7 +210,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function searchWithBadSortByParametersShouldFailed()
     {
@@ -252,10 +253,9 @@ class VideosTest extends TestCase
     }
 
 
-
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function searchWithCallback()
     {
@@ -385,7 +385,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function searchWithBadPaginationShouldReturnEmptyData()
     {
@@ -447,7 +447,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function searchWithoutPaginationShouldReturnFirstPageWith100Items()
     {
@@ -571,7 +571,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function createWithTitleSucceed()
     {
@@ -623,7 +623,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function createWithBadPublishedAtShouldFailed()
     {
@@ -661,7 +661,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function createWithTitleAndPropertiesSucceed()
     {
@@ -713,7 +713,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function updateSucceed()
     {
@@ -791,7 +791,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function updateWihBadPublishedAtFailed()
     {
@@ -829,7 +829,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function updateThumbnailWithTimeCodeSucceed()
     {
@@ -921,7 +921,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function updateThumbnailWithBadTimeCodeFailed()
     {
@@ -957,7 +957,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function uploadSucceed()
     {
@@ -1010,11 +1010,11 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function uploadLargeFileSucceed()
     {
-        $this->markTestSkipped();
+//        $this->markTestSkipped();
         $mockedBrowser = $this->getMockedOAuthBrowser();
 
         $videoReturn = '
@@ -1065,11 +1065,11 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function uploadLargeFileWithBadVideoIdFailed()
     {
-        $this->markTestSkipped();
+//        $this->markTestSkipped();
         $mockedBrowser = $this->getMockedOAuthBrowser();
 
         $response = new Response();
@@ -1107,7 +1107,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function uploadWithAlreadyVideoExistedShouldFail()
     {
@@ -1148,7 +1148,7 @@ class VideosTest extends TestCase
      * @test
      * @expectedException UnexpectedValueException
      * @expectedExceptionMessage 'vfs://root/testempty.mp4' is empty.
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function uploadWithEmptySourceShouldFail()
     {
@@ -1192,7 +1192,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function uploadThumbnailSucceed()
     {
@@ -1243,7 +1243,7 @@ class VideosTest extends TestCase
     }
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function uploadThumbnailPngFailed()
     {
@@ -1314,7 +1314,7 @@ class VideosTest extends TestCase
      * @test
      * @expectedException UnexpectedValueException
      * @expectedExceptionMessage 'vfs://root/testempty.jpg' is empty.
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function uploadThumbnailWithEmptySourceShouldFail()
     {
@@ -1359,7 +1359,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function deleteSucceed()
     {
@@ -1384,7 +1384,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function deleteWithBadVideoIdFailed()
     {
@@ -1409,7 +1409,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function downloadSucceed()
     {

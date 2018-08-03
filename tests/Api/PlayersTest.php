@@ -12,7 +12,7 @@ class PlayersTest extends TestCase
 {
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function getSucceed()
     {
@@ -104,7 +104,7 @@ class PlayersTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function getFailed()
     {
@@ -132,7 +132,7 @@ class PlayersTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function searchSucceed()
     {
@@ -224,7 +224,7 @@ class PlayersTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function searchWithBadCurrentPagePaginationShouldFailed()
     {
@@ -265,7 +265,7 @@ class PlayersTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function searchWithCallback()
     {
@@ -361,7 +361,7 @@ class PlayersTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function searchWithBadPaginationShouldReturnEmptyData()
     {
@@ -425,7 +425,7 @@ class PlayersTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function createSucceed()
     {
@@ -516,7 +516,7 @@ class PlayersTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function createWithEmptyBodyShouldFailed()
     {
@@ -551,7 +551,7 @@ class PlayersTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function createWithropertiesSucceed()
     {
@@ -610,7 +610,7 @@ class PlayersTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function updateSucceed()
     {
@@ -722,7 +722,7 @@ class PlayersTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function updateWihEmptyBodyFailed()
     {
@@ -757,7 +757,7 @@ class PlayersTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function deleteSucceed()
     {
@@ -780,7 +780,7 @@ class PlayersTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function deleteWithBadPlayerIdFailed()
     {

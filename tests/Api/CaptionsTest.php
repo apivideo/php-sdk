@@ -9,6 +9,7 @@ use org\bovigo\vfs\content\LargeFileContent;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use UnexpectedValueException;
 
 class CaptionsTest extends TestCase
 {
@@ -36,7 +37,7 @@ class CaptionsTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function getSucceed()
     {
@@ -76,7 +77,7 @@ class CaptionsTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function getWithBadVideoIdFailed()
     {
@@ -104,7 +105,7 @@ class CaptionsTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function getAll()
     {
@@ -145,7 +146,7 @@ class CaptionsTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function getAllWithBadVideoIdFailed()
     {
@@ -173,7 +174,7 @@ class CaptionsTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function uploadSucceed()
     {
@@ -227,7 +228,7 @@ class CaptionsTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function uploadWithBadVideoIdShouldFail()
     {
@@ -299,7 +300,7 @@ class CaptionsTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function updateDefaultSucceed()
     {
@@ -332,7 +333,7 @@ class CaptionsTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function updateDefaultFailed()
     {
@@ -360,7 +361,7 @@ class CaptionsTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function deleteSucceed()
     {
@@ -383,7 +384,7 @@ class CaptionsTest extends TestCase
 
     /**
      * @test
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function deleteWithBadVideoIdFailed()
     {

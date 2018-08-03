@@ -9,7 +9,11 @@ use ReflectionClass;
 
 final class TokensTest extends TestCase
 {
-    public function testGenerate()
+    /**
+     * @test
+     * @throws \ReflectionException
+     */
+    public function generateSucceed()
     {
         $mockedBrowser = $this->getMockedOAuthBrowser();
         $response = new Response;
@@ -25,6 +29,33 @@ final class TokensTest extends TestCase
         $token = $tokens->generate();
 
         $this->assertEquals('xyz', $token);
+    }
+
+    /**
+     * @test
+     * @throws \ReflectionException
+     */
+    public function getFailed()
+    {
+        $mockedBrowser = $this->getMockedOAuthBrowser();
+        $response = new Response();
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode        = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response, 500);
+
+        $mockedBrowser->method('post')->willReturn($response);
+
+        $tokens = new Tokens($mockedBrowser);
+        $token = $tokens->generate();
+
+        $this->assertNull($token);
+        $error = $tokens->getLastError();
+
+        $this->assertSame(500, $error['status']);
+        $this->assertEmpty($error['message']);
+
     }
 
     private function getMockedOAuthBrowser()

@@ -123,6 +123,8 @@ $videoAnalytics = $client->analytics->get($video->videoId, '2018-07');
 // Search Analytics Data between May 2018 and July 2018 and return the first 100 results
 $analytics = $client->analytics->search(array('period' => '2018-05/2018-07', 'currentPage' => 1, 'pageSize' => 100));
 
+// Generate a token for delegated upload
+$token = $client->tokens->generate();
 ```
 
 ## Full API
@@ -259,69 +261,74 @@ $client->analytics->getLastError();
 
 ### Videos
 
-|     **Function**                    |   **Parameters**      |      **Description**      |      **Required**      |   **Allowed Values**   |         
-| :---------------------------------: | :-------------------: | :-----------------------: | :--------------------: | :--------------------- |
-|    **get**                          |   videoId(string)     |    Video identifier       |   :heavy_check_mark:   |      **-**             |
-|    **search**                       |   **-**               |    **-**                  |   **-**                |      **-**             |
-|    **-**                            |   parameters(array)   |    Search parameters      |   :x:                  |      <ul><li>currentPage(int)</li><li>pageSize(int)</li><li>sortBy(string)</li><li>sortOrder(string)</li><li>keyword(string)</li><li>tags(string&#124;array(string))</li><li>metadata(array(string))</li></ul>   |
-|    **-**                            |   callback(function)  |    callback function      |   :x:                  |      **-**             |
-|    **create**                       |   **-**               |    **-**                  |   **-**                |      **-**             |
-|    **-**                            |   title(string)       |    Video title            |   :heavy_check_mark:   |      **-**             |
-|    **-**                            |   properties(array)   |    Video properties       |   :x:                  |      <ul><li>description(string)</li><li>tags(array(string))</li><li>playerId(string)</li><li>metadata(array(<br/>array(<br/>'key' => 'Key1', <br/>'value' => 'value1'<br/>), <br/>array(<br/>'key' => 'Key2',<br/> 'value' => 'value2'<br/>)<br/>)</li></ul>  |
-|    **upload**                       |   **-**               |    **-**                  |   **-**                |      **-**             |
-|    **-**                            |   source(string)      |    Video media file       |   :heavy_check_mark:   |      **-**             |
-|    **-**                            |   properties(array)   |    Video properties       |   :x:                  |      <ul><li>title(string)</li><li>description(string)</li><li>tags(array(string))</li><li>playerId(string)</li><li>metadata(array(<br/>array(<br/>'key' => 'Key1', <br/>'value' => 'value1'<br/>), <br/>array(<br/>'key' => 'Key2',<br/> 'value' => 'value2'<br/>)<br/>)</li></ul>   |
-|    **-**                            |   videoId(string)     |    Video identifier       |   :x:                  |      **-**             |
-|    **uploadThumbnail**              |   **-**               |    **-**                  |   **-**                |      **-**             |
-|    **-**                            |   source(string)      |    Image media file       |   :heavy_check_mark:   |      **-**             |
-|    **-**                            |   videoId(string)     |    Video identifier       |   :heavy_check_mark:   |      **-**             |
-|    **updateThumbnailWithTimeCode**  |   **-**               |    **-**                  |   **-**                |      **-**             |
-|    **-**                            |   videoId(string)     |    Video identifier       |   :heavy_check_mark:   |      **-**             |
-|    **-**                            |   timecode(string)    |    Video timecode         |   :heavy_check_mark:   |      00:00:00.00<br/>(hours:minutes:seconds.frames)       |
-|    **update**                       |   **-**               |    **-**                  |   **-**                |      **-**             |
-|    **-**                            |   videoId()string     |    Video identifier       |   :heavy_check_mark:   |      **-**             |
-|    **-**                            |   properties(array)   |    Video properties       |   :heavy_check_mark:   |      <ul><li>title(string)</li><li>description(string)</li><li>tags(array(string))</li><li>playerId(string)</li><li>metadata(array(<br/>array(<br/>'key' => 'Key1', <br/>'value' => 'value1'<br/>), <br/>array(<br/>'key' => 'Key2',<br/> 'value' => 'value2'<br/>)<br/>)</li></ul>  |
-|    **delete**                       |   videoId(string)     |    Video identifier       |   :heavy_check_mark:   |      **-**             |
+|     **Function**                    |   **Parameters**      |      **Description**       |      **Required**      |   **Allowed Values**   |         
+| :---------------------------------: | :-------------------: | :------------------------: | :--------------------: | :--------------------- |
+|    **get**                          |   videoId(string)     |    Video identifier        |   :heavy_check_mark:   |      **-**             |
+|    **search**                       |   **-**               |    **-**                   |   **-**                |      **-**             |
+|    **-**                            |   parameters(array)   |    Search parameters       |   :x:                  |      <ul><li>currentPage(int)</li><li>pageSize(int)</li><li>sortBy(string)</li><li>sortOrder(string)</li><li>keyword(string)</li><li>tags(string&#124;array(string))</li><li>metadata(array(string))</li></ul>   |
+|    **-**                            |   callback(function)  |    callback function       |   :x:                  |      **-**             |
+|    **create**                       |   **-**               |    **-**                   |   **-**                |      **-**             |
+|    **-**                            |   title(string)       |    Video title             |   :heavy_check_mark:   |      **-**             |
+|    **-**                            |   properties(array)   |    Video properties        |   :x:                  |      <ul><li>description(string)</li><li>tags(array(string))</li><li>playerId(string)</li><li>metadata(array(<br/>array(<br/>'key' => 'Key1', <br/>'value' => 'value1'<br/>), <br/>array(<br/>'key' => 'Key2',<br/> 'value' => 'value2'<br/>)<br/>)</li></ul>  |
+|    **upload**                       |   **-**               |    **-**                   |   **-**                |      **-**             |
+|    **-**                            |   source(string)      |    Video media file        |   :heavy_check_mark:   |      **-**             |
+|    **-**                            |   properties(array)   |    Video properties        |   :x:                  |      <ul><li>title(string)</li><li>description(string)</li><li>tags(array(string))</li><li>playerId(string)</li><li>metadata(array(<br/>array(<br/>'key' => 'Key1', <br/>'value' => 'value1'<br/>), <br/>array(<br/>'key' => 'Key2',<br/> 'value' => 'value2'<br/>)<br/>)</li></ul>   |
+|    **-**                            |   videoId(string)     |    Video identifier        |   :x:                  |      **-**             |
+|    **uploadThumbnail**              |   **-**               |    **-**                   |   **-**                |      **-**             |
+|    **-**                            |   source(string)      |    Image media file        |   :heavy_check_mark:   |      **-**             |
+|    **-**                            |   videoId(string)     |    Video identifier        |   :heavy_check_mark:   |      **-**             |
+|    **updateThumbnailWithTimeCode**  |   **-**               |    **-**                   |   **-**                |      **-**             |
+|    **-**                            |   videoId(string)     |    Video identifier        |   :heavy_check_mark:   |      **-**             |
+|    **-**                            |   timecode(string)    |    Video timecode          |   :heavy_check_mark:   |      00:00:00.00<br/>(hours:minutes:seconds.frames)       |
+|    **update**                       |   **-**               |    **-**                   |   **-**                |      **-**             |
+|    **-**                            |   videoId()string     |    Video identifier        |   :heavy_check_mark:   |      **-**             |
+|    **-**                            |   properties(array)   |    Video properties        |   :heavy_check_mark:   |      <ul><li>title(string)</li><li>description(string)</li><li>tags(array(string))</li><li>playerId(string)</li><li>metadata(array(<br/>array(<br/>'key' => 'Key1', <br/>'value' => 'value1'<br/>), <br/>array(<br/>'key' => 'Key2',<br/> 'value' => 'value2'<br/>)<br/>)</li></ul>  |
+|    **delete**                       |   videoId(string)     |    Video identifier        |   :heavy_check_mark:   |      **-**             |
                                       
 ### Players                           
                                       
-|     **Function**                    |   **Parameters**      |     **Description**       |      **Required**      |   **Allowed Values**   |
-| :-------------------:               | :-------------------: | :-----------------------: | :--------------------: | :--------------------: |
-|    **get**                          |   playerId(string)    |    Player identifier      |   :heavy_check_mark:   |      **-**             |
-|    **create**                       |   properties(array)   |    Player properties      |   :x:                  |      <ul><li>shapeMargin(int)</li><li>shapeRadius(int)</li><li>shapeAspect(string)</li><li>shapeBackgroundTop(string)</li><li>shapeBackgroundBottom(string)</li><li>text(string)</li><li>link(string)</li><li>linkHover(string)</li><li>linkActive(string)</li><li>trackPlayed(string)</li><li>trackUnplayed(string)</li><li>trackBackground(string)</li><li>backgroundTop(string)</li><li>backgroundBottom(string)</li><li>backgroundText(string)</li><li>enableApi(bool)</li><li>enableControls(bool)</li><li>forceAutoplay(bool)</li><li>hideTitle(bool)</li></ul>             |
-|    **update**                       |   **-**               |    **-**                  |   **-**                |      **-**             |
-|    **-**                            |   playerId(string)    |    Player identifier      |   :heavy_check_mark:   |      **-**             |
-|    **-**                            |   properties(array)   |    Player properties      |   :heavy_check_mark:   |      <ul><li>shapeMargin(int)</li><li>shapeRadius(int)</li><li>shapeAspect(string)</li><li>shapeBackgroundTop(string)</li><li>shapeBackgroundBottom(string)</li><li>text(string)</li><li>link(string)</li><li>linkHover(string)</li><li>linkActive(string)</li><li>trackPlayed(string)</li><li>trackUnplayed(string)</li><li>trackBackground(string)</li><li>backgroundTop(string)</li><li>backgroundBottom(string)</li><li>backgroundText(string)</li><li>enableApi(bool)</li><li>enableControls(bool)</li><li>forceAutoplay(bool)</li><li>hideTitle(bool)</li></ul>              |
-|    **delete**                       |   playerId(string)    |    Player identifier      |   :heavy_check_mark:   |      **-**             |
+|     **Function**                    |   **Parameters**      |     **Description**        |      **Required**      |   **Allowed Values**   |
+| :---------------------------------: | :-------------------: | :------------------------: | :--------------------: | :--------------------: |
+|    **get**                          |   playerId(string)    |    Player identifier       |   :heavy_check_mark:   |      **-**             |
+|    **create**                       |   properties(array)   |    Player properties       |   :x:                  |      <ul><li>shapeMargin(int)</li><li>shapeRadius(int)</li><li>shapeAspect(string)</li><li>shapeBackgroundTop(string)</li><li>shapeBackgroundBottom(string)</li><li>text(string)</li><li>link(string)</li><li>linkHover(string)</li><li>linkActive(string)</li><li>trackPlayed(string)</li><li>trackUnplayed(string)</li><li>trackBackground(string)</li><li>backgroundTop(string)</li><li>backgroundBottom(string)</li><li>backgroundText(string)</li><li>enableApi(bool)</li><li>enableControls(bool)</li><li>forceAutoplay(bool)</li><li>hideTitle(bool)</li></ul>             |
+|    **update**                       |   **-**               |    **-**                   |   **-**                |      **-**             |
+|    **-**                            |   playerId(string)    |    Player identifier       |   :heavy_check_mark:   |      **-**             |
+|    **-**                            |   properties(array)   |    Player properties       |   :heavy_check_mark:   |      <ul><li>shapeMargin(int)</li><li>shapeRadius(int)</li><li>shapeAspect(string)</li><li>shapeBackgroundTop(string)</li><li>shapeBackgroundBottom(string)</li><li>text(string)</li><li>link(string)</li><li>linkHover(string)</li><li>linkActive(string)</li><li>trackPlayed(string)</li><li>trackUnplayed(string)</li><li>trackBackground(string)</li><li>backgroundTop(string)</li><li>backgroundBottom(string)</li><li>backgroundText(string)</li><li>enableApi(bool)</li><li>enableControls(bool)</li><li>forceAutoplay(bool)</li><li>hideTitle(bool)</li></ul>              |
+|    **delete**                       |   playerId(string)    |    Player identifier       |   :heavy_check_mark:   |      **-**             |
                                       
 ### Captions                          
                                       
-|     **Function**                    |   **Parameters**      |      **Description**      |      **Required**      |   **Allowed Values**   |
-| :-------------------:               | :-------------------: | :-----------------------: | :--------------------: | :--------------------: |
-|    **get**                          |   **-**               |    **-**                  |    **-**               |      **-**             |
-|    **-**                            |   videoId(string)     |    Video identifier       |   :heavy_check_mark:   |      **-**             |
-|    **-**                            |   language(string)    |    Language identifier    |   :heavy_check_mark:   |      2 letters (ex: en, fr) |
-|    **getAll**                       |   videoId(string)     |    Video identifier       |   :heavy_check_mark:   |      **-**             |
-|    **upload**                       |   **-**               |    **-**                  |   -                    |      **-**             |
-|    **-**                            |   source(string)      |    Caption file           |   :heavy_check_mark:   |      **-**             |
-|    **-**                            |   properties(string)  |    Caption properties     |   :heavy_check_mark:   |      <ul><li>videoId(string)</li><li>language(string - 2 letters)</li></ul>   |
-|    **updateDefault**                |   **-**     (array)   |    **-**                  |   -                    |      **-**             |
-|    **-**                            |   videoId             |    Video identifier       |   :heavy_check_mark:   |      **-**             |
-|    **-**                            |   language  (string)  |    Language identifier    |   :heavy_check_mark:   |      2 letters (ex: en, fr)  |
-|    **-**                            |   isDefault (string)  |    Set default language   |   :heavy_check_mark:   |      true/false             |
-|    **delete**                       |   **-**     (boolean) |    **-**                  |    -                   |      **-**             |
-|    **-**                            |   videoId             |    Video identifier       |   :heavy_check_mark:   |      **-**             |
-|    **-**                            |   language  (string)  |    Language identifier    |   :heavy_check_mark:   |      2 letters (ex: en, fr)  |
+|     **Function**                    |   **Parameters**      |      **Description**       |      **Required**      |   **Allowed Values**   |
+| :---------------------------------: | :-------------------: | :------------------------: | :--------------------: | :--------------------: |
+|    **get**                          |   **-**               |    **-**                   |    **-**               |      **-**             |
+|    **-**                            |   videoId(string)     |    Video identifier        |   :heavy_check_mark:   |      **-**             |
+|    **-**                            |   language(string)    |    Language identifier     |   :heavy_check_mark:   |      2 letters (ex: en, fr) |
+|    **getAll**                       |   videoId(string)     |    Video identifier        |   :heavy_check_mark:   |      **-**             |
+|    **upload**                       |   **-**               |    **-**                   |   -                    |      **-**             |
+|    **-**                            |   source(string)      |    Caption file            |   :heavy_check_mark:   |      **-**             |
+|    **-**                            |   properties(string)  |    Caption properties      |   :heavy_check_mark:   |      <ul><li>videoId(string)</li><li>language(string - 2 letters)</li></ul>   |
+|    **updateDefault**                |   **-**     (array)   |    **-**                   |   -                    |      **-**             |
+|    **-**                            |   videoId             |    Video identifier        |   :heavy_check_mark:   |      **-**             |
+|    **-**                            |   language  (string)  |    Language identifier     |   :heavy_check_mark:   |      2 letters (ex: en, fr)  |
+|    **-**                            |   isDefault (string)  |    Set default language    |   :heavy_check_mark:   |      true/false             |
+|    **delete**                       |   **-**     (boolean) |    **-**                   |    -                   |      **-**             |
+|    **-**                            |   videoId             |    Video identifier        |   :heavy_check_mark:   |      **-**             |
+|    **-**                            |   language  (string)  |    Language identifier     |   :heavy_check_mark:   |      2 letters (ex: en, fr)  |
                                       
 ### Analytics                         
                                       
-|     **Function**                    |   **Parameters**      |      **Description**      |      **Required**      |   **Allowed Values/Format**   |         
-| :-------------------:               | :-------------------: | :-----------------------: | :--------------------: | :--------------------- |
-|    **get**                          |   **-**               |    **-**                  |   **-**                |      **-**             |
-|    **-**                            |   videoId(string)     |    Video identifier       |   :heavy_check_mark:   |      **-**             |
-|    **-**                            |   period (string)     |    Period research        |   :x:                  |      <ul><li>For a day : 2018-01-01</li><li>For a week: 2018-W01</li><li>For a month: 2018-01</li><li>For a year: 2018</li><li>Date range: 2018-01-01/2018-01-15</li><li>Week range: 2018-W01/2018-W03</li><li>Month range: 2018-01/2018-03</li><li>Year range: 2018/2020</li></ul>             |
-|    **search**                       |   parameters(array)   |    Search parameters      |   :x:                  |      <ul><li>Pagination/Filters:</li><li>currentPage(int)</li><li>pageSize(int)</li><li>sortBy(string)</li><li>sortOrder(string)</li><li>tags(string&#124;array(string))</li><li>metadata(array(string))</li><li>Period:</li><li>For a day : 2018-01-01</li><li>For a week: 2018-W01</li><li>For a month: 2018-01</li><li>For a year: 2018</li><li>Date range: 2018-01-01/2018-01-15</li><li>Week range: 2018-W01/2018-W03</li><li>Month range: 2018-01/2018-03</li><li>Year range: 2018/2020</li></ul>             |
-
+|     **Function**                    |   **Parameters**      |      **Description**       |      **Required**      |   **Allowed Values/Format**   |         
+| :---------------------------------: | :-------------------: | :------------------------: | :--------------------: | :--------------------- |
+|    **get**                          |   **-**               |    **-**                   |   **-**                |      **-**             |
+|    **-**                            |   videoId(string)     |    Video identifier        |   :heavy_check_mark:   |      **-**             |
+|    **-**                            |   period (string)     |    Period research         |   :x:                  |      <ul><li>For a day : 2018-01-01</li><li>For a week: 2018-W01</li><li>For a month: 2018-01</li><li>For a year: 2018</li><li>Date range: 2018-01-01/2018-01-15</li><li>Week range: 2018-W01/2018-W03</li><li>Month range: 2018-01/2018-03</li><li>Year range: 2018/2020</li></ul>             |
+|    **search**                       |   parameters(array)   |    Search parameters       |   :x:                  |      <ul><li>Pagination/Filters:</li><li>currentPage(int)</li><li>pageSize(int)</li><li>sortBy(string)</li><li>sortOrder(string)</li><li>tags(string&#124;array(string))</li><li>metadata(array(string))</li><li>Period:</li><li>For a day : 2018-01-01</li><li>For a week: 2018-W01</li><li>For a month: 2018-01</li><li>For a year: 2018</li><li>Date range: 2018-01-01/2018-01-15</li><li>Week range: 2018-W01/2018-W03</li><li>Month range: 2018-01/2018-03</li><li>Year range: 2018/2020</li></ul>             |
+                                      
+### Tokens                         
+                                      
+|     **Function**                    |   **Parameters**      |      **Description**       |      **Required**      |   **Allowed Values**   |         
+| :---------------------------------: | :-------------------: | :------------------------: | :--------------------: | :--------------------- |
+|    **generate**                     |   **-**               | Token for delegated upload |   **-**                |      **-**             |
 ## More on api.video
 
 A full technical documentation is available on https://docs.api.video/

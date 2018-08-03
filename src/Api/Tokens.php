@@ -2,15 +2,8 @@
 
 namespace ApiVideo\Client\Api;
 
-use ApiVideo\Client\Buzz\OAuthBrowser;
-
 class Tokens extends BaseApi
 {
-    public function __construct(OAuthBrowser $browser)
-    {
-        parent::__construct($browser);
-    }
-
     /**
      * Generate a token to delegate upload
      *
