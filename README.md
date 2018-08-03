@@ -1,4 +1,4 @@
-# api.video PHP client
+# api.video PHP SDK
 
 The [api.video](https://api.video/) web-service helps you put video on the web without the hassle. 
 This documentation helps you use the corresponding PHP client.
@@ -8,7 +8,7 @@ This documentation helps you use the corresponding PHP client.
 Install:
 
 ```shell
-$ composer require api-video/php-client
+$ composer require api-video/php-sdk
 ```
 
 Usage:
