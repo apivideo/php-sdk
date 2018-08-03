@@ -57,7 +57,7 @@ class OAuthBrowser extends Browser
      */
     private function getAccessToken()
     {
-        if (!$this->authPayload) {
+        if (empty($this->authPayload)) {
             throw new AuthenticationFailed('Authentication failed');
         }
 
