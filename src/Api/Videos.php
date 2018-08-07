@@ -5,7 +5,6 @@ namespace ApiVideo\Client\Api;
 use ApiVideo\Client\Buzz\FormByteRangeUpload;
 use ApiVideo\Client\Buzz\OAuthBrowser;
 use ApiVideo\Client\Model\Video;
-use Buzz\Exception\RequestException;
 use Buzz\Message\Form\FormUpload;
 use Buzz\Message\RequestInterface;
 
@@ -180,31 +179,29 @@ class Videos extends BaseApi
         // Split content to upload big files in multiple requests
         $copiedBytes = 0;
         stream_set_chunk_size($resource, $this->chunkSize);
+        $lastResponse = null;
         do {
             $chunkPath   = tempnam(sys_get_temp_dir(), 'upload-chunk-');
             $chunk       = fopen($chunkPath, 'w+b');
             $from        = $copiedBytes;
             $copiedBytes += stream_copy_to_stream($resource, $chunk, $this->chunkSize, $copiedBytes);
-            $lastResponse = null;
-            $response= null;
-            try {
-                $response = $this->browser->submit(
-                    "/videos/$videoId/source",
-                    array('file' => new FormByteRangeUpload($chunkPath, $from, $copiedBytes, $length)),
-                    RequestInterface::METHOD_POST,
-                    array(
-                        'Content-Range' => 'bytes '.$from.'-'.($copiedBytes - 1).'/'.$length,
-                        'Expect'        => '',
-                    )
-                );
-                if($response->isSuccessful() && $response->getStatusCode() !== 100){
-                    $lastResponse = $this->unmarshal($response);
-                }
-            } catch (RequestException $e) {
-                if ($e->getCode() !== 100 && $e->getCode() >= 400) {
-                    return null;
-                }
+
+            $response = $this->browser->submit(
+                "/videos/$videoId/source",
+                array('file' => new FormByteRangeUpload($chunkPath, $from, $copiedBytes, $length)),
+                RequestInterface::METHOD_POST,
+                array(
+                    'Content-Range' => 'bytes '.$from.'-'.($copiedBytes - 1).'/'.$length
+                )
+            );
+
+            if ($response->getStatusCode() >= 400) {
+                $this->registerLastError($response);
+
+                return null;
             }
+
+            $lastResponse = $response;
 
             fclose($chunk);
             unlink($chunkPath);
@@ -212,6 +209,11 @@ class Videos extends BaseApi
         } while ($copiedBytes < $length);
 
         fclose($resource);
+
+        if(null !== $lastResponse)
+        {
+            $lastResponse = $this->unmarshal($lastResponse);
+        }
 
         return $lastResponse;
     }

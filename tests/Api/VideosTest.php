@@ -1084,7 +1084,11 @@ class VideosTest extends TestCase
         $videos            = new Videos($mockedBrowser);
         $videos->chunkSize = 10 * 1024 * 1024;
         $result = $videos->upload($this->getValideVideo()->url(), array(), 'vilWKqgywdX55mg8Yu8WgDZ0');
+
         $this->assertNull($result);
+        $error = $videos->getLastError();
+
+        $this->assertSame(404, $error['status']);
     }
 
     /**
