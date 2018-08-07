@@ -5,6 +5,7 @@ namespace ApiVideo\Client\Api;
 use ApiVideo\Client\Buzz\FormByteRangeUpload;
 use ApiVideo\Client\Buzz\OAuthBrowser;
 use ApiVideo\Client\Model\Video;
+use Buzz\Exception\RequestException;
 use Buzz\Message\Form\FormUpload;
 use Buzz\Message\RequestInterface;
 
@@ -184,24 +185,26 @@ class Videos extends BaseApi
             $chunk       = fopen($chunkPath, 'w+b');
             $from        = $copiedBytes;
             $copiedBytes += stream_copy_to_stream($resource, $chunk, $this->chunkSize, $copiedBytes);
-
-            $response = $this->browser->submit(
-                "/videos/$videoId/source",
-                array('file' => new FormByteRangeUpload($chunkPath, $from, $copiedBytes, $length)),
-                RequestInterface::METHOD_POST,
-                array(
-                    'Content-Range' => 'bytes '.$from.'-'.($copiedBytes - 1).'/'.$length,
-                    'Expect'        => '',
-                )
-            );
-
-            if ($response->getStatusCode() >= 400) {
-                $this->registerLastError($response);
-
-                return null;
+            $lastResponse = null;
+            $response= null;
+            try {
+                $response = $this->browser->submit(
+                    "/videos/$videoId/source",
+                    array('file' => new FormByteRangeUpload($chunkPath, $from, $copiedBytes, $length)),
+                    RequestInterface::METHOD_POST,
+                    array(
+                        'Content-Range' => 'bytes '.$from.'-'.($copiedBytes - 1).'/'.$length,
+                        'Expect'        => '',
+                    )
+                );
+                if($response->isSuccessful() && $response->getStatusCode() !== 100){
+                    $lastResponse = $this->unmarshal($response);
+                }
+            } catch (RequestException $e) {
+                if ($e->getCode() !== 100 && $e->getCode() >= 400) {
+                    return null;
+                }
             }
-
-            $lastResponse = $this->unmarshal($response);
 
             fclose($chunk);
             unlink($chunkPath);
