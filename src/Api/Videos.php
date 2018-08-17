@@ -191,7 +191,7 @@ class Videos extends BaseApi
                 array('file' => new FormByteRangeUpload($chunkPath, $from, $copiedBytes, $length)),
                 RequestInterface::METHOD_POST,
                 array(
-                    'Content-Range' => 'bytes '.$from.'-'.($copiedBytes - 1).'/'.$length
+                    'Content-Range' => 'bytes '.$from.'-'.($copiedBytes - 1).'/'.$length,
                 )
             );
 
@@ -210,8 +210,7 @@ class Videos extends BaseApi
 
         fclose($resource);
 
-        if(null !== $lastResponse)
-        {
+        if (null !== $lastResponse) {
             $lastResponse = $this->unmarshal($lastResponse);
         }
 
