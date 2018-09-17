@@ -120,11 +120,20 @@ $client->videos->captions->updateDefault($video->videoId, 'en', true);
 //Delete caption by language
 $client->videos->captions->delete($video->videoId, 'en');
 
-// Get video Analytics Data for the month of July 2018
-$videoAnalytics = $client->analytics->get($video->videoId, '2018-07');
+// Create a live
+$live = $client->lives->create('Test live');
 
-// Search Analytics Data between May 2018 and July 2018 and return the first 100 results
-$analytics = $client->analytics->search(array('period' => '2018-05/2018-07', 'currentPage' => 1, 'pageSize' => 100));
+// Get video Analytics Data for the month of July 2018
+$videoAnalytics = $client->analyticsVideo->get($video->videoId, '2018-07');
+
+// Search Video Analytics Data between May 2018 and July 2018 and return the first 100 results
+$analyticsVideo = $client->analyticsVideo->search(array('period' => '2018-05/2018-07', 'currentPage' => 1, 'pageSize' => 100));
+
+// Get live Analytics Data for the month of July 2018
+$liveAnalytics = $client->analyticsLive->get($live->liveStreamId, '2018-07');
+
+// Search Live Analytics Data between May 2018 and July 2018 and return the first 100 results
+$analyticsLive = $client->analyticsLive->search(array('period' => '2018-05/2018-07', 'currentPage' => 1, 'pageSize' => 100));
 
 // Generate a token for delegated upload
 $token = $client->tokens->generate();
@@ -238,6 +247,40 @@ $client->players->delete($playerId);
 // Get last players request Error
 $client->players->getLastError();
 
+/*
+ *********************************
+ *********************************
+ *         LIVE                 *
+ *********************************
+ *********************************
+*/
+
+// Show a live
+$client->lives->get($liveStreamId);
+
+// List or search lives
+$client->lives->search(array $parameters = array(), $callback = null);
+
+// Create live properties
+$client->lives->create($name, $properties = array());
+
+// Update live properties
+$client->lives->update($liveStreamId, array $properties);
+
+// Delete live (file and data)
+$client->lives->delete($liveStreamId);
+
+// Get last live request Error
+$client->lives->getLastError();
+
+/*
+ *********************************
+ *         LIVE THUMBNAIL       *
+ *********************************
+*/
+
+// Upload a thumbnail for live
+$client->lives->uploadThumbnail($source, $liveStreamId);
 
 /*
  *********************************
@@ -246,13 +289,22 @@ $client->players->getLastError();
 */
 
 // Get video analytics between period
-$client->analytics->get($videoId, $period);
+$client->analyticsVideo->get($videoId, $period);
 
 // Search videos analytics between period, filter with tags or metadata
-$client->analytics->search($parameters);
+$client->analyticsVideo->search($parameters);
 
-// Get last analytics request Error
-$client->analytics->getLastError();
+// Get last video analytics request Error
+$client->analyticsVideo->getLastError();
+
+// Get live analytics between period
+$client->analyticsLive->get($liveStreamId, $period);
+
+// Search lives analytics between period, filter with tags or metadata
+$client->analyticsLive->search($parameters);
+
+// Get last live analytics request Error
+$client->analyticsLive->getLastError();
 
 
 ```
@@ -317,8 +369,27 @@ $client->analytics->getLastError();
 |    **delete**                       |   **-**     (boolean) |    **-**                   |    -                   |      **-**             |
 |    **-**                            |   videoId             |    Video identifier        |   :heavy_check_mark:   |      **-**             |
 |    **-**                            |   language  (string)  |    Language identifier     |   :heavy_check_mark:   |      2 letters (ex: en, fr)  |
-                                      
-### Analytics                         
+
+### Lives
+
+|     **Function**                    |   **Parameters**      |      **Description**       |      **Required**      |   **Allowed Values**   |         
+| :---------------------------------: | :-------------------: | :------------------------: | :--------------------: | :--------------------- |
+|    **get**                          |   liveStreamId(string)     |    Live identifier        |   :heavy_check_mark:   |      **-**             |
+|    **search**                       |   **-**               |    **-**                   |   **-**                |      **-**             |
+|    **-**                            |   parameters(array)   |    Search parameters       |   :x:                  |      <ul><li>currentPage(int)</li><li>pageSize(int)</li><li>sortBy(string)</li><li>sortOrder(string)</li></ul>   |
+|    **-**                            |   callback(function)  |    callback function       |   :x:                  |      **-**             |
+|    **create**                       |   **-**               |    **-**                   |   **-**                |      **-**             |
+|    **-**                            |   name(string)        |    Live name             |   :heavy_check_mark:   |      **-**             |
+|    **-**                            |   properties(array)   |    Live properties        |   :x:                  |      <ul><li>record(boolean)</li><li>playerId(string)</li></ul>  |
+|    **uploadThumbnail**              |   **-**               |    **-**                   |   **-**                |      **-**             |
+|    **-**                            |   source(string)      |    Image media file        |   :heavy_check_mark:   |      **-**             |
+|    **-**                            |   liveStreamId(string)     |    Live identifier        |   :heavy_check_mark:   |      **-**             |
+|    **update**                       |   **-**               |    **-**                   |   **-**                |      **-**             |
+|    **-**                            |   liveStreamId()string     |    Live identifier        |   :heavy_check_mark:   |      **-**             |
+|    **-**                            |   properties(array)   |    Live properties        |   :heavy_check_mark:   |      <ul><li>title(string)</li><li>description(string)</li><li>tags(array(string))</li><li>playerId(string)</li><li>metadata(array(<br/>array(<br/>'key' => 'Key1', <br/>'value' => 'value1'<br/>), <br/>array(<br/>'key' => 'Key2',<br/> 'value' => 'value2'<br/>)<br/>)</li></ul>  |
+|    **delete**                       |   liveStreamId(string)     |    Live identifier        |   :heavy_check_mark:   |      **-**             |
+                                                     
+### AnalyticsVideo                         
                                       
 |     **Function**                    |   **Parameters**      |      **Description**       |      **Required**      |   **Allowed Values/Format**   |         
 | :---------------------------------: | :-------------------: | :------------------------: | :--------------------: | :--------------------- |
@@ -326,7 +397,16 @@ $client->analytics->getLastError();
 |    **-**                            |   videoId(string)     |    Video identifier        |   :heavy_check_mark:   |      **-**             |
 |    **-**                            |   period (string)     |    Period research         |   :x:                  |      <ul><li>For a day : 2018-01-01</li><li>For a week: 2018-W01</li><li>For a month: 2018-01</li><li>For a year: 2018</li><li>Date range: 2018-01-01/2018-01-15</li><li>Week range: 2018-W01/2018-W03</li><li>Month range: 2018-01/2018-03</li><li>Year range: 2018/2020</li></ul>             |
 |    **search**                       |   parameters(array)   |    Search parameters       |   :x:                  |      <ul><li>Pagination/Filters:</li><li>currentPage(int)</li><li>pageSize(int)</li><li>sortBy(string)</li><li>sortOrder(string)</li><li>tags(string&#124;array(string))</li><li>metadata(array(string))</li><li>Period:</li><li>For a day : 2018-01-01</li><li>For a week: 2018-W01</li><li>For a month: 2018-01</li><li>For a year: 2018</li><li>Date range: 2018-01-01/2018-01-15</li><li>Week range: 2018-W01/2018-W03</li><li>Month range: 2018-01/2018-03</li><li>Year range: 2018/2020</li></ul>             |
+
+### AnalyticsLive                         
                                       
+|     **Function**                    |   **Parameters**      |      **Description**       |      **Required**      |   **Allowed Values/Format**   |         
+| :---------------------------------: | :-------------------: | :------------------------: | :--------------------: | :--------------------- |
+|    **get**                          |   **-**               |    **-**                   |   **-**                |      **-**             |
+|    **-**                            |   liveStreamId(string)     |    Live identifier        |   :heavy_check_mark:   |      **-**             |
+|    **-**                            |   period (string)     |    Period research         |   :x:                  |      <ul><li>For a day : 2018-01-01</li><li>For a week: 2018-W01</li><li>For a month: 2018-01</li><li>For a year: 2018</li><li>Date range: 2018-01-01/2018-01-15</li><li>Week range: 2018-W01/2018-W03</li><li>Month range: 2018-01/2018-03</li><li>Year range: 2018/2020</li></ul>             |
+|    **search**                       |   parameters(array)   |    Search parameters       |   :x:                  |      <ul><li>Pagination/Filters:</li><li>currentPage(int)</li><li>pageSize(int)</li><li>sortBy(string)</li><li>sortOrder(string)</li><li>Period:</li><li>For a day : 2018-01-01</li><li>For a week: 2018-W01</li><li>For a month: 2018-01</li><li>For a year: 2018</li><li>Date range: 2018-01-01/2018-01-15</li><li>Week range: 2018-W01/2018-W03</li><li>Month range: 2018-01/2018-03</li><li>Year range: 2018/2020</li></ul>             |
+                                          
 ### Tokens                         
                                       
 |     **Function**                    |   **Parameters**      |      **Description**       |      **Required**      |   **Allowed Values**   |         

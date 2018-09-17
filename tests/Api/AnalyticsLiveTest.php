@@ -1,11 +1,11 @@
 <?php
 
 
-use ApiVideo\Client\Api\Analytics;
+use ApiVideo\Client\Api\AnalyticsLive;
 use Buzz\Message\Response;
 use PHPUnit\Framework\TestCase;
 
-class AnalyticsTest extends TestCase
+class AnalyticsLiveTest extends TestCase
 {
     /**
      * @test
@@ -14,7 +14,7 @@ class AnalyticsTest extends TestCase
     public function getSucceed()
     {
 
-        $analyticReturn = $this->getVideoAnalytic();
+        $analyticReturn = $this->getLiveAnalytic();
 
         $response = new Response();
 
@@ -29,13 +29,13 @@ class AnalyticsTest extends TestCase
         $oAuthBrowser = $this->getMockedOAuthBrowser();
         $oAuthBrowser->method('get')->willReturn($response);
 
-        $analytics = new Analytics($oAuthBrowser);
-        $analytic  = $analytics->get('vi55mglWKqgywdX8Yu8WgDZ0', '2018-07-31');
+        $AnalyticsLive = new AnalyticsLive($oAuthBrowser);
+        $analytic  = $AnalyticsLive->get('vi55mglWKqgywdX8Yu8WgDZ0', '2018-07-31');
 
         $analyticExpected = json_decode($analyticReturn, true);
-        $this->assertInstanceOf('ApiVideo\Client\Model\Analytic\Analytic', $analytic);
-        $this->assertSame($analyticExpected['video']['video_id'], $analytic->videoId);
-        $this->assertSame($analyticExpected['video']['title'], $analytic->videoTitle);
+        $this->assertInstanceOf('ApiVideo\Client\Model\Analytic\AnalyticLive', $analytic);
+        $this->assertSame($analyticExpected['live']['live_stream_id'], $analytic->liveStreamId);
+        $this->assertSame($analyticExpected['live']['name'], $analytic->liveName);
         $this->assertSame($analyticExpected['period'], $analytic->period);
         $this->assertNotEmpty($analytic->data);
         $this->assertCount(3, $analytic->data);
@@ -50,9 +50,9 @@ class AnalyticsTest extends TestCase
     {
         $returned = '{
             "status": 400,
-            "type": "https://docs.api.video/problems/ressource.not_found",
+            "type": "https://docs.api.Live/problems/ressource.not_found",
             "title": "The requested resource was not found.",
-            "name": "videoId"
+            "name": "LiveId"
         }';
 
         $response = new Response();
@@ -70,11 +70,11 @@ class AnalyticsTest extends TestCase
         $oAuthBrowser = $this->getMockedOAuthBrowser();
         $oAuthBrowser->method('get')->willReturn($response);
 
-        $analytics = new Analytics($oAuthBrowser);
-        $analytic  = $analytics->get('viWKqgywdX55mgl8Yu8WgDZ0');
+        $AnalyticsLive = new AnalyticsLive($oAuthBrowser);
+        $analytic  = $AnalyticsLive->get('viWKqgywdX55mgl8Yu8WgDZ0');
 
         $this->assertNull($analytic);
-        $error = $analytics->getLastError();
+        $error = $AnalyticsLive->getLastError();
 
         $this->assertSame(400, $error['status']);
         $this->assertSame(json_decode($returned, true), $error['message']);
@@ -87,7 +87,7 @@ class AnalyticsTest extends TestCase
      */
     public function searchSucceed()
     {
-        $returned = $this->getCollectionAnalytics();
+        $returned = $this->getCollectionAnalyticsLive();
         $response = new Response();
 
         $responseReflected = new ReflectionClass('Buzz\Message\Response');
@@ -101,16 +101,16 @@ class AnalyticsTest extends TestCase
 
         $oAuthBrowser->method('get')->willReturn($response);
 
-        $analytics = new Analytics($oAuthBrowser);
-        $results = $analytics->search();
+        $AnalyticsLive = new AnalyticsLive($oAuthBrowser);
+        $results = $AnalyticsLive->search();
 
-        $videosReflected = new ReflectionClass('ApiVideo\Client\Api\Videos');
-        $castAll         = $videosReflected->getMethod('castAll');
+        $LivesReflected = new ReflectionClass('ApiVideo\Client\Api\Lives');
+        $castAll         = $LivesReflected->getMethod('castAll');
         $castAll->setAccessible(true);
 
-        $analyticsReturn = json_decode($returned, true);
-        unset($analyticsReturn['period']);
-        $this->assertEquals(array_merge(array(), $castAll->invokeArgs($analytics, $analyticsReturn)), $results);
+        $AnalyticsLiveReturn = json_decode($returned, true);
+        unset($AnalyticsLiveReturn['period']);
+        $this->assertEquals(array_merge(array(), $castAll->invokeArgs($AnalyticsLive, $AnalyticsLiveReturn)), $results);
 
 
     }
@@ -121,7 +121,7 @@ class AnalyticsTest extends TestCase
      */
     public function searchWithPaginationSucceed()
     {
-        $returned = $this->getCollectionAnalytics();
+        $returned = $this->getCollectionAnalyticsLive();
         $response = new Response();
 
         $responseReflected = new ReflectionClass('Buzz\Message\Response');
@@ -135,16 +135,16 @@ class AnalyticsTest extends TestCase
 
         $oAuthBrowser->method('get')->willReturn($response);
 
-        $analytics = new Analytics($oAuthBrowser);
-        $results = $analytics->search(array('currentPage' => 1));
+        $AnalyticsLive = new AnalyticsLive($oAuthBrowser);
+        $results = $AnalyticsLive->search(array('currentPage' => 1));
 
-        $videosReflected = new ReflectionClass('ApiVideo\Client\Api\Videos');
-        $castAll         = $videosReflected->getMethod('castAll');
+        $LivesReflected = new ReflectionClass('ApiVideo\Client\Api\Lives');
+        $castAll         = $LivesReflected->getMethod('castAll');
         $castAll->setAccessible(true);
 
-        $analyticsReturn = json_decode($returned, true);
-        unset($analyticsReturn['period']);
-        $this->assertEquals(array_merge(array(), $castAll->invokeArgs($analytics, $analyticsReturn)), $results);
+        $AnalyticsLiveReturn = json_decode($returned, true);
+        unset($AnalyticsLiveReturn['period']);
+        $this->assertEquals(array_merge(array(), $castAll->invokeArgs($AnalyticsLive, $AnalyticsLiveReturn)), $results);
 
 
     }
@@ -157,7 +157,7 @@ class AnalyticsTest extends TestCase
     {
         $return = '{
             "status": 400,
-            "type": "https://docs.api.video/problems/invalid.pagination",
+            "type": "https://docs.api.Live/problems/invalid.pagination",
             "title": "Invalid page. Must be at least equal to 1",
             "name": "page"
         }';
@@ -175,15 +175,15 @@ class AnalyticsTest extends TestCase
 
         $oAuthBrowser->method('get')->willReturn($response);
 
-        $analytics = new Analytics($oAuthBrowser);
-        $results = $analytics->search(
+        $AnalyticsLive = new AnalyticsLive($oAuthBrowser);
+        $results = $AnalyticsLive->search(
             array(
                 'currentPage' => 0,
                 'pageSize'    => 25,
             )
         );
         $this->assertNull($results);
-        $error = $analytics->getLastError();
+        $error = $AnalyticsLive->getLastError();
 
         $this->assertSame(400, $error['status']);
         $return = json_decode($return, true);
@@ -197,13 +197,13 @@ class AnalyticsTest extends TestCase
                     ->getMock();
     }
 
-    private function getVideoAnalytic()
+    private function getLiveAnalytic()
     {
         return '
         {
-            "video": {
-                "video_id": "vi55mglWKqgywdX8Yu8WgDZ0",
-                "title": "Test"
+            "live": {
+                "live_stream_id": "li55mglWKqgywdX8Yu8WgDZ0",
+                "name": "Test"
             },
             "period": "2018-07-31",
             "data": [
@@ -240,7 +240,7 @@ class AnalyticsTest extends TestCase
                     },
                     "events": [
                         {
-                            "type": "player_session.loaded",
+                            "type": "player_session_live.loaded",
                             "emitted_at": "2018-07-31T15:17:49.822000+02:00"
                         }
                     ]
@@ -278,7 +278,7 @@ class AnalyticsTest extends TestCase
                     },
                     "events": [
                         {
-                            "type": "player_session.loaded",
+                            "type": "player_session_live.loaded",
                             "emitted_at": "2018-07-31T15:17:49.822000+02:00"
                         }
                     ]
@@ -316,7 +316,7 @@ class AnalyticsTest extends TestCase
                     },
                     "events": [
                         {
-                            "type": "player_session.loaded",
+                            "type": "player_session_live.loaded",
                             "emitted_at": "2018-07-31T15:17:49.822000+02:00"
                         }
                     ]
@@ -325,15 +325,15 @@ class AnalyticsTest extends TestCase
         }';
     }
 
-    private function getCollectionAnalytics()
+    private function getCollectionAnalyticsLive()
     {
         return '{
             "period": "2018-08-02",
             "data": [
             {
-                "video": {
-                    "video_id": "vi55mglWKqgywdX8Yu8WgDZ0",
-                    "title": "Test"
+                "live": {
+                    "live_stream_id": "li55mglWKqgywdX8Yu8WgDZ0",
+                    "name": "Test"
                 },
                 "period": "2018-07-31",
                 "data": [
@@ -370,7 +370,7 @@ class AnalyticsTest extends TestCase
                         },
                         "events": [
                             {
-                                "type": "player_session.loaded",
+                                "type": "player_session_live.loaded",
                                 "emitted_at": "2018-07-31T15:17:49.822000+02:00"
                             }
                         ]
@@ -408,7 +408,7 @@ class AnalyticsTest extends TestCase
                         },
                         "events": [
                             {
-                                "type": "player_session.loaded",
+                                "type": "player_session_live.loaded",
                                 "emitted_at": "2018-07-31T15:17:49.822000+02:00"
                             }
                         ]
@@ -446,7 +446,7 @@ class AnalyticsTest extends TestCase
                         },
                         "events": [
                             {
-                                "type": "player_session.loaded",
+                                "type": "player_session_live.loaded",
                                 "emitted_at": "2018-07-31T15:17:49.822000+02:00"
                             }
                         ]
@@ -462,15 +462,15 @@ class AnalyticsTest extends TestCase
                 "links": [
                     {
                         "rel": "self",
-                        "uri": "http://ws.api.video/analytics?currentPage=1"
+                        "uri": "http://ws.api.Live/AnalyticsLive?currentPage=1"
                     },
                     {
                         "rel": "first",
-                        "uri": "http://ws.api.video/analytics?currentPage=1"
+                        "uri": "http://ws.api.Live/AnalyticsLive?currentPage=1"
                     },
                     {
                         "rel": "last",
-                        "uri": "http://ws.api.video/analytics?currentPage=1"
+                        "uri": "http://ws.api.Live/AnalyticsLive?currentPage=1"
                     }
                 ]
             }

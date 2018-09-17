@@ -2,7 +2,7 @@
 
 namespace ApiVideo\Client\Model\Analytic;
 
-class Analytic
+class AnalyticVideo
 {
     /** @var string */
     public $videoId;

@@ -5,8 +5,10 @@ namespace ApiVideo\Client\Api;
 
 
 use ApiVideo\Client\Buzz\OAuthBrowser;
-use ApiVideo\Client\Model\Analytic\Analytic;
+use ApiVideo\Client\Model\Analytic\AnalyticLive;
+use ApiVideo\Client\Model\Analytic\AnalyticVideo;
 use ApiVideo\Client\Model\Caption;
+use ApiVideo\Client\Model\Live;
 use ApiVideo\Client\Model\Player;
 use ApiVideo\Client\Model\Video;
 use Buzz\Message\MessageInterface;
@@ -43,7 +45,7 @@ abstract class BaseApi
 
     /**
      * @param \Buzz\Message\MessageInterface $message
-     * @return Caption|Player|Video|Analytic
+     * @return Caption|Player|Video|Live|AnalyticVideo|AnalyticLive
      */
     protected function unmarshal(MessageInterface $message)
     {
@@ -52,7 +54,7 @@ abstract class BaseApi
 
     /**
      * @param array $collection
-     * @return Caption[]|Players[]|Video[]|Analytic[]
+     * @return Caption[]|Players[]|Video[]|Live[]|AnalyticVideo[]|AnalyticLive[]
      */
     protected function castAll(array $collection)
     {

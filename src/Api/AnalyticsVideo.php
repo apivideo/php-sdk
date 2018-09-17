@@ -3,17 +3,16 @@
 
 namespace ApiVideo\Client\Api;
 
-
-use ApiVideo\Client\Model\Analytic\Analytic;
 use ApiVideo\Client\Model\Analytic\AnalyticData;
 use ApiVideo\Client\Model\Analytic\AnalyticEvent;
+use ApiVideo\Client\Model\Analytic\AnalyticVideo;
 
-class Analytics extends BaseApi
+class AnalyticsVideo extends BaseApi
 {
     /**
      * @param $videoId
      * @param string|null $period
-     * @return Analytic|null
+     * @return AnalyticVideo|null
      */
     public function get($videoId, $period = null)
     {
@@ -34,7 +33,7 @@ class Analytics extends BaseApi
 
     /**
      * @param array $parameters
-     * @return Analytic[]|null
+     * @return AnalyticVideo[]|null
      */
     public function search(array $parameters = array())
     {
@@ -45,7 +44,7 @@ class Analytics extends BaseApi
 
         do {
             $params['currentPage'] = $currentPage;
-            $response              = $this->browser->get('/analytics?'.http_build_query($parameters));
+            $response              = $this->browser->get('/analytics/videos?'.http_build_query($parameters));
 
             if (!$response->isSuccessful()) {
                 $this->registerLastError($response);
@@ -72,11 +71,11 @@ class Analytics extends BaseApi
 
     /**
      * @param array $data
-     * @return Analytic
+     * @return AnalyticVideo
      */
     protected function cast(array $data)
     {
-        $analytic             = new Analytic();
+        $analytic             = new AnalyticVideo();
         $analytic->videoId    = $data['video']['video_id'];
         $analytic->videoTitle = $data['video']['title'];
         $analytic->period     = $data['period'];
