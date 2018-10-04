@@ -10,8 +10,10 @@ final class Live
     /** @var string */
     public $name;
 
+    /** @var boolean */
     public $record;
 
+    /** @var string */
     public $streamKey;
 
     /** @var array */
