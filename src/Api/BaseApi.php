@@ -9,6 +9,7 @@ use ApiVideo\Client\Model\Analytic\Analytic;
 use ApiVideo\Client\Model\Caption;
 use ApiVideo\Client\Model\Player;
 use ApiVideo\Client\Model\Video;
+use ApiVideo\Client\Model\Live;
 use Buzz\Message\MessageInterface;
 use Buzz\Message\Response;
 
