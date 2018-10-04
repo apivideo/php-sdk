@@ -5,6 +5,7 @@ namespace ApiVideo\Client;
 use ApiVideo\Client\Api\Analytics;
 use ApiVideo\Client\Api\Players;
 use ApiVideo\Client\Api\Videos;
+use ApiVideo\Client\Api\LiveStream;
 use ApiVideo\Client\Api\Tokens;
 use ApiVideo\Client\Buzz\OAuthBrowser;
 use Buzz\Client\Curl;
@@ -23,6 +24,9 @@ final class Client
 
     /** @var Analytics */
     public $analytics;
+    
+    /** @var LiveStream */
+    public $live;
 
     /**
      *
@@ -45,6 +49,7 @@ final class Client
         $this->videos  = new Videos($browser);
         $this->players = new Players($browser);
         $this->analytics = new Analytics($browser);
+        $this->live = new LiveStream($browser);
         $this->tokens  = new Tokens($browser);
     }
 }
