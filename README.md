@@ -11,7 +11,7 @@ This documentation helps you use the corresponding PHP client.
 Install:
 
 ```shell
-$ composer require api-video/php-sdk
+$ composer require api-video/php-client
 ```
 
 Usage:
