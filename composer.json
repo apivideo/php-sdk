@@ -1,5 +1,5 @@
 {
-    "name": "api-video/php-client",
+    "name": "api-video/php-sdk",
     "description": "PHP client for api.video web services.",
     "license": "MIT",
     "type": "library",
