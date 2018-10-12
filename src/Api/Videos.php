@@ -141,6 +141,8 @@ class Videos extends BaseApi
      */
     public function upload($source, array $properties = array(), $videoId = null)
     {
+        $timeout = $this->browser->getClient()->getTimeout();
+        $this->browser->getClient()->setTimeout(0);
         if (!is_readable($source)) {
             throw new \UnexpectedValueException("'$source' must be a readable source file.");
         }
@@ -214,6 +216,7 @@ class Videos extends BaseApi
             $lastResponse = $this->unmarshal($lastResponse);
         }
 
+        $this->browser->getClient()->setTimeout($timeout);
         return $lastResponse;
     }
 
