@@ -35,6 +35,11 @@ abstract class BaseApi
         return $this->lastError;
     }
 
+    public function getBrowser()
+    {
+        return $this->browser;
+    }
+
     protected function registerLastError(Response $response)
     {
         $this->lastError = array(
