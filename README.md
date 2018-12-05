@@ -171,6 +171,12 @@ $client->videos->download($source, $title, array $properties = array());
 // Update video properties
 $client->videos->update($videoId, array $properties);
 
+// Set video public
+$client->videos->setPublic($videoId);
+
+// Set video private
+$client->videos->setPrivate($videoId);
+
 // Delete video (file and data)
 $client->videos->delete($videoId);
 
@@ -338,6 +344,8 @@ $client->analyticsLive->getLastError();
 |    **update**                       |   **-**               |    **-**                   |   **-**                |      **-**             |
 |    **-**                            |   videoId()string     |    Video identifier        |   :heavy_check_mark:   |      **-**             |
 |    **-**                            |   properties(array)   |    Video properties        |   :heavy_check_mark:   |      <ul><li>title(string)</li><li>description(string)</li><li>tags(array(string))</li><li>playerId(string)</li><li>metadata(array(<br/>array(<br/>'key' => 'Key1', <br/>'value' => 'value1'<br/>), <br/>array(<br/>'key' => 'Key2',<br/> 'value' => 'value2'<br/>)<br/>)</li></ul>  |
+|    **setPublic**                    |   videoId(string)     |    Video identifier        |   :heavy_check_mark:   |      **-**             |
+|    **setPrivate**                   |   videoId(string)     |    Video identifier        |   :heavy_check_mark:   |      **-**             |
 |    **delete**                       |   videoId(string)     |    Video identifier        |   :heavy_check_mark:   |      **-**             |
                                       
 ### Players                           
