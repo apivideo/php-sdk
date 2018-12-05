@@ -57,14 +57,14 @@ class Videos extends BaseApi
      */
     public function search(array $parameters = array(), $callback = null)
     {
-        $params             = $parameters;
-        $currentPage        = isset($parameters['currentPage']) ? $parameters['currentPage'] : 1;
-        $params['pageSize'] = isset($parameters['pageSize']) ? $parameters['pageSize'] : 100;
-        $allVideos          = array();
+        $params                = $parameters;
+        $currentPage           = isset($parameters['currentPage']) ? $parameters['currentPage'] : 1;
+        $params['pageSize']    = isset($parameters['pageSize']) ? $parameters['pageSize'] : 100;
+        $params['currentPage'] = $currentPage;
+        $allVideos             = array();
 
         do {
-            $params['currentPage'] = $currentPage;
-            $response              = $this->browser->get('/videos?'.http_build_query($parameters));
+            $response = $this->browser->get('/videos?'.http_build_query($params));
 
             if (!$response->isSuccessful()) {
                 $this->registerLastError($response);
@@ -88,6 +88,7 @@ class Videos extends BaseApi
 
             $pagination = $json['pagination'];
             $pagination['currentPage']++;
+            $params['currentPage'] = $pagination['currentPage'];
         } while ($pagination['pagesTotal'] > $pagination['currentPage']);
         $allVideos = call_user_func_array('array_merge', $allVideos);
 
@@ -217,6 +218,7 @@ class Videos extends BaseApi
         }
 
         $this->browser->getClient()->setTimeout($timeout);
+
         return $lastResponse;
     }
 
@@ -279,6 +281,47 @@ class Videos extends BaseApi
 
     /**
      * @param string $videoId
+     * @return Video|null
+     */
+    public function setPublic($videoId)
+    {
+        $response = $this->browser->patch(
+            "/videos/$videoId",
+            array(),
+            json_encode(array('public' => true))
+        );
+
+        if (!$response->isSuccessful()) {
+            $this->registerLastError($response);
+
+            return null;
+        }
+
+        return $this->unmarshal($response);
+    }
+    /**
+     * @param string $videoId
+     * @return Video|null
+     */
+    public function setPrivate($videoId)
+    {
+        $response = $this->browser->patch(
+            "/videos/$videoId",
+            array(),
+            json_encode(array('public' => false))
+        );
+
+        if (!$response->isSuccessful()) {
+            $this->registerLastError($response);
+
+            return null;
+        }
+
+        return $this->unmarshal($response);
+    }
+
+    /**
+     * @param string $videoId
      * @param string $timecode
      * @return Video|null
      */
@@ -323,6 +366,7 @@ class Videos extends BaseApi
     /**
      * @param array $data
      * @return Video
+     * @throws \Exception
      */
     protected function cast(array $data)
     {
@@ -330,6 +374,7 @@ class Videos extends BaseApi
         $video->videoId     = $data['videoId'];
         $video->title       = $data['title'];
         $video->description = $data['description'];
+        $video->public      = $data['public'];
         $video->tags        = $data['tags'];
         $video->metadata    = $data['metadata'];
         $video->source      = $data['source'];

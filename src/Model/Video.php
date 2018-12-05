@@ -13,6 +13,9 @@ final class Video
     /** @var string */
     public $description;
 
+    /** @var boolean */
+    public $public;
+
     /** @var array */
     public $tags = array();
 
