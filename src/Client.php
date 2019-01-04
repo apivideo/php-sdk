@@ -4,6 +4,7 @@ namespace ApiVideo\Client;
 
 use ApiVideo\Client\Api\AnalyticsLive;
 use ApiVideo\Client\Api\AnalyticsVideo;
+use ApiVideo\Client\Api\Captions;
 use ApiVideo\Client\Api\Lives;
 use ApiVideo\Client\Api\Players;
 use ApiVideo\Client\Api\Videos;
@@ -22,6 +23,9 @@ final class Client
 
     /** @var Players */
     public $players;
+
+    /** @var Captions */
+    public $captions;
 
     /** @var Tokens */
     public $tokens;
@@ -53,6 +57,7 @@ final class Client
         $this->videos  = new Videos($browser);
         $this->lives  = new Lives($browser);
         $this->players = new Players($browser);
+        $this->captions = new Captions($browser);
         $this->analyticsVideo = new AnalyticsVideo($browser);
         $this->analyticsLive = new AnalyticsLive($browser);
         $this->tokens  = new Tokens($browser);
