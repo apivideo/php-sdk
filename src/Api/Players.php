@@ -150,38 +150,29 @@ class Players extends BaseApi
      */
     protected function cast(array $data)
     {
-        $player                           = new Player();
-        $player->playerId                 = $data['playerId'];
-        $player->enableApi                = $data['enableApi'];
-        $player->hideTitle                = $data['hideTitle'];
-        $player->controlLogo              = $data['controlLogo'];
-        $player->buttonRadius             = $data['buttonRadius'];
-        $player->controlMargin            = $data['controlMargin'];
-        $player->forceAutoplay            = $data['forceAutoplay'];
-        $player->controlLogoUrl           = $data['controlLogoUrl'];
-        $player->enableControls           = $data['enableControls'];
-        $player->panelTextHover           = $data['panelTextHover'];
-        $player->scrollbarThumb           = $data['scrollbarThumb'];
-        $player->scrollbarTrack           = $data['scrollbarTrack'];
-        $player->buttonTextHover          = $data['buttonTextHover'];
-        $player->enableInfoPanel          = $data['enableInfoPanel'];
-        $player->panelTextActive          = $data['panelTextActive'];
-        $player->buttonTextActive         = $data['buttonTextActive'];
-        $player->enableSharePanel         = $data['enableSharePanel'];
-        $player->buttonLightEffect        = $data['buttonLightEffect'];
-        $player->panelTextInactive        = $data['panelTextInactive'];
-        $player->trackbarPlayedTop        = $data['trackbarPlayedTop'];
-        $player->trackbarTextColor        = $data['trackbarTextColor'];
-        $player->buttonTextInactive       = $data['buttonTextInactive'];
-        $player->panelBackgroundTop       = $data['panelBackgroundTop'];
-        $player->buttonBackgroundTop      = $data['buttonBackgroundTop'];
-        $player->enableDownloadPanel      = $data['enableDownloadPanel'];
-        $player->enableSettingsPanel      = $data['enableSettingsPanel'];
-        $player->trackbarPlayedBottom     = $data['trackbarPlayedBottom'];
-        $player->panelBackgroundBottom    = $data['panelBackgroundBottom'];
-        $player->trackbarBackgroundTop    = $data['trackbarBackgroundTop'];
-        $player->buttonBackgroundBottom   = $data['buttonBackgroundBottom'];
-        $player->trackbarBackgroundBottom = $data['trackbarBackgroundBottom'];
+        $player                        = new Player();
+        $player->playerId              = $data['playerId'];
+        $player->shapeMargin           = $data['shapeMargin'];
+        $player->shapeRadius           = $data['shapeRadius'];
+        $player->shapeAspect           = $data['shapeAspect'];
+        $player->shapeBackgroundTop    = $data['shapeBackgroundTop'];
+        $player->shapeBackgroundBottom = $data['shapeBackgroundBottom'];
+        $player->text                  = $data['text'];
+        $player->link                  = $data['link'];
+        $player->linkHover             = $data['linkHover'];
+        $player->linkActive            = $data['linkActive'];
+        $player->trackPlayed           = $data['trackPlayed'];
+        $player->trackUnplayed         = $data['trackUnplayed'];
+        $player->trackBackground       = $data['trackBackground'];
+        $player->backgroundTop         = $data['backgroundTop'];
+        $player->backgroundBottom      = $data['backgroundBottom'];
+        $player->backgroundText        = $data['backgroundText'];
+        $player->language              = $data['language'];
+        $player->enableApi             = $data['enableApi'];
+        $player->enableControls        = $data['enableControls'];
+        $player->forceAutoplay         = $data['forceAutoplay'];
+        $player->hideTitle             = $data['hideTitle'];
+        $player->forceLoop             = $data['forceLoop'];
 
         return $player;
     }

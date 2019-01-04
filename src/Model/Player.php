@@ -6,64 +6,67 @@ final class Player
 {
     /** @var string */
     public $playerId;
+
+    /** @var integer */
+    public $shapeMargin;
+
+    /** @var integer */
+    public $shapeRadius;
+
+    /** @var string */
+    public $shapeAspect;
+
+    /** @var string */
+    public $shapeBackgroundTop;
+
+    /** @var string */
+    public $shapeBackgroundBottom;
+
+    /** @var string */
+    public $text;
+
+    /** @var string */
+    public $link;
+
+    /** @var string */
+    public $linkHover;
+
+    /** @var string */
+    public $linkActive;
+
+    /** @var string */
+    public $trackPlayed;
+
+    /** @var string */
+    public $trackUnplayed;
+
+    /** @var string */
+    public $trackBackground;
+
+    /** @var string */
+    public $backgroundTop;
+
+    /** @var string */
+    public $backgroundBottom;
+
+    /** @var string */
+    public $backgroundText;
+
+    /** @var string */
+    public $language;
+
     /** @var boolean */
     public $enableApi;
-    /** @var boolean */
-    public $hideTitle;
-    /** @var string */
-    public $controlLogo;
-    /** @var string */
-    public $buttonRadius;
-    /** @var string */
-    public $controlMargin;
-    /** @var boolean */
-    public $forceAutoplay;
-    /** @var string */
-    public $controlLogoUrl;
+
     /** @var boolean */
     public $enableControls;
-    /** @var string */
-    public $panelTextHover;
-    /** @var string */
-    public $scrollbarThumb;
-    /** @var string */
-    public $scrollbarTrack;
-    /** @var string */
-    public $buttonTextHover;
+
     /** @var boolean */
-    public $enableInfoPanel;
-    /** @var string */
-    public $panelTextActive;
-    /** @var string */
-    public $buttonTextActive;
+    public $forceAutoplay;
+
     /** @var boolean */
-    public $enableSharePanel;
+    public $hideTitle;
+
     /** @var boolean */
-    public $buttonLightEffect;
-    /** @var string */
-    public $panelTextInactive;
-    /** @var string */
-    public $trackbarPlayedTop;
-    /** @var string */
-    public $trackbarTextColor;
-    /** @var string */
-    public $buttonTextInactive;
-    /** @var string */
-    public $panelBackgroundTop;
-    /** @var string */
-    public $buttonBackgroundTop;
-    /** @var boolean */
-    public $enableDownloadPanel;
-    /** @var boolean */
-    public $enableSettingsPanel;
-    /** @var string */
-    public $trackbarPlayedBottom;
-    /** @var string */
-    public $panelBackgroundBottom;
-    /** @var string */
-    public $trackbarBackgroundTop;
-    /** @var string */
-    public $buttonBackgroundBottom;
-    /** @var string */
-    public $trackbarBackgroundBottom;
+    public $forceLoop;
 }
