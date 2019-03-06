@@ -48,6 +48,7 @@ class VideosTest extends TestCase
             "publishedAt": "2018-05-18T17:21:11+02:00",
             "tags": [],
             "metadata": [],
+            "public": true,
             "source": {
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
             },
@@ -136,6 +137,7 @@ class VideosTest extends TestCase
                     "description": null,
                     "publishedAt": "2018-05-03T17:21:11+02:00",
                     "tags": [],
+                    "public": true,
                     "metadata": [],
                     "source": {
                         "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
@@ -269,6 +271,7 @@ class VideosTest extends TestCase
                     "publishedAt": "2018-05-03T17:21:11+02:00",
                     "tags": [],
                     "metadata": [],
+                    "public": true,
                     "source": {
                         "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
                     },
@@ -293,6 +296,7 @@ class VideosTest extends TestCase
                         "baz": "wat",
                         "foo": "bar"
                     },
+                    "public": true,
                     "source": {
                         "uri": "/videos/viABC/source"
                     },
@@ -317,6 +321,7 @@ class VideosTest extends TestCase
                         "baz": "wat",
                         "alice": "bob"
                     },
+                    "public": true,
                     "source": {
                         "uri": "/videos/viDEF/source"
                     },
@@ -461,6 +466,7 @@ class VideosTest extends TestCase
                     "publishedAt": "2018-05-03T17:21:11+02:00",
                     "tags": [],
                     "metadata": [],
+                    "public": true,
                     "source": {
                         "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
                     },
@@ -485,6 +491,7 @@ class VideosTest extends TestCase
                         "baz": "wat",
                         "foo": "bar"
                     },
+                    "public": true,
                     "source": {
                         "uri": "/videos/viABC/source"
                     },
@@ -509,6 +516,7 @@ class VideosTest extends TestCase
                         "baz": "wat",
                         "alice": "bob"
                     },
+                    "public": true,
                     "source": {
                         "uri": "/videos/viDEF/source"
                     },
@@ -585,6 +593,7 @@ class VideosTest extends TestCase
             "publishedAt": "2018-05-18T17:21:11+02:00",
             "tags": [],
             "metadata": [],
+            "public": true,
             "source": {
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
             },
@@ -675,6 +684,7 @@ class VideosTest extends TestCase
             "publishedAt": "2018-05-18T17:21:11+02:00",
             "tags": ["tag1", "tag2"],
             "metadata": [],
+            "public": true,
             "source": {
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
             },
@@ -727,6 +737,7 @@ class VideosTest extends TestCase
             "publishedAt": "2018-05-18T17:21:11+02:00",
             "tags": [],
             "metadata": [],
+            "public": true,
             "source": {
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
             },
@@ -746,6 +757,7 @@ class VideosTest extends TestCase
             "publishedAt": "2018-05-18T17:21:11+02:00",
             "tags": [],
             "metadata": [],
+            "public": true,
             "source": {
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
             },
@@ -843,6 +855,7 @@ class VideosTest extends TestCase
             "publishedAt": "2018-05-18T17:21:11+02:00",
             "tags": [],
             "metadata": [],
+            "public": true,
             "source": {
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
             },
@@ -862,6 +875,7 @@ class VideosTest extends TestCase
             "publishedAt": "2018-05-18T17:21:11+02:00",
             "tags": [],
             "metadata": [],
+            "public": true,
             "source": {
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
             },
@@ -971,6 +985,7 @@ class VideosTest extends TestCase
             "publishedAt": "2018-05-18T17:21:11+02:00",
             "tags": [],
             "metadata": [],
+            "public": true,
             "source": {
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
             },
@@ -1025,6 +1040,7 @@ class VideosTest extends TestCase
             "publishedAt": "2018-05-18T17:21:11+02:00",
             "tags": [],
             "metadata": [],
+            "public": true,
             "source": {
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
             },
@@ -1162,6 +1178,7 @@ class VideosTest extends TestCase
             "publishedAt": "2018-05-18T17:21:11+02:00",
             "tags": [],
             "metadata": [],
+            "public": true,
             "source": {
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
             },
@@ -1206,6 +1223,7 @@ class VideosTest extends TestCase
             "publishedAt": "2018-05-18T17:21:11+02:00",
             "tags": [],
             "metadata": [],
+            "public": true,
             "source": {
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
             },
@@ -1294,6 +1312,7 @@ class VideosTest extends TestCase
             "publishedAt": "2018-05-18T17:21:11+02:00",
             "tags": [],
             "metadata": [],
+            "public": true,
             "source": {
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
             },
@@ -1328,6 +1347,7 @@ class VideosTest extends TestCase
             "publishedAt": "2018-05-18T17:21:11+02:00",
             "tags": [],
             "metadata": [],
+            "public": true,
             "source": {
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
             },
@@ -1423,6 +1443,7 @@ class VideosTest extends TestCase
             "publishedAt": "2018-05-18T17:21:11+02:00",
             "tags": [],
             "metadata": [],
+            "public": true,
             "source": {
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
             },
