@@ -22,7 +22,7 @@ Usage:
 require_once __DIR__ . 'vendor/autoload.php';
 
 // Create client and authenticate
-$client = new ApiVideo\Client\Client('john.doe@api.video', 'jOhnDo3_');
+$client = new ApiVideo\Client\Client('xxxx');
 
 // Create and upload a video resource from local drive
 $video = $client->videos->upload(
