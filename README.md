@@ -24,10 +24,16 @@ require_once __DIR__ . 'vendor/autoload.php';
 // Create client and authenticate
 $client = new ApiVideo\Client\Client('john.doe@api.video', 'jOhnDo3_');
 
-// Create and upload a video ressource
+// Create and upload a video resource from local drive
 $video = $client->videos->upload(
     '/path/to/video.mp4', 
     array('title' => 'Course #4 - Part B')
+);
+
+// Create and upload a video resource from online source (third party)
+$video = $client->videos->download(
+    'https://www.exemple.com/path/to/video.mp4', 
+    'Course #4 - Part B'
 );
 
 // Update video properties
@@ -51,7 +57,7 @@ foreach ($videos  as $video) {
     echo $video->title."\n";
 }
 
-// Delete video ressource
+// Delete video resource
 $client->videos->delete($video->videoId);
 
 
@@ -335,6 +341,10 @@ $client->analyticsLive->getLastError();
 |    **-**                            |   source(string)      |    Video media file        |   :heavy_check_mark:   |      **-**             |
 |    **-**                            |   properties(array)   |    Video properties        |   :x:                  |      <ul><li>title(string)</li><li>description(string)</li><li>tags(array(string))</li><li>playerId(string)</li><li>metadata(array(<br/>array(<br/>'key' => 'Key1', <br/>'value' => 'value1'<br/>), <br/>array(<br/>'key' => 'Key2',<br/> 'value' => 'value2'<br/>)<br/>)</li></ul>   |
 |    **-**                            |   videoId(string)     |    Video identifier        |   :x:                  |      **-**             |
+|    **download**                       |   **-**               |    **-**                   |   **-**                |      **-**             |
+|    **-**                            |   source(string)      |    Video media file        |   :heavy_check_mark:   |      **-**             |
+|    **-**                            |   title(string)       |    Video title             |   :heavy_check_mark:   |      **-**             |
+|    **-**                            |   properties(array)   |    Video properties        |   :x:                  |      <ul><li>description(string)</li><li>tags(array(string))</li><li>playerId(string)</li><li>metadata(array(<br/>array(<br/>'key' => 'Key1', <br/>'value' => 'value1'<br/>), <br/>array(<br/>'key' => 'Key2',<br/> 'value' => 'value2'<br/>)<br/>)</li></ul>   |
 |    **uploadThumbnail**              |   **-**               |    **-**                   |   **-**                |      **-**             |
 |    **-**                            |   source(string)      |    Image media file        |   :heavy_check_mark:   |      **-**             |
 |    **-**                            |   videoId(string)     |    Video identifier        |   :heavy_check_mark:   |      **-**             |
@@ -419,7 +429,13 @@ $client->analyticsLive->getLastError();
                                       
 |     **Function**                    |   **Parameters**      |      **Description**       |      **Required**      |   **Allowed Values**   |         
 | :---------------------------------: | :-------------------: | :------------------------: | :--------------------: | :--------------------- |
-|    **generate**                     |   **-**               | Token for delegated upload |   **-**                |      **-**             |
+|    **generate**                     |   **-**               | Token for delegated upload |   **-**                |      **-**             |      
+                                    
+### Account                         
+                                      
+|     **Function**                    |   **Parameters**      |      **Description**       |      **Required**      |   **Allowed Values**   |         
+| :---------------------------------: | :-------------------: | :------------------------: | :--------------------: | :--------------------- |
+|    **get**                     |   **-**               | Get account informations (quota, term) |   **-**                |      **-**             |
 ## More on api.video
 
 A full technical documentation is available on https://docs.api.video/
