@@ -38,21 +38,15 @@ final class Client
 
     /**
      *
-     * @param string $username
-     * @param string $password
-     * @param string $domainName
+     * @param $apiKey
      * @param string $baseUri
      */
-    public function __construct($username, $password, $domainName = null, $baseUri = 'https://ws.api.video')
+    public function __construct($apiKey, $baseUri = 'https://ws.api.video')
     {
         $client  = extension_loaded('curl') ? new Curl : new FileGetContents;
         $browser = new OAuthBrowser($client);
         $browser->setBaseUri($baseUri);
-        $browser->authenticate(
-            $username,
-            $password,
-            $domainName
-        );
+        $browser->authenticate($apiKey);
 
         $this->videos  = new Videos($browser);
         $this->lives  = new Lives($browser);

@@ -33,20 +33,13 @@ class OAuthBrowser extends Browser
 
     /**
      *
-     * @param string $username
-     * @param string $password
-     * @param string $domainName
+     * @param $apiKey
      */
-    public function authenticate($username, $password, $domainName = null)
+    public function authenticate($apiKey)
     {
         $this->authPayload = array(
-            'username' => $username,
-            'password' => $password,
+            'apiKey' => $apiKey,
         );
-
-        if (null !== $domainName) {
-            $this->authPayload['domain'] = $domainName;
-        }
 
         $this->getAccessToken();
     }
@@ -61,10 +54,10 @@ class OAuthBrowser extends Browser
             throw new AuthenticationFailed('Authentication failed');
         }
 
-        /* @var $response \Buzz\Message\Response */
+        /* @var $response Response */
         $response =
             parent::post(
-                $this->baseUri.'/token',
+                $this->baseUri.'/auth/api-key',
                 array(),
                 json_encode($this->authPayload)
             );
