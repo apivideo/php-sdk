@@ -6,6 +6,8 @@ namespace ApiVideo\Client\Api;
 use ApiVideo\Client\Model\Analytic\AnalyticData;
 use ApiVideo\Client\Model\Analytic\AnalyticEvent;
 use ApiVideo\Client\Model\Analytic\AnalyticLive;
+use DateTime;
+use Exception;
 
 class AnalyticsLive extends BaseApi
 {
@@ -72,6 +74,7 @@ class AnalyticsLive extends BaseApi
     /**
      * @param array $data
      * @return AnalyticLive
+     * @throws Exception
      */
     protected function cast(array $data)
     {
@@ -85,8 +88,8 @@ class AnalyticsLive extends BaseApi
 
             // Build Analytic Session
             $analyticData->session->sessionId = $playerSession['session']['session_id'];
-            $analyticData->session->loadedAt  = new \DateTime($playerSession['session']['loaded_at']);
-            $analyticData->session->endedAt   = new \DateTime($playerSession['session']['ended_at']);
+            $analyticData->session->loadedAt  = new DateTime($playerSession['session']['loaded_at']);
+            $analyticData->session->endedAt   = new DateTime($playerSession['session']['ended_at']);
 
             // Build Analytic Location
             $analyticData->location->country = $playerSession['location']['country'];
@@ -114,7 +117,7 @@ class AnalyticsLive extends BaseApi
             $analyticData->client->version = $playerSession['client']['version'];
 
             // Build Analytic Events
-            $analyticData->events = $this->buildAnalyticEventsData($playerSession['events']);
+            $analyticData->events = self::buildAnalyticEventsData($playerSession['events']);
 
             $analytic->data[] = $analyticData;
         }
@@ -122,14 +125,19 @@ class AnalyticsLive extends BaseApi
         return $analytic;
     }
 
-    private function buildAnalyticEventsData(array $events)
+    /**
+     * @param array $events
+     * @return array
+     * @throws Exception
+     */
+    private static function buildAnalyticEventsData(array $events)
     {
         $eventsBuilded = array();
 
         foreach ($events as $event) {
             $analyticEvent            = new AnalyticEvent();
             $analyticEvent->type      = $event['type'];
-            $analyticEvent->emittedAt = new \DateTime($event['emitted_at']);
+            $analyticEvent->emittedAt = new DateTime($event['emitted_at']);
             $analyticEvent->at        = isset($event['at']) ? $event['at'] : null;
             $analyticEvent->from      = isset($event['from']) ? $event['from'] : null;
             $analyticEvent->to        = isset($event['to']) ? $event['to'] : null;

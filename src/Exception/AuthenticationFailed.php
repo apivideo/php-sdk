@@ -2,6 +2,8 @@
 
 namespace ApiVideo\Client\Exception;
 
-final class AuthenticationFailed extends \RuntimeException implements ClientExceptionInterface
+use RuntimeException;
+
+final class AuthenticationFailed extends RuntimeException implements ClientExceptionInterface
 {
 }

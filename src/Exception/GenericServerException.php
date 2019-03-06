@@ -2,6 +2,8 @@
 
 namespace ApiVideo\Client\Exception;
 
-final class GenericServerException extends \RuntimeException implements ServerExceptionInterface
+use RuntimeException;
+
+final class GenericServerException extends RuntimeException implements ServerExceptionInterface
 {
 }

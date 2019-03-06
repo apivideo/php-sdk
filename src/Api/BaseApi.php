@@ -1,10 +1,9 @@
 <?php
 
-
 namespace ApiVideo\Client\Api;
 
-
 use ApiVideo\Client\Buzz\OAuthBrowser;
+use ApiVideo\Client\Model\Account as AccountModel;
 use ApiVideo\Client\Model\Analytic\AnalyticLive;
 use ApiVideo\Client\Model\Analytic\AnalyticVideo;
 use ApiVideo\Client\Model\Caption;
@@ -49,8 +48,8 @@ abstract class BaseApi
     }
 
     /**
-     * @param \Buzz\Message\MessageInterface $message
-     * @return Caption|Player|Video|Live|AnalyticVideo|AnalyticLive
+     * @param MessageInterface $message
+     * @return Caption|Player|Video|Live|AnalyticVideo|AnalyticLive|AccountModel
      */
     protected function unmarshal(MessageInterface $message)
     {

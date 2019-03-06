@@ -4,14 +4,16 @@
 namespace ApiVideo\Client\Model\Analytic;
 
 
+use DateTimeInterface;
+
 class AnalyticSession
 {
     /** @var string */
     public $sessionId;
 
-    /** @var \DateTimeInterface */
+    /** @var DateTimeInterface */
     public $loadedAt;
 
-    /** @var \DateTimeInterface */
+    /** @var DateTimeInterface */
     public $endedAt;
 }

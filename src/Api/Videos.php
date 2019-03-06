@@ -5,8 +5,12 @@ namespace ApiVideo\Client\Api;
 use ApiVideo\Client\Buzz\FormByteRangeUpload;
 use ApiVideo\Client\Buzz\OAuthBrowser;
 use ApiVideo\Client\Model\Video;
+use Buzz\Exception\RequestException;
 use Buzz\Message\Form\FormUpload;
 use Buzz\Message\RequestInterface;
+use DateTimeImmutable;
+use Exception;
+use UnexpectedValueException;
 
 class Videos extends BaseApi
 {
@@ -137,15 +141,15 @@ class Videos extends BaseApi
      * @param array $properties
      * @param string $videoId
      * @return Video|null
-     * @throws \Buzz\Exception\RequestException
-     * @throws \UnexpectedValueException
+     * @throws RequestException
+     * @throws UnexpectedValueException
      */
     public function upload($source, array $properties = array(), $videoId = null)
     {
         $timeout = $this->browser->getClient()->getTimeout();
         $this->browser->getClient()->setTimeout(0);
         if (!is_readable($source)) {
-            throw new \UnexpectedValueException("'$source' must be a readable source file.");
+            throw new UnexpectedValueException("'$source' must be a readable source file.");
         }
 
         if (null === $videoId) {
@@ -161,7 +165,7 @@ class Videos extends BaseApi
         $stats  = fstat($resource);
         $length = $stats['size'];
         if (0 >= $length) {
-            throw new \UnexpectedValueException("'$source' is empty.");
+            throw new UnexpectedValueException("'$source' is empty.");
         }
         // Complete upload in a single request when file is small enough
         if ($this->chunkSize > $length) {
@@ -226,13 +230,13 @@ class Videos extends BaseApi
      * @param string $source Path to the file to upload
      * @param string $videoId
      * @return Video|null
-     * @throws \Buzz\Exception\RequestException
-     * @throws \UnexpectedValueException
+     * @throws RequestException
+     * @throws UnexpectedValueException
      */
     public function uploadThumbnail($source, $videoId)
     {
         if (!is_readable($source)) {
-            throw new \UnexpectedValueException("'$source' must be a readable source file.");
+            throw new UnexpectedValueException("'$source' must be a readable source file.");
         }
 
         $resource = fopen($source, 'rb');
@@ -240,7 +244,7 @@ class Videos extends BaseApi
         $stats  = fstat($resource);
         $length = $stats['size'];
         if (0 >= $length) {
-            throw new \UnexpectedValueException("'$source' is empty.");
+            throw new UnexpectedValueException("'$source' is empty.");
         }
 
         $response = $this->browser->submit(
@@ -328,7 +332,7 @@ class Videos extends BaseApi
     public function updateThumbnailWithTimeCode($videoId, $timecode)
     {
         if (empty($timecode)) {
-            throw new \UnexpectedValueException('Timecode is empty.');
+            throw new UnexpectedValueException('Timecode is empty.');
         }
 
         $response = $this->browser->patch(
@@ -366,7 +370,7 @@ class Videos extends BaseApi
     /**
      * @param array $data
      * @return Video
-     * @throws \Exception
+     * @throws Exception
      */
     protected function cast(array $data)
     {
@@ -379,7 +383,7 @@ class Videos extends BaseApi
         $video->metadata    = $data['metadata'];
         $video->source      = $data['source'];
         $video->assets      = $data['assets'];
-        $video->publishedAt = new \DateTimeImmutable($data['publishedAt']);
+        $video->publishedAt = new DateTimeImmutable($data['publishedAt']);
 
         return $video;
     }

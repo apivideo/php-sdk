@@ -4,6 +4,7 @@ namespace ApiVideo\Client\Api;
 
 use ApiVideo\Client\Model\Caption;
 use Buzz\Message\Form\FormUpload;
+use UnexpectedValueException;
 
 class Captions extends BaseApi
 {
@@ -48,15 +49,15 @@ class Captions extends BaseApi
     public function upload($source, array $properties = array())
     {
         if (!is_readable($source)) {
-            throw new \UnexpectedValueException("'$source' must be a readable source file.");
+            throw new UnexpectedValueException("'$source' must be a readable source file.");
         }
 
         if (!isset($properties['videoId'])) {
-            throw new \UnexpectedValueException('"videoId" property must be set for upload caption.');
+            throw new UnexpectedValueException('"videoId" property must be set for upload caption.');
         }
 
         if (!isset($properties['language'])) {
-            throw new \UnexpectedValueException('"language" property must be set for upload caption.');
+            throw new UnexpectedValueException('"language" property must be set for upload caption.');
         }
         $videoId  = $properties['videoId'];
         $language = $properties['language'];
@@ -66,7 +67,7 @@ class Captions extends BaseApi
         $stats  = fstat($resource);
         $length = $stats['size'];
         if (0 >= $length) {
-            throw new \UnexpectedValueException("'$source' is empty.");
+            throw new UnexpectedValueException("'$source' is empty.");
         }
 
         $response = $this->browser->submit(

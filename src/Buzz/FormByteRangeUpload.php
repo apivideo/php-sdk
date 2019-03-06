@@ -2,8 +2,9 @@
 
 namespace ApiVideo\Client\Buzz;
 
-use ApiVideo\Client\Exception\FileNotFoundException;
 use Buzz\Message\Form\FormUpload;
+use Exception;
+use RuntimeException;
 
 class FormByteRangeUpload extends FormUpload
 {
@@ -37,28 +38,30 @@ class FormByteRangeUpload extends FormUpload
     {
         parent::__construct($file, $contentType);
 
-        $this->from = $from;
-        $this->to = $to;
+        $this->from   = $from;
+        $this->to     = $to;
         $this->length = $length;
     }
 
     /**
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function getHeaders()
     {
         $headers = parent::getHeaders();
 
         if (!$this->getFile()) {
-            throw new \RuntimeException('Missing file');
+            throw new RuntimeException('Missing file');
         }
 
-        $headers[] = sprintf('Content-Range: %d-%d/%d',
+        $headers[] = sprintf(
+            'Content-Range: %d-%d/%d',
             $this->from,
             $this->to,
-            $this->length);
+            $this->length
+        );
 
         return $headers;
     }
