@@ -2,6 +2,7 @@
 
 namespace ApiVideo\Client;
 
+use ApiVideo\Client\Api\Account;
 use ApiVideo\Client\Api\AnalyticsLive;
 use ApiVideo\Client\Api\AnalyticsVideo;
 use ApiVideo\Client\Api\Captions;
@@ -36,6 +37,9 @@ final class Client
     /** @var AnalyticsLive */
     public $analyticsLive;
 
+    /** @var Account */
+    public $account;
+
     /**
      *
      * @param $apiKey
@@ -55,5 +59,6 @@ final class Client
         $this->analyticsVideo = new AnalyticsVideo($browser);
         $this->analyticsLive = new AnalyticsLive($browser);
         $this->tokens  = new Tokens($browser);
+        $this->account  = new Account($browser);
     }
 }
