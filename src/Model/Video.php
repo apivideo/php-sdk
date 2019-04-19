@@ -33,4 +33,7 @@ final class Video
 
     /** @var Caption[] */
     public $captions;
+
+    /** @var string */
+    public $playerId;
 }

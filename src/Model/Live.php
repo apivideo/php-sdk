@@ -23,4 +23,7 @@ class Live
 
     /** @var array */
     public $assets = array();
+
+    /** @var string */
+    public $playerId;
 }

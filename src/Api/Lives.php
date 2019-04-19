@@ -6,6 +6,7 @@ use ApiVideo\Client\Model\Live;
 use Buzz\Exception\RequestException;
 use Buzz\Message\Form\FormUpload;
 use UnexpectedValueException;
+use function array_key_exists;
 
 class Lives extends BaseApi
 {
@@ -196,6 +197,9 @@ class Lives extends BaseApi
         $live->record       = $data['record'];
         $live->broadcasting = $data['broadcasting'];
         $live->assets       = $data['assets'];
+        if (array_key_exists('playerId', $data)) {
+            $live->playerId = $data['playerId'];
+        }
 
         return $live;
     }
