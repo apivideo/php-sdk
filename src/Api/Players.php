@@ -5,6 +5,8 @@ namespace ApiVideo\Client\Api;
 
 
 use ApiVideo\Client\Model\Player;
+use Buzz\Message\Form\FormUpload;
+use UnexpectedValueException;
 
 class Players extends BaseApi
 {
@@ -128,6 +130,48 @@ class Players extends BaseApi
     }
 
     /**
+     * @param string $source Path to the file to upload
+     * @param $link
+     * @param $playerId
+     * @return Player|null
+     */
+    public function uploadLogo($source, $playerId, $link = null)
+    {
+        if (!is_readable($source)) {
+            throw new UnexpectedValueException("'$source' must be a readable source file.");
+        }
+
+        $resource = fopen($source, 'rb');
+
+        $stats  = fstat($resource);
+        $length = $stats['size'];
+        if (0 >= $length) {
+            throw new UnexpectedValueException("'$source' is empty.");
+        }
+
+        $payload = array(
+            'file' => new FormUpload($source),
+        );
+
+        if (null !== $link) {
+            $payload['link'] = $link;
+        }
+
+        $response = $this->browser->submit(
+            "/players/$playerId/logo",
+            $payload
+        );
+
+        if (!$response->isSuccessful()) {
+            $this->registerLastError($response);
+
+            return null;
+        }
+
+        return $this->unmarshal($response);
+    }
+
+    /**
      * @param string $playerId
      * @return int|null
      */
@@ -173,6 +217,10 @@ class Players extends BaseApi
         $player->forceAutoplay         = $data['forceAutoplay'];
         $player->hideTitle             = $data['hideTitle'];
         $player->forceLoop             = $data['forceLoop'];
+        if (array_key_exists('logo', $data)) {
+            $player->logo = $data['logo'];
+        }
+
 
         return $player;
     }

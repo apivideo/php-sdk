@@ -69,4 +69,7 @@ final class Player
 
     /** @var boolean */
     public $forceLoop;
+
+    /** @var array */
+    public $logo = array();
 }
