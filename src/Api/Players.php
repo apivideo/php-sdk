@@ -217,8 +217,8 @@ class Players extends BaseApi
         $player->forceAutoplay         = $data['forceAutoplay'];
         $player->hideTitle             = $data['hideTitle'];
         $player->forceLoop             = $data['forceLoop'];
-        if (array_key_exists('logo', $data)) {
-            $player->logo = $data['logo'];
+        if (array_key_exists('assets', $data)) {
+            $player->logo = $data['assets'];
         }
 
 
