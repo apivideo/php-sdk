@@ -103,6 +103,9 @@ $properties = array(
 // Update player properties
 $client->players->update($player->playerId, $properties);
 
+// Upload player logo
+$client->players->uploadLogo('/path/to/logo.png', $playerId, 'https://api.video');
+
 
 // Delete a player
 $client->players->delete($player->playerId);
@@ -253,6 +256,10 @@ $client->players->create(array $properties = array());
 // Update player's properties
 $client->players->update($playerId, array $properties);
 
+// Upload player logo
+$client->players->uploadLogo('/path/to/logo.png', $playerId, 'https://api.video');
+
+
 // Delete a player
 $client->players->delete($playerId);
 
@@ -367,6 +374,10 @@ $client->analyticsLive->getLastError();
 |    **update**                       |   **-**               |    **-**                   |   **-**                |      **-**             |
 |    **-**                            |   playerId(string)    |    Player identifier       |   :heavy_check_mark:   |      **-**             |
 |    **-**                            |   properties(array)   |    Player properties       |   :heavy_check_mark:   |      <ul><li>shapeMargin(int)</li><li>shapeRadius(int)</li><li>shapeAspect(string)</li><li>shapeBackgroundTop(string)</li><li>shapeBackgroundBottom(string)</li><li>text(string)</li><li>link(string)</li><li>linkHover(string)</li><li>linkActive(string)</li><li>trackPlayed(string)</li><li>trackUnplayed(string)</li><li>trackBackground(string)</li><li>backgroundTop(string)</li><li>backgroundBottom(string)</li><li>backgroundText(string)</li><li>enableApi(bool)</li><li>enableControls(bool)</li><li>forceAutoplay(bool)</li><li>hideTitle(bool)</li></ul>              |
+|    **uploadLogo**                   |   **-**               |    **-**                   |   **-**                |      **-**             |
+|    **-**                            |   source(string)      |    Image media file        |   :heavy_check_mark:   |      **-**             |
+|    **-**                            |   playerId(string)    |    Player identifier       |   :heavy_check_mark:   |      **-**             |
+|    **-**                            |   link(string)        |    Link url       |   **-**      |      **-**             |
 |    **delete**                       |   playerId(string)    |    Player identifier       |   :heavy_check_mark:   |      **-**             |
                                       
 ### Captions                          
