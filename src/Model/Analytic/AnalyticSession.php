@@ -16,4 +16,7 @@ class AnalyticSession
 
     /** @var DateTimeInterface */
     public $endedAt;
+
+    /** @var array */
+    public $metadata = array();
 }

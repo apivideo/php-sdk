@@ -16,14 +16,23 @@ class AnalyticsVideo extends BaseApi
      * @param string|null $period
      * @return AnalyticVideo|null
      */
-    public function get($videoId, $period = null)
+    public function get($videoId, $period = null, array $metadata = null)
     {
-        $parameters = '';
+        $parameters = array();
         if (null !== $period) {
-            $parameters = "?period=$period";
+            $parameters['period'] = $period;
         }
 
-        $response = $this->browser->get("/analytics/videos/$videoId".$parameters);
+
+        if(null !== $metadata){
+            if(!is_array($metadata)){
+                throw new \InvalidArgumentException('Metadata argument must be an array');
+            }
+
+            $parameters['metadata'] = $metadata;
+        }
+
+        $response = $this->browser->get("/analytics/videos/$videoId?".http_build_query($parameters));
         if (!$response->isSuccessful()) {
             $this->registerLastError($response);
 
@@ -46,6 +55,8 @@ class AnalyticsVideo extends BaseApi
 
         do {
             $params['currentPage'] = $currentPage;
+
+            var_dump("/analytics/videos?".http_build_query($parameters));
             $response              = $this->browser->get('/analytics/videos?'.http_build_query($parameters));
 
             if (!$response->isSuccessful()) {
@@ -81,6 +92,7 @@ class AnalyticsVideo extends BaseApi
         $analytic             = new AnalyticVideo();
         $analytic->videoId    = $data['video']['video_id'];
         $analytic->videoTitle = $data['video']['title'];
+        $analytic->metadata   = $data['video']['metadata'];
         $analytic->period     = $data['period'];
         // Build Analytic Data
         foreach ($data['data'] as $playerSession) {
@@ -90,6 +102,9 @@ class AnalyticsVideo extends BaseApi
             $analyticData->session->sessionId = $playerSession['session']['session_id'];
             $analyticData->session->loadedAt  = new DateTime($playerSession['session']['loaded_at']);
             $analyticData->session->endedAt   = new DateTime($playerSession['session']['ended_at']);
+            if(isset($playerSession['session']['metadatas'])){
+                $analyticData->session->metadata = $playerSession['session']['metadatas'];
+            }
 
             // Build Analytic Location
             $analyticData->location->country = $playerSession['location']['country'];
