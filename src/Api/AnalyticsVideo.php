@@ -55,8 +55,6 @@ class AnalyticsVideo extends BaseApi
 
         do {
             $params['currentPage'] = $currentPage;
-
-            var_dump("/analytics/videos?".http_build_query($parameters));
             $response              = $this->browser->get('/analytics/videos?'.http_build_query($parameters));
 
             if (!$response->isSuccessful()) {
