@@ -14,6 +14,7 @@ class AnalyticsVideo extends BaseApi
     /**
      * @param $videoId
      * @param string|null $period
+     * @param array|null $metadata
      * @return AnalyticVideo|null
      */
     public function get($videoId, $period = null, array $metadata = null)
