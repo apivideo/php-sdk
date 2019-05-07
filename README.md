@@ -19,7 +19,7 @@ Usage:
 ```php
 <?php
 
-require_once __DIR__ . 'vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 // Create client and authenticate
 $client = new ApiVideo\Client\Client('xxxx');
