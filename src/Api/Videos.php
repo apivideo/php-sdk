@@ -239,7 +239,7 @@ class Videos extends BaseApi
     public function uploadThumbnail($source, $videoId)
     {
         if (!is_readable($source)) {
-            throw new InvalidArgumentException("'$source' must be a readable source file.");
+            throw new InvalidArgumentException('The source file must be readable.');
         }
 
         $resource = fopen($source, 'rb');
@@ -247,7 +247,7 @@ class Videos extends BaseApi
         $stats  = fstat($resource);
         $length = $stats['size'];
         if (0 >= $length) {
-            throw new InvalidArgumentException("'$source' is empty.");
+            throw new InvalidArgumentException("'$source' is an empty file.");
         }
 
         $response = $this->browser->submit(
@@ -336,7 +336,7 @@ class Videos extends BaseApi
     public function updateThumbnailWithTimeCode($videoId, $timecode)
     {
         if (empty($timecode)) {
-            throw new InvalidArgumentException('Timecode is empty.');
+            throw new InvalidArgumentException('Timecode is an empty file.');
         }
 
         $response = $this->browser->patch(

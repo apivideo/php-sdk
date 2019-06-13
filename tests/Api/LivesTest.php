@@ -708,7 +708,7 @@ class LivesTest extends TestCase
     /**
      * @test
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage 'vfs://root/image/testfail.jpg' must be a readable source file.
+     * @expectedExceptionMessage The source file must be readable.
      */
     public function uploadThumbnailWithBadSourceShouldFail()
     {
@@ -736,7 +736,7 @@ class LivesTest extends TestCase
     /**
      * @test
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage 'vfs://root/testempty.jpg' is empty.
+     * @expectedExceptionMessage 'vfs://root/testempty.jpg' is an empty file.
      * @throws \ReflectionException
      */
     public function uploadThumbnailWithEmptySourceShouldFail()

@@ -215,7 +215,7 @@ class CaptionsTest extends TestCase
     /**
      * @test
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage 'vfs://root/captions/test.vtt' must be a readable source file.
+     * @expectedExceptionMessage The source file must be readable.
      */
     public function uploadWithBadSourceShouldFail()
     {
@@ -287,7 +287,7 @@ class CaptionsTest extends TestCase
     /**
      * @test
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage 'vfs://root/testempty.vtt' is empty.
+     * @expectedExceptionMessage 'vfs://root/testempty.vtt' is an empty file.
      */
     public function uploadWithEmptySourceShouldFail()
     {

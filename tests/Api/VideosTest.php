@@ -922,7 +922,7 @@ class VideosTest extends TestCase
     /**
      * @test
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Timecode is empty.
+     * @expectedExceptionMessage Timecode is an empty file.
      */
     public function updateThumbnailWithEmptyTimeCodeFailed()
     {
@@ -1110,7 +1110,7 @@ class VideosTest extends TestCase
     /**
      * @test
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage 'vfs://root/video/testfail.mp4' must be a readable source file.
+     * @expectedExceptionMessage The source file must be readable.
      */
     public function uploadWithBadSourceShouldFail()
     {
@@ -1163,7 +1163,7 @@ class VideosTest extends TestCase
     /**
      * @test
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage 'vfs://root/testempty.mp4' is empty.
+     * @expectedExceptionMessage 'vfs://root/testempty.mp4' is an empty file.
      * @throws \ReflectionException
      */
     public function uploadWithEmptySourceShouldFail()
@@ -1299,7 +1299,7 @@ class VideosTest extends TestCase
     /**
      * @test
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage 'vfs://root/image/testfail.jpg' must be a readable source file.
+     * @expectedExceptionMessage The source file must be readable.
      */
     public function uploadThumbnailWithBadSourceShouldFail()
     {
@@ -1332,7 +1332,7 @@ class VideosTest extends TestCase
     /**
      * @test
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage 'vfs://root/testempty.jpg' is empty.
+     * @expectedExceptionMessage 'vfs://root/testempty.jpg' is an empty file.
      * @throws \ReflectionException
      */
     public function uploadThumbnailWithEmptySourceShouldFail()
