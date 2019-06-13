@@ -9,7 +9,7 @@ use org\bovigo\vfs\content\LargeFileContent;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
-use UnexpectedValueException;
+use InvalidArgumentException;
 
 class CaptionsTest extends TestCase
 {
@@ -214,7 +214,7 @@ class CaptionsTest extends TestCase
 
     /**
      * @test
-     * @expectedException UnexpectedValueException
+     * @expectedException InvalidArgumentException
      * @expectedExceptionMessage 'vfs://root/captions/test.vtt' must be a readable source file.
      */
     public function uploadWithBadSourceShouldFail()
@@ -256,7 +256,7 @@ class CaptionsTest extends TestCase
 
     /**
      * @test
-     * @expectedException UnexpectedValueException
+     * @expectedException InvalidArgumentException
      * @expectedExceptionMessage "videoId" property must be set for upload caption.
      */
     public function uploadWithMissingVideoIdShouldFail()
@@ -271,7 +271,7 @@ class CaptionsTest extends TestCase
 
     /**
      * @test
-     * @expectedException UnexpectedValueException
+     * @expectedException InvalidArgumentException
      * @expectedExceptionMessage "language" property must be set for upload caption.
      */
     public function uploadWithMissingLanguageShouldFail()
@@ -286,7 +286,7 @@ class CaptionsTest extends TestCase
 
     /**
      * @test
-     * @expectedException UnexpectedValueException
+     * @expectedException InvalidArgumentException
      * @expectedExceptionMessage 'vfs://root/testempty.vtt' is empty.
      */
     public function uploadWithEmptySourceShouldFail()

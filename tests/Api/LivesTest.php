@@ -9,7 +9,7 @@ use org\bovigo\vfs\content\LargeFileContent;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
-use UnexpectedValueException;
+use InvalidArgumentException;
 
 class LivesTest extends TestCase
 {
@@ -707,7 +707,7 @@ class LivesTest extends TestCase
 
     /**
      * @test
-     * @expectedException UnexpectedValueException
+     * @expectedException InvalidArgumentException
      * @expectedExceptionMessage 'vfs://root/image/testfail.jpg' must be a readable source file.
      */
     public function uploadThumbnailWithBadSourceShouldFail()
@@ -735,7 +735,7 @@ class LivesTest extends TestCase
 
     /**
      * @test
-     * @expectedException UnexpectedValueException
+     * @expectedException InvalidArgumentException
      * @expectedExceptionMessage 'vfs://root/testempty.jpg' is empty.
      * @throws \ReflectionException
      */

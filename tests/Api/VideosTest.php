@@ -9,7 +9,7 @@ use org\bovigo\vfs\content\LargeFileContent;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
-use UnexpectedValueException;
+use InvalidArgumentException;
 
 class VideosTest extends TestCase
 {
@@ -921,7 +921,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @expectedException UnexpectedValueException
+     * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Timecode is empty.
      */
     public function updateThumbnailWithEmptyTimeCodeFailed()
@@ -1109,7 +1109,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @expectedException UnexpectedValueException
+     * @expectedException InvalidArgumentException
      * @expectedExceptionMessage 'vfs://root/video/testfail.mp4' must be a readable source file.
      */
     public function uploadWithBadSourceShouldFail()
@@ -1162,7 +1162,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @expectedException UnexpectedValueException
+     * @expectedException InvalidArgumentException
      * @expectedExceptionMessage 'vfs://root/testempty.mp4' is empty.
      * @throws \ReflectionException
      */
@@ -1298,7 +1298,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @expectedException UnexpectedValueException
+     * @expectedException InvalidArgumentException
      * @expectedExceptionMessage 'vfs://root/image/testfail.jpg' must be a readable source file.
      */
     public function uploadThumbnailWithBadSourceShouldFail()
@@ -1331,7 +1331,7 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @expectedException UnexpectedValueException
+     * @expectedException InvalidArgumentException
      * @expectedExceptionMessage 'vfs://root/testempty.jpg' is empty.
      * @throws \ReflectionException
      */

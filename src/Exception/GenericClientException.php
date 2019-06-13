@@ -2,8 +2,8 @@
 
 namespace ApiVideo\Client\Exception;
 
-use UnexpectedValueException;
+use InvalidArgumentException;
 
-final class GenericClientException extends UnexpectedValueException implements ClientExceptionInterface
+final class GenericClientException extends InvalidArgumentException implements ClientExceptionInterface
 {
 }
