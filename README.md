@@ -5,24 +5,22 @@
 
 The [api.video](https://api.video/) web-service helps you put video on the web without the hassle. 
 This documentation helps you use the corresponding PHP client.
- 
-## Quick start
 
-Install:
+## Installation
 
 ```shell
-$ composer require api-video/php-sdk
+composer require api-video/php-sdk
 ```
-
-Usage:
+ 
+## Quick start
 
 ```php
 <?php
 
-require_once __DIR__ . 'vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 // Create client and authenticate
-$client = new ApiVideo\Client\Client('xxxx');
+$client = new ApiVideo\Client\Client('yourApiKey');
 
 // Create and upload a video resource from local drive
 $video = $client->videos->upload(
@@ -30,6 +28,15 @@ $video = $client->videos->upload(
     array('title' => 'Course #4 - Part B')
 );
 
+// Display embed code
+echo $video->assets['iframe'];
+// <iframe src="https://embed.api.video/vod/viXXX" width="100%" height="100%" frameborder="0" scrolling="no" allowfullscreen=""></iframe>
+```
+
+## Advanced usage
+
+```php
+<?php
 // Create and upload a video resource from online source (third party)
 $video = $client->videos->download(
     'https://www.exemple.com/path/to/video.mp4', 
