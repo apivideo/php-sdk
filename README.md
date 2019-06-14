@@ -19,8 +19,11 @@ composer require api-video/php-sdk
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-// Create client and authenticate
-$client = new ApiVideo\Client\Client('yourApiKey');
+// Authenticate in production mode
+$client = ApiVideo\Client\Client::create('yourProductionApiKey');
+
+// Alternatively, authenticate in sandbox mode for testing
+$client = ApiVideo\Client\Client::createSandbox('yourApiKey');
 
 // Create and upload a video resource from local drive
 $video = $client->videos->upload(
@@ -119,7 +122,7 @@ $client->players->delete($player->playerId);
 
 
 // Upload video caption
-$client->videos->captions->upload(
+$client->captions->upload(
     'path/to/caption.vtt', 
     array(
         'videoId' => $video->videoId, 
@@ -128,13 +131,13 @@ $client->videos->captions->upload(
 );
 
 // Get video caption by language
-$caption = $client->videos->captions->get($video->videoId, 'en');
+$caption = $client->captions->get($video->videoId, 'en');
 
 // Update the default caption language
-$client->videos->captions->updateDefault($video->videoId, 'en', true);
+$client->captions->updateDefault($video->videoId, 'en', true);
 
 //Delete caption by language
-$client->videos->captions->delete($video->videoId, 'en');
+$client->captions->delete($video->videoId, 'en');
 
 // Create a live
 $live = $client->lives->create('Test live');
@@ -166,26 +169,24 @@ $token = $client->tokens->generate();
  *********************************
  *********************************
 */
-$client = new ApiVideo\Client\Client($username, $password);
-
 // Show a video
 $client->videos->get($videoId);
 
 // List or search videos
-$client->videos->search(array $parameters = array(), $callback = null);
+$client->videos->search($parameters = array(), $callback = null);
 
 // Create video properties
 $client->videos->create($title, $properties = array());
 
 // Upload a video media file
 // Create a video, if videoId is null
-$client->videos->upload($source, array $properties = array(), $videoId = null);
+$client->videos->upload($source, $properties = array(), $videoId = null);
 
 // Create a video by downloading it from a third party
-$client->videos->download($source, $title, array $properties = array());
+$client->videos->download($source, $title, $properties = array());
 
 // Update video properties
-$client->videos->update($videoId, array $properties);
+$client->videos->update($videoId, $properties = array());
 
 // Set video public
 $client->videos->setPublic($videoId);
@@ -226,23 +227,23 @@ $client->videos->getLastError();
 */
 
 // Get caption for a video
-$client->videos->captions->get($videoId, $language);
+$client->captions->get($videoId, $language);
 
 // Get all captions for a video
-$client->videos->captions->getAll($videoId);
+$client->captions->getAll($videoId);
 
 // Upload a caption file for a video (.vtt)
-$client->videos->captions->upload($source, array $properties);
+$client->captions->upload($source, $properties = array());
 
 
 // Set default caption for a video
-$client->videos->captions->updateDefault($videoId, $language, $isDefault);
+$client->captions->updateDefault($videoId, $language, $isDefault);
 
 // Delete video's caption
-$client->videos->captions->delete($videoId, $language);
+$client->captions->delete($videoId, $language);
 
 // Get last video captions request Error
-$client->videos->captions->getLastError();
+$client->captions->getLastError();
 
 
 /*
@@ -255,13 +256,13 @@ $client->videos->captions->getLastError();
 $client->players->get($playerId);
 
 // List players
-$client->players->search(array $parameters = array(), $callback = null);
+$client->players->search($parameters = array(), $callback = null);
 
 // Create a player
-$client->players->create(array $properties = array());
+$client->players->create($properties = array());
 
 // Update player's properties
-$client->players->update($playerId, array $properties);
+$client->players->update($playerId, $properties);
 
 // Upload player logo
 $client->players->uploadLogo('/path/to/logo.png', $playerId, 'https://api.video');
@@ -285,13 +286,13 @@ $client->players->getLastError();
 $client->lives->get($liveStreamId);
 
 // List or search lives
-$client->lives->search(array $parameters = array(), $callback = null);
+$client->lives->search($parameters = array(), $callback = null);
 
 // Create live properties
 $client->lives->create($name, $properties = array());
 
 // Update live properties
-$client->lives->update($liveStreamId, array $properties);
+$client->lives->update($liveStreamId, $properties = array());
 
 // Delete live (file and data)
 $client->lives->delete($liveStreamId);

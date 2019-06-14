@@ -41,8 +41,28 @@ final class Client
     public $account;
 
     /**
-     *
-     * @param $apiKey
+     * Create client for production environment.
+     * @param string $apiKey
+     * @return Client
+     */
+    public static function create($apiKey)
+    {
+        return new Client($apiKey, 'https://ws.api.video');
+    }
+
+    /**
+     * Create client for sandbox environment.
+     * @param string $apiKey
+     * @return Client
+     */
+    public static function createSandbox($apiKey)
+    {
+        return new Client($apiKey, 'https://sandbox.api.video');
+    }
+
+    /**
+     * @deprecated Use Client::create() or Client::createSandbox() instead
+     * @param string $apiKey
      * @param string $baseUri
      */
     public function __construct($apiKey, $baseUri = 'https://ws.api.video')
@@ -52,13 +72,13 @@ final class Client
         $browser->setBaseUri($baseUri);
         $browser->authenticate($apiKey);
 
-        $this->videos  = new Videos($browser);
-        $this->lives  = new Lives($browser);
-        $this->players = new Players($browser);
-        $this->captions = new Captions($browser);
+        $this->videos         = new Videos($browser);
+        $this->lives          = new Lives($browser);
+        $this->players        = new Players($browser);
+        $this->captions       = new Captions($browser);
         $this->analyticsVideo = new AnalyticsVideo($browser);
-        $this->analyticsLive = new AnalyticsLive($browser);
-        $this->tokens  = new Tokens($browser);
-        $this->account  = new Account($browser);
+        $this->analyticsLive  = new AnalyticsLive($browser);
+        $this->tokens         = new Tokens($browser);
+        $this->account        = new Account($browser);
     }
 }
