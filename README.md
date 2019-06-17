@@ -19,10 +19,10 @@ composer require api-video/php-sdk
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-// Authenticate in production mode
+// Authenticate in production environment
 $client = ApiVideo\Client\Client::create('yourProductionApiKey');
 
-// Alternatively, authenticate in sandbox mode for testing
+// Alternatively, authenticate in sandbox environment for testing
 $client = ApiVideo\Client\Client::createSandbox('yourSandboxApiKey');
 
 // Create and upload a video resource from local drive
