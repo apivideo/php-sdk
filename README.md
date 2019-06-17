@@ -23,7 +23,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 $client = ApiVideo\Client\Client::create('yourProductionApiKey');
 
 // Alternatively, authenticate in sandbox mode for testing
-$client = ApiVideo\Client\Client::createSandbox('yourApiKey');
+$client = ApiVideo\Client\Client::createSandbox('yourSandboxApiKey');
 
 // Create and upload a video resource from local drive
 $video = $client->videos->upload(
