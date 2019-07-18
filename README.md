@@ -347,7 +347,7 @@ $client->analyticsLive->getLastError();
 | :---------------------------------: | :-------------------: | :------------------------: | :--------------------: | :--------------------- |
 |    **get**                          |   videoId(string)     |    Video identifier        |   :heavy_check_mark:   |      **-**             |
 |    **search**                       |   **-**               |    **-**                   |   **-**                |      **-**             |
-|    **-**                            |   parameters(array)   |    Search parameters       |   :x:                  |      <ul><li>currentPage(int)</li><li>pageSize(int)</li><li>sortBy(string)</li><li>sortOrder(string)</li><li>keyword(string)</li><li>tags(string&#124;array(string))</li><li>metadata(array(string))</li></ul>   |
+|    **-**                            |   parameters(array)   |    Search parameters       |   :x:                  |      <ul><li>currentPage(int)</li><li>pageSize(int)</li><li>sortBy(string)</li><li>sortOrder(string)</li><li>title(string)</li><li>description(string)</li><li>tags(string&#124;array(string))</li><li>metadata(array())</li></ul>   |
 |    **-**                            |   callback(function)  |    callback function       |   :x:                  |      **-**             |
 |    **create**                       |   **-**               |    **-**                   |   **-**                |      **-**             |
 |    **-**                            |   title(string)       |    Video title             |   :heavy_check_mark:   |      **-**             |
