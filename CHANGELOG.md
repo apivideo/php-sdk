@@ -1,6 +1,12 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [1.2.0] - 2019-07-18
+### Added
+- Improve Documentation
+- Light Refactoring to support new Analytics response
+- Add Analytics Session Events support
+
 ## [1.1.0] - 2019-06-13
 ### Added
 - Constructors for production and sandbox environments

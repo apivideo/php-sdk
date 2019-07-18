@@ -8,7 +8,7 @@ class AnalyticVideo
     public $videoId;
 
     /** @var string */
-    public $videoTitle;
+    public $title;
 
     /** @var array */
     public $metadata = array();

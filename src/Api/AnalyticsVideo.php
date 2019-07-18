@@ -25,8 +25,8 @@ class AnalyticsVideo extends BaseApi
         }
 
 
-        if(null !== $metadata){
-            if(!is_array($metadata)){
+        if (null !== $metadata) {
+            if (!is_array($metadata)) {
                 throw new \InvalidArgumentException('Metadata argument must be an array');
             }
 
@@ -49,14 +49,14 @@ class AnalyticsVideo extends BaseApi
      */
     public function search(array $parameters = array())
     {
-        $params             = $parameters;
-        $currentPage        = isset($parameters['currentPage']) ? $parameters['currentPage'] : 1;
+        $params = $parameters;
+        $currentPage = isset($parameters['currentPage']) ? $parameters['currentPage'] : 1;
         $params['pageSize'] = isset($parameters['pageSize']) ? $parameters['pageSize'] : 100;
-        $allAnalytics       = array();
+        $allAnalytics = array();
 
         do {
             $params['currentPage'] = $currentPage;
-            $response              = $this->browser->get('/analytics/videos?'.http_build_query($parameters));
+            $response = $this->browser->get('/analytics/videos?'.http_build_query($parameters));
 
             if (!$response->isSuccessful()) {
                 $this->registerLastError($response);
@@ -64,8 +64,8 @@ class AnalyticsVideo extends BaseApi
                 return null;
             }
 
-            $json           = json_decode($response->getContent(), true);
-            $analytics      = $json['data'];
+            $json = json_decode($response->getContent(), true);
+            $analytics = $json['data'];
             $allAnalytics[] = $this->castAll($analytics);
 
             if (isset($parameters['currentPage'])) {
@@ -88,78 +88,52 @@ class AnalyticsVideo extends BaseApi
      */
     protected function cast(array $data)
     {
-        $analytic             = new AnalyticVideo();
-        $analytic->videoId    = $data['video']['video_id'];
-        $analytic->videoTitle = $data['video']['title'];
-        $analytic->metadata   = $data['video']['metadata'];
-        $analytic->period     = $data['period'];
+        $analytic = new AnalyticVideo();
+        $analytic->videoId = $data['video']['videoId'];
+        $analytic->title = $data['video']['title'];
+        $analytic->metadata = $data['video']['metadata'];
+        $analytic->period = $data['period'];
         // Build Analytic Data
         foreach ($data['data'] as $playerSession) {
             $analyticData = new AnalyticData();
 
             // Build Analytic Session
-            $analyticData->session->sessionId = $playerSession['session']['session_id'];
-            $analyticData->session->loadedAt  = new DateTime($playerSession['session']['loaded_at']);
-            $analyticData->session->endedAt   = new DateTime($playerSession['session']['ended_at']);
-            if(isset($playerSession['session']['metadatas'])){
+            $analyticData->session->sessionId = $playerSession['session']['sessionId'];
+            $analyticData->session->loadedAt = new DateTime($playerSession['session']['loadedAt']);
+            $analyticData->session->endedAt = new DateTime($playerSession['session']['endedAt']);
+            if (isset($playerSession['session']['metadatas'])) {
                 $analyticData->session->metadata = $playerSession['session']['metadatas'];
             }
 
             // Build Analytic Location
             $analyticData->location->country = $playerSession['location']['country'];
-            $analyticData->location->city    = $playerSession['location']['city'];
+            $analyticData->location->city = $playerSession['location']['city'];
 
             // Build Analytic Referrer
-            $analyticData->referrer->url         = $playerSession['referrer']['url'];
-            $analyticData->referrer->medium      = $playerSession['referrer']['medium'];
-            $analyticData->referrer->source      = $playerSession['referrer']['source'];
-            $analyticData->referrer->search_term = $playerSession['referrer']['search_term'];
+            $analyticData->referrer->url = $playerSession['referrer']['url'];
+            $analyticData->referrer->medium = $playerSession['referrer']['medium'];
+            $analyticData->referrer->source = $playerSession['referrer']['source'];
+            $analyticData->referrer->searchTerm = $playerSession['referrer']['searchTerm'];
 
             // Build Analytic Device
-            $analyticData->device->type   = $playerSession['device']['type'];
+            $analyticData->device->type = $playerSession['device']['type'];
             $analyticData->device->vendor = $playerSession['device']['vendor'];
-            $analyticData->device->model  = $playerSession['device']['model'];
+            $analyticData->device->model = $playerSession['device']['model'];
 
             // Build Analytic Os
-            $analyticData->os->name      = $playerSession['os']['name'];
+            $analyticData->os->name = $playerSession['os']['name'];
             $analyticData->os->shortname = $playerSession['os']['shortname'];
-            $analyticData->os->version   = $playerSession['os']['version'];
+            $analyticData->os->version = $playerSession['os']['version'];
 
             // Build Analytic Client
-            $analyticData->client->type    = $playerSession['client']['type'];
-            $analyticData->client->name    = $playerSession['client']['name'];
+            $analyticData->client->type = $playerSession['client']['type'];
+            $analyticData->client->name = $playerSession['client']['name'];
             $analyticData->client->version = $playerSession['client']['version'];
-
-            // Build Analytic Events
-            $analyticData->events = self::buildAnalyticEventsData($playerSession['events']);
 
             $analytic->data[] = $analyticData;
         }
 
         return $analytic;
-    }
-
-    /**
-     * @param array $events
-     * @return array
-     * @throws Exception
-     */
-    private static function buildAnalyticEventsData(array $events)
-    {
-        $eventsBuilded = array();
-
-        foreach ($events as $event) {
-            $analyticEvent            = new AnalyticEvent();
-            $analyticEvent->type      = $event['type'];
-            $analyticEvent->emittedAt = new DateTime($event['emitted_at']);
-            $analyticEvent->at        = isset($event['at']) ? $event['at'] : null;
-            $analyticEvent->from      = isset($event['from']) ? $event['from'] : null;
-            $analyticEvent->to        = isset($event['to']) ? $event['to'] : null;
-
-            $eventsBuilded[] = $analyticEvent;
-        }
-
-        return $eventsBuilded;
     }
 
 }

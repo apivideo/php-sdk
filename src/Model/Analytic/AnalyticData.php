@@ -24,9 +24,6 @@ class AnalyticData
     /** @var AnalyticClient */
     public $client;
 
-    /** @var AnalyticEvent[] */
-    public $events;
-
     public function __construct()
     {
         $this->session  = new AnalyticSession();
@@ -35,6 +32,5 @@ class AnalyticData
         $this->device   = new AnalyticDevice();
         $this->os       = new AnalyticOs();
         $this->client   = new AnalyticClient();
-        $this->events   = array();
     }
 }
