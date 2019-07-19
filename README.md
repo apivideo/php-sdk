@@ -145,6 +145,9 @@ $live = $client->lives->create('Test live');
 // Get video Analytics Data for the month of July 2018
 $videoAnalytics = $client->analyticsVideo->get($video->videoId, '2018-07');
 
+// Get Session Events Analytics for a sessionId
+$sessionEventsAnalytics = $client->analyticsSessionEvent->get($videoAnalytics->data->session->sessionId);
+
 // Search Video Analytics Data between May 2018 and July 2018 and return the first 100 results
 $analyticsVideo = $client->analyticsVideo->search(array('period' => '2018-05/2018-07', 'currentPage' => 1, 'pageSize' => 100));
 
@@ -334,6 +337,13 @@ $client->analyticsLive->search($parameters);
 $client->analyticsLive->getLastError();
 
 
+// Get sesion events analytics
+$client->analyticsSessionEvent->get($sessionId, $parameters);
+
+// Get last sesion events analytics request Error
+$client->analyticsSessionEvent->getLastError();
+
+
 ```
 
 
@@ -444,6 +454,14 @@ $client->analyticsLive->getLastError();
 |    **-**                            |   liveStreamId(string)     |    Live identifier        |   :heavy_check_mark:   |      **-**             |
 |    **-**                            |   period (string)     |    Period research         |   :x:                  |      <ul><li>For a day : 2018-01-01</li><li>For a week: 2018-W01</li><li>For a month: 2018-01</li><li>For a year: 2018</li><li>Date range: 2018-01-01/2018-01-15</li><li>Week range: 2018-W01/2018-W03</li><li>Month range: 2018-01/2018-03</li><li>Year range: 2018/2020</li></ul>             |
 |    **search**                       |   parameters(array)   |    Search parameters       |   :x:                  |      <ul><li>Pagination/Filters:</li><li>currentPage(int)</li><li>pageSize(int)</li><li>sortBy(string)</li><li>sortOrder(string)</li><li>Period:</li><li>For a day : 2018-01-01</li><li>For a week: 2018-W01</li><li>For a month: 2018-01</li><li>For a year: 2018</li><li>Date range: 2018-01-01/2018-01-15</li><li>Week range: 2018-W01/2018-W03</li><li>Month range: 2018-01/2018-03</li><li>Year range: 2018/2020</li></ul>             |
+                                                     
+### AnalyticsSessionEvent                         
+                                      
+|     **Function**                    |   **Parameters**      |      **Description**       |      **Required**      |   **Allowed Values/Format**   |         
+| :---------------------------------: | :-------------------: | :------------------------: | :--------------------: | :--------------------- |
+|    **get**                          |   **-**               |    **-**                   |   **-**                |      **-**             |
+|    **-**                            |   sessionId(string)   |    Session identifier      |   :heavy_check_mark:   |      **-**             |
+|    **-**                            |   parameters(array)   |    Search parameters       |   :x:                  |      <ul><li>currentPage(int)</li><li>pageSize(int)</li></ul>   |
                                           
 ### Tokens                         
                                       
