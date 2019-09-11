@@ -8,7 +8,7 @@ class AnalyticLive
     public $liveStreamId;
 
     /** @var string */
-    public $liveName;
+    public $name;
 
     /** @var string */
     public $period;

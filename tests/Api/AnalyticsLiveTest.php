@@ -30,12 +30,12 @@ class AnalyticsLiveTest extends TestCase
         $oAuthBrowser->method('get')->willReturn($response);
 
         $AnalyticsLive = new AnalyticsLive($oAuthBrowser);
-        $analytic  = $AnalyticsLive->get('vi55mglWKqgywdX8Yu8WgDZ0', '2018-07-31');
+        $analytic  = $AnalyticsLive->get('li55mglWKqgywdX8Yu8WgDZ0', '2018-07-31');
 
         $analyticExpected = json_decode($analyticReturn, true);
         $this->assertInstanceOf('ApiVideo\Client\Model\Analytic\AnalyticLive', $analytic);
-        $this->assertSame($analyticExpected['live']['live_stream_id'], $analytic->liveStreamId);
-        $this->assertSame($analyticExpected['live']['name'], $analytic->liveName);
+        $this->assertSame($analyticExpected['live']['liveStreamId'], $analytic->liveStreamId);
+        $this->assertSame($analyticExpected['live']['name'], $analytic->name);
         $this->assertSame($analyticExpected['period'], $analytic->period);
         $this->assertNotEmpty($analytic->data);
         $this->assertCount(3, $analytic->data);
@@ -71,7 +71,7 @@ class AnalyticsLiveTest extends TestCase
         $oAuthBrowser->method('get')->willReturn($response);
 
         $AnalyticsLive = new AnalyticsLive($oAuthBrowser);
-        $analytic  = $AnalyticsLive->get('viWKqgywdX55mgl8Yu8WgDZ0');
+        $analytic  = $AnalyticsLive->get('liWKqgywdX55mgl8Yu8WgDZ0');
 
         $this->assertNull($analytic);
         $error = $AnalyticsLive->getLastError();
@@ -202,16 +202,16 @@ class AnalyticsLiveTest extends TestCase
         return '
         {
             "live": {
-                "live_stream_id": "li55mglWKqgywdX8Yu8WgDZ0",
+                "liveStreamId": "li55mglWKqgywdX8Yu8WgDZ0",
                 "name": "Test"
             },
             "period": "2018-07-31",
             "data": [
                 {
                     "session": {
-                        "session_id": "psJd8U77m2BddeNwM5A1jrG0",
-                        "loaded_at": "2018-07-31 15:17:49.822+02",
-                        "ended_at": "2018-07-31T15:17:49.822000+02:00"
+                        "sessionId": "psJd8U77m2BddeNwM5A1jrG0",
+                        "loadedAt": "2018-07-31 15:17:49.822+02",
+                        "endedAt": "2018-07-31T15:17:49.822000+02:00"
                     },
                     "location": {
                         "country": "France",
@@ -221,7 +221,7 @@ class AnalyticsLiveTest extends TestCase
                         "url": "unknown",
                         "medium": "unknown",
                         "source": "unknown",
-                        "search_term": "unknown"
+                        "searchTerm": "unknown"
                     },
                     "device": {
                         "type": "desktop",
@@ -237,19 +237,13 @@ class AnalyticsLiveTest extends TestCase
                         "type": "browser",
                         "name": "Firefox",
                         "version": "61.0"
-                    },
-                    "events": [
-                        {
-                            "type": "player_session_live.loaded",
-                            "emitted_at": "2018-07-31T15:17:49.822000+02:00"
-                        }
-                    ]
+                    }
                 },
                 {
                     "session": {
-                        "session_id": "ps4CPJ1MTXUBAzZExi9JQXpx",
-                        "loaded_at": "2018-07-31 15:17:49.822+02",
-                        "ended_at": "2018-07-31T15:17:49.822000+02:00"
+                        "sessionId": "ps4CPJ1MTXUBAzZExi9JQXpx",
+                        "loadedAt": "2018-07-31 15:17:49.822+02",
+                        "endedAt": "2018-07-31T15:17:49.822000+02:00"
                     },
                     "location": {
                         "country": "France",
@@ -259,7 +253,7 @@ class AnalyticsLiveTest extends TestCase
                         "url": "unknown",
                         "medium": "unknown",
                         "source": "unknown",
-                        "search_term": "unknown"
+                        "searchTerm": "unknown"
                     },
                     "device": {
                         "type": "desktop",
@@ -275,19 +269,13 @@ class AnalyticsLiveTest extends TestCase
                         "type": "browser",
                         "name": "Firefox",
                         "version": "61.0"
-                    },
-                    "events": [
-                        {
-                            "type": "player_session_live.loaded",
-                            "emitted_at": "2018-07-31T15:17:49.822000+02:00"
-                        }
-                    ]
+                    }
                 },
                 {
                     "session": {
-                        "session_id": "psp02UdkjoXu5JzO4mc6sOj",
-                        "loaded_at": "2018-07-31 15:17:49.822+02",
-                        "ended_at": "2018-07-31T15:17:49.822000+02:00"
+                        "sessionId": "psp02UdkjoXu5JzO4mc6sOj",
+                        "loadedAt": "2018-07-31 15:17:49.822+02",
+                        "endedAt": "2018-07-31T15:17:49.822000+02:00"
                     },
                     "location": {
                         "country": "France",
@@ -297,7 +285,7 @@ class AnalyticsLiveTest extends TestCase
                         "url": "unknown",
                         "medium": "unknown",
                         "source": "unknown",
-                        "search_term": "unknown"
+                        "searchTerm": "unknown"
                     },
                     "device": {
                         "type": "desktop",
@@ -313,13 +301,7 @@ class AnalyticsLiveTest extends TestCase
                         "type": "browser",
                         "name": "Firefox",
                         "version": "61.0"
-                    },
-                    "events": [
-                        {
-                            "type": "player_session_live.loaded",
-                            "emitted_at": "2018-07-31T15:17:49.822000+02:00"
-                        }
-                    ]
+                    }
                 }
             ]
         }';
@@ -332,16 +314,16 @@ class AnalyticsLiveTest extends TestCase
             "data": [
             {
                 "live": {
-                    "live_stream_id": "li55mglWKqgywdX8Yu8WgDZ0",
+                    "liveStreamId": "li55mglWKqgywdX8Yu8WgDZ0",
                     "name": "Test"
                 },
                 "period": "2018-07-31",
                 "data": [
                     {
                         "session": {
-                            "session_id": "psJd8U77m2BddeNwM5A1jrG0",
-                            "loaded_at": "2018-07-31 15:17:49.822+02",
-                            "ended_at": "2018-07-31T15:17:49.822000+02:00"
+                            "sessionId": "psJd8U77m2BddeNwM5A1jrG0",
+                            "loadedAt": "2018-07-31 15:17:49.822+02",
+                            "endedAt": "2018-07-31T15:17:49.822000+02:00"
                         },
                         "location": {
                             "country": "France",
@@ -351,7 +333,7 @@ class AnalyticsLiveTest extends TestCase
                             "url": "unknown",
                             "medium": "unknown",
                             "source": "unknown",
-                            "search_term": "unknown"
+                            "searchTerm": "unknown"
                         },
                         "device": {
                             "type": "desktop",
@@ -367,19 +349,13 @@ class AnalyticsLiveTest extends TestCase
                             "type": "browser",
                             "name": "Firefox",
                             "version": "61.0"
-                        },
-                        "events": [
-                            {
-                                "type": "player_session_live.loaded",
-                                "emitted_at": "2018-07-31T15:17:49.822000+02:00"
-                            }
-                        ]
+                        }
                     },
                     {
                         "session": {
-                            "session_id": "ps4CPJ1MTXUBAzZExi9JQXpx",
-                            "loaded_at": "2018-07-31 15:17:49.822+02",
-                            "ended_at": "2018-07-31T15:17:49.822000+02:00"
+                            "sessionId": "ps4CPJ1MTXUBAzZExi9JQXpx",
+                            "loadedAt": "2018-07-31 15:17:49.822+02",
+                            "endedAt": "2018-07-31T15:17:49.822000+02:00"
                         },
                         "location": {
                             "country": "France",
@@ -389,7 +365,7 @@ class AnalyticsLiveTest extends TestCase
                             "url": "unknown",
                             "medium": "unknown",
                             "source": "unknown",
-                            "search_term": "unknown"
+                            "searchTerm": "unknown"
                         },
                         "device": {
                             "type": "desktop",
@@ -405,19 +381,13 @@ class AnalyticsLiveTest extends TestCase
                             "type": "browser",
                             "name": "Firefox",
                             "version": "61.0"
-                        },
-                        "events": [
-                            {
-                                "type": "player_session_live.loaded",
-                                "emitted_at": "2018-07-31T15:17:49.822000+02:00"
-                            }
-                        ]
+                        }
                     },
                     {
                         "session": {
-                            "session_id": "psp02UdkjoXu5JzO4mc6sOj",
-                            "loaded_at": "2018-07-31 15:17:49.822+02",
-                            "ended_at": "2018-07-31T15:17:49.822000+02:00"
+                            "sessionId": "psp02UdkjoXu5JzO4mc6sOj",
+                            "loadedAt": "2018-07-31 15:17:49.822+02",
+                            "endedAt": "2018-07-31T15:17:49.822000+02:00"
                         },
                         "location": {
                             "country": "France",
@@ -427,7 +397,7 @@ class AnalyticsLiveTest extends TestCase
                             "url": "unknown",
                             "medium": "unknown",
                             "source": "unknown",
-                            "search_term": "unknown"
+                            "searchTerm": "unknown"
                         },
                         "device": {
                             "type": "desktop",
@@ -443,13 +413,7 @@ class AnalyticsLiveTest extends TestCase
                             "type": "browser",
                             "name": "Firefox",
                             "version": "61.0"
-                        },
-                        "events": [
-                            {
-                                "type": "player_session_live.loaded",
-                                "emitted_at": "2018-07-31T15:17:49.822000+02:00"
-                            }
-                        ]
+                        }
                     }
                 ]
             }],
@@ -462,15 +426,15 @@ class AnalyticsLiveTest extends TestCase
                 "links": [
                     {
                         "rel": "self",
-                        "uri": "http://ws.api.Live/AnalyticsLive?currentPage=1"
+                        "uri": "http://ws.api.Live/analytics/live-streams?currentPage=1"
                     },
                     {
                         "rel": "first",
-                        "uri": "http://ws.api.Live/AnalyticsLive?currentPage=1"
+                        "uri": "http://ws.api.Live/analytics/live-streams?currentPage=1"
                     },
                     {
                         "rel": "last",
-                        "uri": "http://ws.api.Live/AnalyticsLive?currentPage=1"
+                        "uri": "http://ws.api.Live/analytics/live-streams?currentPage=1"
                     }
                 ]
             }

@@ -9,7 +9,7 @@ use org\bovigo\vfs\content\LargeFileContent;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
-use UnexpectedValueException;
+use InvalidArgumentException;
 
 class VideosTest extends TestCase
 {
@@ -921,8 +921,8 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @expectedException UnexpectedValueException
-     * @expectedExceptionMessage Timecode is empty.
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Timecode is an empty file.
      */
     public function updateThumbnailWithEmptyTimeCodeFailed()
     {
@@ -1109,8 +1109,8 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @expectedException UnexpectedValueException
-     * @expectedExceptionMessage 'vfs://root/video/testfail.mp4' must be a readable source file.
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage The source file must be readable.
      */
     public function uploadWithBadSourceShouldFail()
     {
@@ -1162,8 +1162,8 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @expectedException UnexpectedValueException
-     * @expectedExceptionMessage 'vfs://root/testempty.mp4' is empty.
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage 'vfs://root/testempty.mp4' is an empty file.
      * @throws \ReflectionException
      */
     public function uploadWithEmptySourceShouldFail()
@@ -1298,8 +1298,8 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @expectedException UnexpectedValueException
-     * @expectedExceptionMessage 'vfs://root/image/testfail.jpg' must be a readable source file.
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage The source file must be readable.
      */
     public function uploadThumbnailWithBadSourceShouldFail()
     {
@@ -1331,8 +1331,8 @@ class VideosTest extends TestCase
 
     /**
      * @test
-     * @expectedException UnexpectedValueException
-     * @expectedExceptionMessage 'vfs://root/testempty.jpg' is empty.
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage 'vfs://root/testempty.jpg' is an empty file.
      * @throws \ReflectionException
      */
     public function uploadThumbnailWithEmptySourceShouldFail()

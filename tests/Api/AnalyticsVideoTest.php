@@ -29,13 +29,13 @@ class AnalyticsVideoTest extends TestCase
         $oAuthBrowser = $this->getMockedOAuthBrowser();
         $oAuthBrowser->method('get')->willReturn($response);
 
-        $AnalyticsVideo = new AnalyticsVideo($oAuthBrowser);
-        $analytic  = $AnalyticsVideo->get('vi55mglWKqgywdX8Yu8WgDZ0', '2018-07-31');
+        $analyticsVideo = new AnalyticsVideo($oAuthBrowser);
+        $analytic  = $analyticsVideo->get('vi55mglWKqgywdX8Yu8WgDZ0', '2018-07-31');
 
         $analyticExpected = json_decode($analyticReturn, true);
         $this->assertInstanceOf('ApiVideo\Client\Model\Analytic\AnalyticVideo', $analytic);
-        $this->assertSame($analyticExpected['video']['video_id'], $analytic->videoId);
-        $this->assertSame($analyticExpected['video']['title'], $analytic->videoTitle);
+        $this->assertSame($analyticExpected['video']['videoId'], $analytic->videoId);
+        $this->assertSame($analyticExpected['video']['title'], $analytic->title);
         $this->assertSame($analyticExpected['period'], $analytic->period);
         $this->assertNotEmpty($analytic->data);
         $this->assertCount(3, $analytic->data);
@@ -70,11 +70,11 @@ class AnalyticsVideoTest extends TestCase
         $oAuthBrowser = $this->getMockedOAuthBrowser();
         $oAuthBrowser->method('get')->willReturn($response);
 
-        $AnalyticsVideo = new AnalyticsVideo($oAuthBrowser);
-        $analytic  = $AnalyticsVideo->get('viWKqgywdX55mgl8Yu8WgDZ0');
+        $analyticsVideo = new AnalyticsVideo($oAuthBrowser);
+        $analytic  = $analyticsVideo->get('viWKqgywdX55mgl8Yu8WgDZ0');
 
         $this->assertNull($analytic);
-        $error = $AnalyticsVideo->getLastError();
+        $error = $analyticsVideo->getLastError();
 
         $this->assertSame(400, $error['status']);
         $this->assertSame(json_decode($returned, true), $error['message']);
@@ -89,7 +89,6 @@ class AnalyticsVideoTest extends TestCase
     {
         $returned = $this->getCollectionAnalyticsVideo();
         $response = new Response();
-
         $responseReflected = new ReflectionClass('Buzz\Message\Response');
         $statusCode        = $responseReflected->getProperty('statusCode');
         $statusCode->setAccessible(true);
@@ -101,16 +100,15 @@ class AnalyticsVideoTest extends TestCase
 
         $oAuthBrowser->method('get')->willReturn($response);
 
-        $AnalyticsVideo = new AnalyticsVideo($oAuthBrowser);
-        $results = $AnalyticsVideo->search();
+        $analyticsVideo = new AnalyticsVideo($oAuthBrowser);
+        $results = $analyticsVideo->search();
 
         $videosReflected = new ReflectionClass('ApiVideo\Client\Api\Videos');
         $castAll         = $videosReflected->getMethod('castAll');
         $castAll->setAccessible(true);
-
-        $AnalyticsVideoReturn = json_decode($returned, true);
-        unset($AnalyticsVideoReturn['period']);
-        $this->assertEquals(array_merge(array(), $castAll->invokeArgs($AnalyticsVideo, $AnalyticsVideoReturn)), $results);
+        $analyticsVideoReturn = json_decode($returned, true);
+        unset($analyticsVideoReturn['period']);
+        $this->assertEquals(array_merge(array(), $castAll->invokeArgs($analyticsVideo, $analyticsVideoReturn)), $results);
 
 
     }
@@ -135,16 +133,16 @@ class AnalyticsVideoTest extends TestCase
 
         $oAuthBrowser->method('get')->willReturn($response);
 
-        $AnalyticsVideo = new AnalyticsVideo($oAuthBrowser);
-        $results = $AnalyticsVideo->search(array('currentPage' => 1));
+        $analyticsVideo = new AnalyticsVideo($oAuthBrowser);
+        $results = $analyticsVideo->search(array('currentPage' => 1));
 
         $videosReflected = new ReflectionClass('ApiVideo\Client\Api\Videos');
         $castAll         = $videosReflected->getMethod('castAll');
         $castAll->setAccessible(true);
 
-        $AnalyticsVideoReturn = json_decode($returned, true);
-        unset($AnalyticsVideoReturn['period']);
-        $this->assertEquals(array_merge(array(), $castAll->invokeArgs($AnalyticsVideo, $AnalyticsVideoReturn)), $results);
+        $analyticsVideoReturn = json_decode($returned, true);
+        unset($analyticsVideoReturn['period']);
+        $this->assertEquals(array_merge(array(), $castAll->invokeArgs($analyticsVideo, $analyticsVideoReturn)), $results);
 
 
     }
@@ -175,15 +173,15 @@ class AnalyticsVideoTest extends TestCase
 
         $oAuthBrowser->method('get')->willReturn($response);
 
-        $AnalyticsVideo = new AnalyticsVideo($oAuthBrowser);
-        $results = $AnalyticsVideo->search(
+        $analyticsVideo = new AnalyticsVideo($oAuthBrowser);
+        $results = $analyticsVideo->search(
             array(
                 'currentPage' => 0,
                 'pageSize'    => 25,
             )
         );
         $this->assertNull($results);
-        $error = $AnalyticsVideo->getLastError();
+        $error = $analyticsVideo->getLastError();
 
         $this->assertSame(400, $error['status']);
         $return = json_decode($return, true);
@@ -202,16 +200,18 @@ class AnalyticsVideoTest extends TestCase
         return '
         {
             "video": {
-                "video_id": "vi55mglWKqgywdX8Yu8WgDZ0",
-                "title": "Test"
+                "videoId": "vi55mglWKqgywdX8Yu8WgDZ0",
+                "title": "Test",
+                "metadata": []
             },
             "period": "2018-07-31",
             "data": [
                 {
                     "session": {
-                        "session_id": "psJd8U77m2BddeNwM5A1jrG0",
-                        "loaded_at": "2018-07-31 15:17:49.822+02",
-                        "ended_at": "2018-07-31T15:17:49.822000+02:00"
+                        "sessionId": "psJd8U77m2BddeNwM5A1jrG0",
+                        "loadedAt": "2018-07-31 15:17:49.822+02",
+                        "endedAt": "2018-07-31T15:17:49.822000+02:00",
+                        "metadatas": []
                     },
                     "location": {
                         "country": "France",
@@ -221,7 +221,7 @@ class AnalyticsVideoTest extends TestCase
                         "url": "unknown",
                         "medium": "unknown",
                         "source": "unknown",
-                        "search_term": "unknown"
+                        "searchTerm": "unknown"
                     },
                     "device": {
                         "type": "desktop",
@@ -237,19 +237,14 @@ class AnalyticsVideoTest extends TestCase
                         "type": "browser",
                         "name": "Firefox",
                         "version": "61.0"
-                    },
-                    "events": [
-                        {
-                            "type": "player_session_video.loaded",
-                            "emitted_at": "2018-07-31T15:17:49.822000+02:00"
-                        }
-                    ]
+                    }
                 },
                 {
                     "session": {
-                        "session_id": "ps4CPJ1MTXUBAzZExi9JQXpx",
-                        "loaded_at": "2018-07-31 15:17:49.822+02",
-                        "ended_at": "2018-07-31T15:17:49.822000+02:00"
+                        "sessionId": "ps4CPJ1MTXUBAzZExi9JQXpx",
+                        "loadedAt": "2018-07-31 15:17:49.822+02",
+                        "endedAt": "2018-07-31T15:17:49.822000+02:00",
+                        "metadatas": []
                     },
                     "location": {
                         "country": "France",
@@ -259,7 +254,7 @@ class AnalyticsVideoTest extends TestCase
                         "url": "unknown",
                         "medium": "unknown",
                         "source": "unknown",
-                        "search_term": "unknown"
+                        "searchTerm": "unknown"
                     },
                     "device": {
                         "type": "desktop",
@@ -275,19 +270,14 @@ class AnalyticsVideoTest extends TestCase
                         "type": "browser",
                         "name": "Firefox",
                         "version": "61.0"
-                    },
-                    "events": [
-                        {
-                            "type": "player_session_video.loaded",
-                            "emitted_at": "2018-07-31T15:17:49.822000+02:00"
-                        }
-                    ]
+                    }
                 },
                 {
                     "session": {
-                        "session_id": "psp02UdkjoXu5JzO4mc6sOj",
-                        "loaded_at": "2018-07-31 15:17:49.822+02",
-                        "ended_at": "2018-07-31T15:17:49.822000+02:00"
+                        "sessionId": "psp02UdkjoXu5JzO4mc6sOj",
+                        "loadedAt": "2018-07-31 15:17:49.822+02",
+                        "endedAt": "2018-07-31T15:17:49.822000+02:00",
+                        "metadatas": []
                     },
                     "location": {
                         "country": "France",
@@ -297,7 +287,7 @@ class AnalyticsVideoTest extends TestCase
                         "url": "unknown",
                         "medium": "unknown",
                         "source": "unknown",
-                        "search_term": "unknown"
+                        "searchTerm": "unknown"
                     },
                     "device": {
                         "type": "desktop",
@@ -313,13 +303,7 @@ class AnalyticsVideoTest extends TestCase
                         "type": "browser",
                         "name": "Firefox",
                         "version": "61.0"
-                    },
-                    "events": [
-                        {
-                            "type": "player_session_video.loaded",
-                            "emitted_at": "2018-07-31T15:17:49.822000+02:00"
-                        }
-                    ]
+                    }
                 }
             ]
         }';
@@ -332,16 +316,18 @@ class AnalyticsVideoTest extends TestCase
             "data": [
             {
                 "video": {
-                    "video_id": "vi55mglWKqgywdX8Yu8WgDZ0",
-                    "title": "Test"
+                    "videoId": "vi55mglWKqgywdX8Yu8WgDZ0",
+                    "title": "Test",
+                    "metadata": []
                 },
                 "period": "2018-07-31",
                 "data": [
                     {
                         "session": {
-                            "session_id": "psJd8U77m2BddeNwM5A1jrG0",
-                            "loaded_at": "2018-07-31 15:17:49.822+02",
-                            "ended_at": "2018-07-31T15:17:49.822000+02:00"
+                            "sessionId": "psJd8U77m2BddeNwM5A1jrG0",
+                            "loadedAt": "2018-07-31 15:17:49.822+02",
+                            "endedAt": "2018-07-31T15:17:49.822000+02:00",
+                            "metadatas": []
                         },
                         "location": {
                             "country": "France",
@@ -351,7 +337,7 @@ class AnalyticsVideoTest extends TestCase
                             "url": "unknown",
                             "medium": "unknown",
                             "source": "unknown",
-                            "search_term": "unknown"
+                            "searchTerm": "unknown"
                         },
                         "device": {
                             "type": "desktop",
@@ -367,19 +353,15 @@ class AnalyticsVideoTest extends TestCase
                             "type": "browser",
                             "name": "Firefox",
                             "version": "61.0"
-                        },
-                        "events": [
-                            {
-                                "type": "player_session_video.loaded",
-                                "emitted_at": "2018-07-31T15:17:49.822000+02:00"
-                            }
+                        }}
                         ]
                     },
                     {
                         "session": {
-                            "session_id": "ps4CPJ1MTXUBAzZExi9JQXpx",
-                            "loaded_at": "2018-07-31 15:17:49.822+02",
-                            "ended_at": "2018-07-31T15:17:49.822000+02:00"
+                            "sessionId": "ps4CPJ1MTXUBAzZExi9JQXpx",
+                            "loadedAt": "2018-07-31 15:17:49.822+02",
+                            "endedAt": "2018-07-31T15:17:49.822000+02:00",
+                            "metadatas": []
                         },
                         "location": {
                             "country": "France",
@@ -389,7 +371,7 @@ class AnalyticsVideoTest extends TestCase
                             "url": "unknown",
                             "medium": "unknown",
                             "source": "unknown",
-                            "search_term": "unknown"
+                            "searchTerm": "unknown"
                         },
                         "device": {
                             "type": "desktop",
@@ -405,19 +387,14 @@ class AnalyticsVideoTest extends TestCase
                             "type": "browser",
                             "name": "Firefox",
                             "version": "61.0"
-                        },
-                        "events": [
-                            {
-                                "type": "player_session_video.loaded",
-                                "emitted_at": "2018-07-31T15:17:49.822000+02:00"
-                            }
-                        ]
+                        }
                     },
                     {
                         "session": {
-                            "session_id": "psp02UdkjoXu5JzO4mc6sOj",
-                            "loaded_at": "2018-07-31 15:17:49.822+02",
-                            "ended_at": "2018-07-31T15:17:49.822000+02:00"
+                            "sessionId": "psp02UdkjoXu5JzO4mc6sOj",
+                            "loadedAt": "2018-07-31 15:17:49.822+02",
+                            "endedAt": "2018-07-31T15:17:49.822000+02:00",
+                            "metadatas": []
                         },
                         "location": {
                             "country": "France",
@@ -427,7 +404,7 @@ class AnalyticsVideoTest extends TestCase
                             "url": "unknown",
                             "medium": "unknown",
                             "source": "unknown",
-                            "search_term": "unknown"
+                            "searchTerm": "unknown"
                         },
                         "device": {
                             "type": "desktop",
@@ -443,13 +420,7 @@ class AnalyticsVideoTest extends TestCase
                             "type": "browser",
                             "name": "Firefox",
                             "version": "61.0"
-                        },
-                        "events": [
-                            {
-                                "type": "player_session_video.loaded",
-                                "emitted_at": "2018-07-31T15:17:49.822000+02:00"
-                            }
-                        ]
+                        }
                     }
                 ]
             }],
@@ -462,15 +433,15 @@ class AnalyticsVideoTest extends TestCase
                 "links": [
                     {
                         "rel": "self",
-                        "uri": "http://ws.api.video/AnalyticsVideo?currentPage=1"
+                        "uri": "http://ws.api.video/analytics/videos?currentPage=1"
                     },
                     {
                         "rel": "first",
-                        "uri": "http://ws.api.video/AnalyticsVideo?currentPage=1"
+                        "uri": "http://ws.api.video/analytics/videos?currentPage=1"
                     },
                     {
                         "rel": "last",
-                        "uri": "http://ws.api.video/AnalyticsVideo?currentPage=1"
+                        "uri": "http://ws.api.video/analytics/videos?currentPage=1"
                     }
                 ]
             }

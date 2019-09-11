@@ -5,24 +5,26 @@
 
 The [api.video](https://api.video/) web-service helps you put video on the web without the hassle. 
 This documentation helps you use the corresponding PHP client.
- 
-## Quick start
 
-Install:
+## Installation
 
 ```shell
-$ composer require api-video/php-sdk
+composer require api-video/php-sdk
 ```
-
-Usage:
+ 
+## Quick start
 
 ```php
 <?php
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-// Create client and authenticate
-$client = new ApiVideo\Client\Client('xxxx');
+// Authenticate in production environment
+$client = ApiVideo\Client\Client::create('yourProductionApiKey');
+
+
+// Alternatively, authenticate in sandbox environment for testing
+$client = ApiVideo\Client\Client::createSandbox('yourSandboxApiKey');
 
 // Create and upload a video resource from local drive
 $video = $client->videos->upload(
@@ -30,6 +32,15 @@ $video = $client->videos->upload(
     array('title' => 'Course #4 - Part B')
 );
 
+// Display embed code
+echo $video->assets['iframe'];
+// <iframe src="https://embed.api.video/vod/viXXX" width="100%" height="100%" frameborder="0" scrolling="no" allowfullscreen=""></iframe>
+```
+
+## Advanced usage
+
+```php
+<?php
 // Create and upload a video resource from online source (third party)
 $video = $client->videos->download(
     'https://www.exemple.com/path/to/video.mp4', 
@@ -112,7 +123,7 @@ $client->players->delete($player->playerId);
 
 
 // Upload video caption
-$client->videos->captions->upload(
+$client->captions->upload(
     'path/to/caption.vtt', 
     array(
         'videoId' => $video->videoId, 
@@ -121,19 +132,22 @@ $client->videos->captions->upload(
 );
 
 // Get video caption by language
-$caption = $client->videos->captions->get($video->videoId, 'en');
+$caption = $client->captions->get($video->videoId, 'en');
 
 // Update the default caption language
-$client->videos->captions->updateDefault($video->videoId, 'en', true);
+$client->captions->updateDefault($video->videoId, 'en', true);
 
 //Delete caption by language
-$client->videos->captions->delete($video->videoId, 'en');
+$client->captions->delete($video->videoId, 'en');
 
 // Create a live
 $live = $client->lives->create('Test live');
 
 // Get video Analytics Data for the month of July 2018
 $videoAnalytics = $client->analyticsVideo->get($video->videoId, '2018-07');
+
+// Get Session Events Analytics for a sessionId
+$sessionEventsAnalytics = $client->analyticsSessionEvent->get($videoAnalytics->data->session->sessionId);
 
 // Search Video Analytics Data between May 2018 and July 2018 and return the first 100 results
 $analyticsVideo = $client->analyticsVideo->search(array('period' => '2018-05/2018-07', 'currentPage' => 1, 'pageSize' => 100));
@@ -159,26 +173,24 @@ $token = $client->tokens->generate();
  *********************************
  *********************************
 */
-$client = new ApiVideo\Client\Client($username, $password);
-
 // Show a video
 $client->videos->get($videoId);
 
 // List or search videos
-$client->videos->search(array $parameters = array(), $callback = null);
+$client->videos->search($parameters = array(), $callback = null);
 
 // Create video properties
 $client->videos->create($title, $properties = array());
 
 // Upload a video media file
 // Create a video, if videoId is null
-$client->videos->upload($source, array $properties = array(), $videoId = null);
+$client->videos->upload($source, $properties = array(), $videoId = null);
 
 // Create a video by downloading it from a third party
-$client->videos->download($source, $title, array $properties = array());
+$client->videos->download($source, $title, $properties = array());
 
 // Update video properties
-$client->videos->update($videoId, array $properties);
+$client->videos->update($videoId, $properties = array());
 
 // Set video public
 $client->videos->setPublic($videoId);
@@ -219,23 +231,23 @@ $client->videos->getLastError();
 */
 
 // Get caption for a video
-$client->videos->captions->get($videoId, $language);
+$client->captions->get($videoId, $language);
 
 // Get all captions for a video
-$client->videos->captions->getAll($videoId);
+$client->captions->getAll($videoId);
 
 // Upload a caption file for a video (.vtt)
-$client->videos->captions->upload($source, array $properties);
+$client->captions->upload($source, $properties = array());
 
 
 // Set default caption for a video
-$client->videos->captions->updateDefault($videoId, $language, $isDefault);
+$client->captions->updateDefault($videoId, $language, $isDefault);
 
 // Delete video's caption
-$client->videos->captions->delete($videoId, $language);
+$client->captions->delete($videoId, $language);
 
 // Get last video captions request Error
-$client->videos->captions->getLastError();
+$client->captions->getLastError();
 
 
 /*
@@ -248,13 +260,13 @@ $client->videos->captions->getLastError();
 $client->players->get($playerId);
 
 // List players
-$client->players->search(array $parameters = array(), $callback = null);
+$client->players->search($parameters = array(), $callback = null);
 
 // Create a player
-$client->players->create(array $properties = array());
+$client->players->create($properties = array());
 
 // Update player's properties
-$client->players->update($playerId, array $properties);
+$client->players->update($playerId, $properties);
 
 // Upload player logo
 $client->players->uploadLogo('/path/to/logo.png', $playerId, 'https://api.video');
@@ -278,13 +290,13 @@ $client->players->getLastError();
 $client->lives->get($liveStreamId);
 
 // List or search lives
-$client->lives->search(array $parameters = array(), $callback = null);
+$client->lives->search($parameters = array(), $callback = null);
 
 // Create live properties
 $client->lives->create($name, $properties = array());
 
 // Update live properties
-$client->lives->update($liveStreamId, array $properties);
+$client->lives->update($liveStreamId, $properties = array());
 
 // Delete live (file and data)
 $client->lives->delete($liveStreamId);
@@ -326,6 +338,13 @@ $client->analyticsLive->search($parameters);
 $client->analyticsLive->getLastError();
 
 
+// Get sesion events analytics
+$client->analyticsSessionEvent->get($sessionId, $parameters);
+
+// Get last sesion events analytics request Error
+$client->analyticsSessionEvent->getLastError();
+
+
 ```
 
 
@@ -339,7 +358,7 @@ $client->analyticsLive->getLastError();
 | :---------------------------------: | :-------------------: | :------------------------: | :--------------------: | :--------------------- |
 |    **get**                          |   videoId(string)     |    Video identifier        |   :heavy_check_mark:   |      **-**             |
 |    **search**                       |   **-**               |    **-**                   |   **-**                |      **-**             |
-|    **-**                            |   parameters(array)   |    Search parameters       |   :x:                  |      <ul><li>currentPage(int)</li><li>pageSize(int)</li><li>sortBy(string)</li><li>sortOrder(string)</li><li>keyword(string)</li><li>tags(string&#124;array(string))</li><li>metadata(array(string))</li></ul>   |
+|    **-**                            |   parameters(array)   |    Search parameters       |   :x:                  |      <ul><li>currentPage(int)</li><li>pageSize(int)</li><li>sortBy(string)</li><li>sortOrder(string)</li><li>title(string)</li><li>description(string)</li><li>tags(string&#124;array(string))</li><li>metadata(array())</li></ul>   |
 |    **-**                            |   callback(function)  |    callback function       |   :x:                  |      **-**             |
 |    **create**                       |   **-**               |    **-**                   |   **-**                |      **-**             |
 |    **-**                            |   title(string)       |    Video title             |   :heavy_check_mark:   |      **-**             |
@@ -436,6 +455,14 @@ $client->analyticsLive->getLastError();
 |    **-**                            |   liveStreamId(string)     |    Live identifier        |   :heavy_check_mark:   |      **-**             |
 |    **-**                            |   period (string)     |    Period research         |   :x:                  |      <ul><li>For a day : 2018-01-01</li><li>For a week: 2018-W01</li><li>For a month: 2018-01</li><li>For a year: 2018</li><li>Date range: 2018-01-01/2018-01-15</li><li>Week range: 2018-W01/2018-W03</li><li>Month range: 2018-01/2018-03</li><li>Year range: 2018/2020</li></ul>             |
 |    **search**                       |   parameters(array)   |    Search parameters       |   :x:                  |      <ul><li>Pagination/Filters:</li><li>currentPage(int)</li><li>pageSize(int)</li><li>sortBy(string)</li><li>sortOrder(string)</li><li>Period:</li><li>For a day : 2018-01-01</li><li>For a week: 2018-W01</li><li>For a month: 2018-01</li><li>For a year: 2018</li><li>Date range: 2018-01-01/2018-01-15</li><li>Week range: 2018-W01/2018-W03</li><li>Month range: 2018-01/2018-03</li><li>Year range: 2018/2020</li></ul>             |
+                                                     
+### AnalyticsSessionEvent                         
+                                      
+|     **Function**                    |   **Parameters**      |      **Description**       |      **Required**      |   **Allowed Values/Format**   |         
+| :---------------------------------: | :-------------------: | :------------------------: | :--------------------: | :--------------------- |
+|    **get**                          |   **-**               |    **-**                   |   **-**                |      **-**             |
+|    **-**                            |   sessionId(string)   |    Session identifier      |   :heavy_check_mark:   |      **-**             |
+|    **-**                            |   parameters(array)   |    Search parameters       |   :x:                  |      <ul><li>currentPage(int)</li><li>pageSize(int)</li></ul>   |
                                           
 ### Tokens                         
                                       

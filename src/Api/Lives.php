@@ -5,7 +5,7 @@ namespace ApiVideo\Client\Api;
 use ApiVideo\Client\Model\Live;
 use Buzz\Exception\RequestException;
 use Buzz\Message\Form\FormUpload;
-use UnexpectedValueException;
+use InvalidArgumentException;
 use function array_key_exists;
 
 class Lives extends BaseApi
@@ -115,12 +115,12 @@ class Lives extends BaseApi
      * @param string $liveStreamId
      * @return Live|null
      * @throws RequestException
-     * @throws UnexpectedValueException
+     * @throws InvalidArgumentException
      */
     public function uploadThumbnail($source, $liveStreamId)
     {
         if (!is_readable($source)) {
-            throw new UnexpectedValueException("'$source' must be a readable source file.");
+            throw new InvalidArgumentException('The source file must be readable.');
         }
 
         $resource = fopen($source, 'rb');
@@ -128,7 +128,7 @@ class Lives extends BaseApi
         $stats  = fstat($resource);
         $length = $stats['size'];
         if (0 >= $length) {
-            throw new UnexpectedValueException("'$source' is empty.");
+            throw new InvalidArgumentException("'$source' is an empty file.");
         }
 
         $response = $this->browser->submit(

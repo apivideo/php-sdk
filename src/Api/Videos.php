@@ -10,7 +10,7 @@ use Buzz\Message\Form\FormUpload;
 use Buzz\Message\RequestInterface;
 use DateTimeImmutable;
 use Exception;
-use UnexpectedValueException;
+use InvalidArgumentException;
 
 class Videos extends BaseApi
 {
@@ -23,7 +23,8 @@ class Videos extends BaseApi
     public function __construct(OAuthBrowser $browser)
     {
         parent::__construct($browser);
-        $this->chunkSize = 64 * 1024 * 1024;
+
+        $this->chunkSize = 128 * 1024 * 1024;
     }
 
     /**
@@ -55,7 +56,7 @@ class Videos extends BaseApi
      * If currentPage and pageSize are not given, the method iterates over all
      * pages of results and return an array containing all the results.
      *
-     * @param array $parameters
+     * @param array    $parameters
      * @param callable $callback
      * @return Video[]|null
      */
@@ -105,7 +106,7 @@ class Videos extends BaseApi
 
     /**
      * @param string $title
-     * @param array $properties
+     * @param array  $properties
      * @return Video|null
      */
     public function create($title, array $properties = array())
@@ -138,21 +139,23 @@ class Videos extends BaseApi
 
     /**
      * @param string $source Path to the file to upload
-     * @param array $properties
+     * @param array  $properties
      * @param string $videoId
      * @return Video|null
      * @throws RequestException
-     * @throws UnexpectedValueException
+     * @throws InvalidArgumentException
      */
     public function upload($source, array $properties = array(), $videoId = null)
     {
         $timeout = $this->browser->getClient()->getTimeout();
+        // Set unlimited timeout for video uploads
         $this->browser->getClient()->setTimeout(0);
+
         if (!is_readable($source)) {
-            throw new UnexpectedValueException("'$source' must be a readable source file.");
+            throw new InvalidArgumentException('The source file must be readable.');
         }
 
-        if (null === $videoId) {
+        if ($videoId === null) {
             if (!isset($properties['title'])) {
                 $properties['title'] = basename($source);
             }
@@ -165,7 +168,7 @@ class Videos extends BaseApi
         $stats  = fstat($resource);
         $length = $stats['size'];
         if (0 >= $length) {
-            throw new UnexpectedValueException("'$source' is empty.");
+            throw new InvalidArgumentException("'$source' is an empty file.");
         }
         // Complete upload in a single request when file is small enough
         if ($this->chunkSize > $length) {
@@ -231,12 +234,12 @@ class Videos extends BaseApi
      * @param string $videoId
      * @return Video|null
      * @throws RequestException
-     * @throws UnexpectedValueException
+     * @throws InvalidArgumentException
      */
     public function uploadThumbnail($source, $videoId)
     {
         if (!is_readable($source)) {
-            throw new UnexpectedValueException("'$source' must be a readable source file.");
+            throw new InvalidArgumentException('The source file must be readable.');
         }
 
         $resource = fopen($source, 'rb');
@@ -244,7 +247,7 @@ class Videos extends BaseApi
         $stats  = fstat($resource);
         $length = $stats['size'];
         if (0 >= $length) {
-            throw new UnexpectedValueException("'$source' is empty.");
+            throw new InvalidArgumentException("'$source' is an empty file.");
         }
 
         $response = $this->browser->submit(
@@ -263,7 +266,7 @@ class Videos extends BaseApi
 
     /**
      * @param string $videoId
-     * @param array $properties
+     * @param array  $properties
      * @return Video|null
      */
     public function update($videoId, array $properties)
@@ -333,7 +336,7 @@ class Videos extends BaseApi
     public function updateThumbnailWithTimeCode($videoId, $timecode)
     {
         if (empty($timecode)) {
-            throw new UnexpectedValueException('Timecode is empty.');
+            throw new InvalidArgumentException('Timecode is an empty file.');
         }
 
         $response = $this->browser->patch(

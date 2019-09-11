@@ -16,5 +16,5 @@ class AnalyticReferrer
     public $source;
 
     /** @var string */
-    public $search_term;
+    public $searchTerm;
 }

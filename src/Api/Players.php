@@ -6,7 +6,7 @@ namespace ApiVideo\Client\Api;
 
 use ApiVideo\Client\Model\Player;
 use Buzz\Message\Form\FormUpload;
-use UnexpectedValueException;
+use InvalidArgumentException;
 
 class Players extends BaseApi
 {
@@ -138,7 +138,7 @@ class Players extends BaseApi
     public function uploadLogo($source, $playerId, $link = null)
     {
         if (!is_readable($source)) {
-            throw new UnexpectedValueException("'$source' must be a readable source file.");
+            throw new InvalidArgumentException('The source file must be readable.');
         }
 
         $resource = fopen($source, 'rb');
@@ -146,7 +146,7 @@ class Players extends BaseApi
         $stats  = fstat($resource);
         $length = $stats['size'];
         if (0 >= $length) {
-            throw new UnexpectedValueException("'$source' is empty.");
+            throw new InvalidArgumentException("'$source' is an empty file.");
         }
 
         $payload = array(
