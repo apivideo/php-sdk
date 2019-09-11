@@ -22,6 +22,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 // Authenticate in production environment
 $client = ApiVideo\Client\Client::create('yourProductionApiKey');
 
+
 // Alternatively, authenticate in sandbox environment for testing
 $client = ApiVideo\Client\Client::createSandbox('yourSandboxApiKey');
 
