@@ -391,6 +391,7 @@ class Videos extends BaseApi
         if (array_key_exists('playerId', $data)) {
             $video->playerId = $data['playerId'];
         }
+        $video->panoramic    = $data['panoramic'];
 
         return $video;
     }

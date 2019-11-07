@@ -15,6 +15,60 @@ class VideosTest extends TestCase
 {
     protected $filesystem;
 
+    /**
+     * @return string
+     */
+    private static function buildVideoResponse()
+    {
+        return '
+        {
+            "videoId": "vi55mglWKqgywdX8Yu8WgDZ0",
+            "title": "test.mp4",
+            "description": "",
+            "publishedAt": "2018-05-18T17:21:11+02:00",
+            "tags": [],
+            "metadata": [],
+            "public": true,
+            "source": {
+                "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
+            },
+            "assets": {
+                "iframe": "<iframe src=\'https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3\' width=\'100%\' height=\'100%\' frameborder=\'0\' scrolling=\'no\' allowfullscreen=\'\'></iframe>",
+                "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
+                "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
+                "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
+            },
+            "panoramic": false
+        }';
+    }
+
+    /**
+     * @return string
+     */
+    private static function buildVideoPatchBody()
+    {
+        return '
+        {
+            "videoId": "vi55mglWKqgywdX8Yu8WgDZ0",
+            "title": "test.mp4",
+            "description": "Description test",
+            "publishedAt": "2018-05-18T17:21:11+02:00",
+            "tags": [],
+            "metadata": [],
+            "public": true,
+            "source": {
+                "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
+            },
+            "assets": {
+                "iframe": "<iframe src=\'https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3\' width=\'100%\' height=\'100%\' frameborder=\'0\' scrolling=\'no\' allowfullscreen=\'\'></iframe>",
+                "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
+                "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
+                "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
+            },
+            "panoramic": false
+        }';
+    }
+
     protected function setUp()
     {
         parent::setUp();
@@ -57,7 +111,8 @@ class VideosTest extends TestCase
                 "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
                 "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                 "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
-            }
+            },
+            "panoramic": false
         }';
 
 
@@ -147,7 +202,8 @@ class VideosTest extends TestCase
                         "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
                         "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                         "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
-                    }
+                    },
+                    "panoramic": false
                 }
             ],
             "pagination": {
@@ -280,7 +336,8 @@ class VideosTest extends TestCase
                         "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
                         "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                         "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
-                    }
+                    },
+                    "panoramic": false
                 },
                 {
                     "videoId": "viABC",
@@ -305,7 +362,8 @@ class VideosTest extends TestCase
                         "player": "https://embed.api.video/viABC?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
                         "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                         "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
-                    }
+                    },
+                    "panoramic": false
                 },
                 {
                     "videoId": "viDEF",
@@ -330,7 +388,8 @@ class VideosTest extends TestCase
                         "player": "https://embed.api.video/viDEF?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
                         "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                         "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
-                    }
+                    },
+                    "panoramic": false
                 }
             ],
             "pagination": {
@@ -475,7 +534,8 @@ class VideosTest extends TestCase
                         "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
                         "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                         "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
-                    }
+                    },
+                    "panoramic": false
                 },
                 {
                     "videoId": "viABC",
@@ -500,7 +560,8 @@ class VideosTest extends TestCase
                         "player": "https://embed.api.video/viABC?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
                         "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                         "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
-                    }
+                    },
+                    "panoramic": false
                 },
                 {
                     "videoId": "viDEF",
@@ -525,7 +586,8 @@ class VideosTest extends TestCase
                         "player": "https://embed.api.video/viDEF?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
                         "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                         "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
-                    }
+                    },
+                    "panoramic": false
                 }
             ],
             "pagination": {
@@ -602,7 +664,8 @@ class VideosTest extends TestCase
                 "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
                 "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                 "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
-            }
+            },
+            "panoramic": false
         }';
 
         $response = new Response();
@@ -693,7 +756,8 @@ class VideosTest extends TestCase
                 "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
                 "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                 "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
-            }
+            },
+            "panoramic": false
         }';
 
         $response = new Response();
@@ -729,45 +793,9 @@ class VideosTest extends TestCase
     {
         $mockedBrowser = $this->getMockedOAuthBrowser();
 
-        $videoReturn = '
-        {
-            "videoId": "vi55mglWKqgywdX8Yu8WgDZ0",
-            "title": "test.mp4",
-            "description": "",
-            "publishedAt": "2018-05-18T17:21:11+02:00",
-            "tags": [],
-            "metadata": [],
-            "public": true,
-            "source": {
-                "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
-            },
-            "assets": {
-                "iframe": "<iframe src=\'https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3\' width=\'100%\' height=\'100%\' frameborder=\'0\' scrolling=\'no\' allowfullscreen=\'\'></iframe>",
-                "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
-                "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
-                "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
-            }
-        }';
+        $videoReturn = self::buildVideoResponse();
 
-        $videoPatch = '
-        {
-            "videoId": "vi55mglWKqgywdX8Yu8WgDZ0",
-            "title": "test.mp4",
-            "description": "Description test",
-            "publishedAt": "2018-05-18T17:21:11+02:00",
-            "tags": [],
-            "metadata": [],
-            "public": true,
-            "source": {
-                "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
-            },
-            "assets": {
-                "iframe": "<iframe src=\'https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3\' width=\'100%\' height=\'100%\' frameborder=\'0\' scrolling=\'no\' allowfullscreen=\'\'></iframe>",
-                "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
-                "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
-                "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
-            }
-        }';
+        $videoPatch = self::buildVideoPatchBody();
 
         $response = new Response();
 
@@ -847,45 +875,9 @@ class VideosTest extends TestCase
     {
         $mockedBrowser = $this->getMockedOAuthBrowser();
 
-        $videoReturn = '
-        {
-            "videoId": "vi55mglWKqgywdX8Yu8WgDZ0",
-            "title": "test.mp4",
-            "description": "",
-            "publishedAt": "2018-05-18T17:21:11+02:00",
-            "tags": [],
-            "metadata": [],
-            "public": true,
-            "source": {
-                "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
-            },
-            "assets": {
-                "iframe": "<iframe src=\'https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3\' width=\'100%\' height=\'100%\' frameborder=\'0\' scrolling=\'no\' allowfullscreen=\'\'></iframe>",
-                "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
-                "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
-                "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
-            }
-        }';
+        $videoReturn = self::buildVideoResponse();
 
-        $videoPatch = '
-        {
-            "videoId": "vi55mglWKqgywdX8Yu8WgDZ0",
-            "title": "test.mp4",
-            "description": "Description test",
-            "publishedAt": "2018-05-18T17:21:11+02:00",
-            "tags": [],
-            "metadata": [],
-            "public": true,
-            "source": {
-                "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
-            },
-            "assets": {
-                "iframe": "<iframe src=\'https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3\' width=\'100%\' height=\'100%\' frameborder=\'0\' scrolling=\'no\' allowfullscreen=\'\'></iframe>",
-                "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
-                "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
-                "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
-            }
-        }';
+        $videoPatch = self::buildVideoPatchBody();
 
         $response = new Response();
 
@@ -994,7 +986,8 @@ class VideosTest extends TestCase
                 "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
                 "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                 "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
-            }
+            },
+            "panoramic": true
         }';
 
         $response = new Response();
@@ -1049,7 +1042,8 @@ class VideosTest extends TestCase
                 "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
                 "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                 "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
-            }
+            },
+            "panoramic": true
         }';
 
         $response = new Response();
@@ -1187,7 +1181,8 @@ class VideosTest extends TestCase
                 "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
                 "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                 "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
-            }
+            },
+            "panoramic": true
         }';
 
         $response = new Response();
@@ -1232,7 +1227,8 @@ class VideosTest extends TestCase
                 "player": "https://embed.api.video/vi55mglWKqgywdX8Yu8WgDZ0?token=99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3",
                 "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                 "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
-            }
+            },
+            "panoramic": true
         }';
 
         $response = new Response();
@@ -1449,7 +1445,8 @@ class VideosTest extends TestCase
             },
             "assets": {
                 "hls": "https://localhost/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8"
-            }
+            },
+            "panoramic": true
         }';
 
         $response = new Response();

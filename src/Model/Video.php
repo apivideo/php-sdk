@@ -36,4 +36,7 @@ final class Video
 
     /** @var string */
     public $playerId;
+
+    /** @var boolean */
+    public $panoramic;
 }
