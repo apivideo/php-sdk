@@ -1,6 +1,14 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [1.3.0] - 2019-11-07
+### Added
+- method `$client->videos->getStatus($videoId)` https://docs.api.video/5.1/videos/show-video-status
+
+## [1.2.2] - 2019-11-07
+### Fixed
+- missing property video.panoramic
+
 ## [1.2.0] - 2019-07-18
 ### Added
 - Improve Documentation

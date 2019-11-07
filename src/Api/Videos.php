@@ -5,6 +5,7 @@ namespace ApiVideo\Client\Api;
 use ApiVideo\Client\Buzz\FormByteRangeUpload;
 use ApiVideo\Client\Buzz\OAuthBrowser;
 use ApiVideo\Client\Model\Video;
+use ApiVideo\Client\Model\VideoStatus;
 use Buzz\Exception\RequestException;
 use Buzz\Message\Form\FormUpload;
 use Buzz\Message\RequestInterface;
@@ -41,6 +42,22 @@ class Videos extends BaseApi
         }
 
         return $this->unmarshal($response);
+    }
+
+    /**
+     * @param string $videoId
+     * @return VideoStatus|null
+     */
+    public function getStatus($videoId)
+    {
+        $response = $this->browser->get("/videos/$videoId/status");
+        if (!$response->isSuccessful()) {
+            $this->registerLastError($response);
+
+            return null;
+        }
+
+        return VideoStatus::fromArray(json_decode($response->getContent(), true));
     }
 
     /**
