@@ -71,5 +71,5 @@ final class Player
     public $forceLoop;
 
     /** @var array */
-    public $logo = array();
+    public $assets = array();
 }
