@@ -4,7 +4,7 @@
 namespace ApiVideo\Client\Model\Analytic;
 
 
-class AnalyticData
+class PlayerSession
 {
     /** @var AnalyticSession */
     public $session;

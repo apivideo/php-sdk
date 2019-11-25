@@ -33,7 +33,7 @@ class AnalyticsLiveTest extends TestCase
         $analytic  = $AnalyticsLive->get('li55mglWKqgywdX8Yu8WgDZ0', '2018-07-31');
 
         $analyticExpected = json_decode($analyticReturn, true);
-        $this->assertInstanceOf('ApiVideo\Client\Model\Analytic\AnalyticLive', $analytic);
+        $this->assertInstanceOf('ApiVideo\Client\Model\Analytic\PlayerSession', $analytic);
         $this->assertSame($analyticExpected['live']['liveStreamId'], $analytic->liveStreamId);
         $this->assertSame($analyticExpected['live']['name'], $analytic->name);
         $this->assertSame($analyticExpected['period'], $analytic->period);

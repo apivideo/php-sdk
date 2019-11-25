@@ -4,7 +4,7 @@ namespace ApiVideo\Client;
 
 use ApiVideo\Client\Api\Account;
 use ApiVideo\Client\Api\AnalyticsLive;
-use ApiVideo\Client\Api\AnalyticsSessionEvent;
+use ApiVideo\Client\Api\AnalyticsSessionEvents;
 use ApiVideo\Client\Api\AnalyticsVideo;
 use ApiVideo\Client\Api\Captions;
 use ApiVideo\Client\Api\Lives;
@@ -38,8 +38,8 @@ final class Client
     /** @var AnalyticsLive */
     public $analyticsLive;
 
-    /** @var AnalyticsSessionEvent */
-    public $analyticsSessionEvent;
+    /** @var AnalyticsSessionEvents */
+    public $analyticsSessionEvents;
 
     /** @var Account */
     public $account;
@@ -76,14 +76,14 @@ final class Client
         $browser->setBaseUri($baseUri);
         $browser->authenticate($apiKey);
 
-        $this->videos         = new Videos($browser);
-        $this->lives          = new Lives($browser);
-        $this->players        = new Players($browser);
-        $this->captions       = new Captions($browser);
-        $this->analyticsVideo = new AnalyticsVideo($browser);
-        $this->analyticsLive  = new AnalyticsLive($browser);
-        $this->analyticsSessionEvent  = new AnalyticsSessionEvent($browser);
-        $this->tokens         = new Tokens($browser);
-        $this->account        = new Account($browser);
+        $this->videos                 = new Videos($browser);
+        $this->lives                  = new Lives($browser);
+        $this->players                = new Players($browser);
+        $this->captions               = new Captions($browser);
+        $this->analyticsVideo         = new AnalyticsVideo($browser);
+        $this->analyticsLive          = new AnalyticsLive($browser);
+        $this->analyticsSessionEvents = new AnalyticsSessionEvents($browser);
+        $this->tokens                 = new Tokens($browser);
+        $this->account                = new Account($browser);
     }
 }

@@ -33,7 +33,7 @@ class AnalyticsVideoTest extends TestCase
         $analytic  = $analyticsVideo->get('vi55mglWKqgywdX8Yu8WgDZ0', '2018-07-31');
 
         $analyticExpected = json_decode($analyticReturn, true);
-        $this->assertInstanceOf('ApiVideo\Client\Model\Analytic\AnalyticVideo', $analytic);
+        $this->assertInstanceOf('ApiVideo\Client\Model\Analytic\PlayerSession', $analytic);
         $this->assertSame($analyticExpected['video']['videoId'], $analytic->videoId);
         $this->assertSame($analyticExpected['video']['title'], $analytic->title);
         $this->assertSame($analyticExpected['period'], $analytic->period);

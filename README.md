@@ -43,7 +43,7 @@ echo $video->assets['iframe'];
 <?php
 // Create and upload a video resource from online source (third party)
 $video = $client->videos->download(
-    'https://www.exemple.com/path/to/video.mp4', 
+    'https://www.example.com/path/to/video.mp4', 
     'Course #4 - Part B'
 );
 
@@ -140,23 +140,28 @@ $client->captions->updateDefault($video->videoId, 'en', true);
 //Delete caption by language
 $client->captions->delete($video->videoId, 'en');
 
-// Create a live
-$live = $client->lives->create('Test live');
+// Create a live stream container
+$liveStream = $client->lives->create('Test live');
+// Get the RTMP stream key
+$streamKey = $liveStream->streamKey;
 
-// Get video Analytics Data for the month of July 2018
-$videoAnalytics = $client->analyticsVideo->get($video->videoId, '2018-07');
+//// Raw statistics
 
-// Get Session Events Analytics for a sessionId
-$sessionEventsAnalytics = $client->analyticsSessionEvent->get($videoAnalytics->data->session->sessionId);
+// List video player sessions 
+$videoSessions = $client->analyticsVideo->search($video->videoId);
+// List video player sessions for the month of July 2018 with pagination
+$videoSessionsJuly2018 = $client->analyticsVideo->search($video->videoId, '2018-07', array(), array('currentPage' => 1, 'pageSize' => 100));
 
-// Search Video Analytics Data between May 2018 and July 2018 and return the first 100 results
-$analyticsVideo = $client->analyticsVideo->search(array('period' => '2018-05/2018-07', 'currentPage' => 1, 'pageSize' => 100));
+// Get video session events for a sessionId
+$videoSessionEvents = $client->analyticsSessionEvents->get($videoSessions[0]->session->sessionId);
 
-// Get live Analytics Data for the month of July 2018
-$liveAnalytics = $client->analyticsLive->get($live->liveStreamId, '2018-07');
+// List video player sessions 
+$liveSessions = $client->analyticsLive->search($liveStream->liveStreamId);
+// List video player sessions for the month of July 2018 with pagination
+$liveSessionsJuly2018 = $client->analyticsLive->search($video->videoId, '2018-07', array(), array('currentPage' => 1, 'pageSize' => 100));
 
-// Search Live Analytics Data between May 2018 and July 2018 and return the first 100 results
-$analyticsLive = $client->analyticsLive->search(array('period' => '2018-05/2018-07', 'currentPage' => 1, 'pageSize' => 100));
+// Get video session events for a sessionId
+$liveSessionEvents = $client->analyticsSessionEvents->get($liveSessions[0]->session->sessionId);
 
 // Generate a token for delegated upload
 $token = $client->tokens->generate();
@@ -319,30 +324,23 @@ $client->lives->uploadThumbnail($source, $liveStreamId);
  *********************************
 */
 
-// Get video analytics between period
-$client->analyticsVideo->get($videoId, $period, $metadata);
-
 // Search videos analytics between period, filter with tags or metadata
-$client->analyticsVideo->search($parameters);
+$client->analyticsVideo->search($videoId, $period, $metadata, $parameters);
 
 // Get last video analytics request Error
 $client->analyticsVideo->getLastError();
 
-// Get live analytics between period
-$client->analyticsLive->get($liveStreamId, $period);
-
-// Search lives analytics between period, filter with tags or metadata
-$client->analyticsLive->search($parameters);
+// Search live stream analytics between period, filter with tags or metadata
+$client->analyticsLive->search($liveStreamId, $period, $parameters);
 
 // Get last live analytics request Error
 $client->analyticsLive->getLastError();
 
-
-// Get sesion events analytics
-$client->analyticsSessionEvent->get($sessionId, $parameters);
+// Get session events analytics
+$client->analyticsSessionEvents->search($sessionId, $parameters);
 
 // Get last sesion events analytics request Error
-$client->analyticsSessionEvent->getLastError();
+$client->analyticsSessionEvents->getLastError();
 
 
 ```
@@ -418,7 +416,7 @@ $client->analyticsSessionEvent->getLastError();
 |    **-**                            |   videoId             |    Video identifier        |   :heavy_check_mark:   |      **-**             |
 |    **-**                            |   language  (string)  |    Language identifier     |   :heavy_check_mark:   |      2 letters (ex: en, fr)  |
 
-### Lives
+### Live streams
 
 |     **Function**                    |   **Parameters**      |      **Description**       |      **Required**      |   **Allowed Values**   |         
 | :---------------------------------: | :-------------------: | :------------------------: | :--------------------: | :--------------------- |
@@ -441,26 +439,24 @@ $client->analyticsSessionEvent->getLastError();
                                       
 |     **Function**                    |   **Parameters**      |      **Description**       |      **Required**      |   **Allowed Values/Format**   |         
 | :---------------------------------: | :-------------------: | :------------------------: | :--------------------: | :--------------------- |
-|    **get**                          |   **-**               |    **-**                   |   **-**                |      **-**             |
+|    **search**                       |   parameters(array)   |    Search parameters       |   :x:                  |      <ul><li>Pagination/Filters:</li><li>currentPage(int)</li><li>pageSize(int)</li><li>sortBy(string)</li><li>sortOrder(string)</li><li>tags(string&#124;array(string))</li><li>metadata(array(string))</li><li>Period:</li><li>For a day : 2018-01-01</li><li>For a week: 2018-W01</li><li>For a month: 2018-01</li><li>For a year: 2018</li><li>Date range: 2018-01-01/2018-01-15</li><li>Week range: 2018-W01/2018-W03</li><li>Month range: 2018-01/2018-03</li><li>Year range: 2018/2020</li></ul>             |
 |    **-**                            |   videoId(string)     |    Video identifier        |   :heavy_check_mark:   |      **-**             |
 |    **-**                            |   period (string)     |    Period research         |   :x:                  |      <ul><li>For a day : 2018-01-01</li><li>For a week: 2018-W01</li><li>For a month: 2018-01</li><li>For a year: 2018</li><li>Date range: 2018-01-01/2018-01-15</li><li>Week range: 2018-W01/2018-W03</li><li>Month range: 2018-01/2018-03</li><li>Year range: 2018/2020</li></ul>             |
 |    **-**                            |   metadata (array)    |    Metadata research         |   :x:                  |    **-**             |
-|    **search**                       |   parameters(array)   |    Search parameters       |   :x:                  |      <ul><li>Pagination/Filters:</li><li>currentPage(int)</li><li>pageSize(int)</li><li>sortBy(string)</li><li>sortOrder(string)</li><li>tags(string&#124;array(string))</li><li>metadata(array(string))</li><li>Period:</li><li>For a day : 2018-01-01</li><li>For a week: 2018-W01</li><li>For a month: 2018-01</li><li>For a year: 2018</li><li>Date range: 2018-01-01/2018-01-15</li><li>Week range: 2018-W01/2018-W03</li><li>Month range: 2018-01/2018-03</li><li>Year range: 2018/2020</li></ul>             |
 
 ### AnalyticsLive                         
                                       
 |     **Function**                    |   **Parameters**      |      **Description**       |      **Required**      |   **Allowed Values/Format**   |         
 | :---------------------------------: | :-------------------: | :------------------------: | :--------------------: | :--------------------- |
-|    **get**                          |   **-**               |    **-**                   |   **-**                |      **-**             |
+|    **search**                       |   parameters(array)   |    Search parameters       |   :x:                  |      <ul><li>Pagination/Filters:</li><li>currentPage(int)</li><li>pageSize(int)</li><li>sortBy(string)</li><li>sortOrder(string)</li><li>Period:</li><li>For a day : 2018-01-01</li><li>For a week: 2018-W01</li><li>For a month: 2018-01</li><li>For a year: 2018</li><li>Date range: 2018-01-01/2018-01-15</li><li>Week range: 2018-W01/2018-W03</li><li>Month range: 2018-01/2018-03</li><li>Year range: 2018/2020</li></ul>             |
 |    **-**                            |   liveStreamId(string)     |    Live identifier        |   :heavy_check_mark:   |      **-**             |
 |    **-**                            |   period (string)     |    Period research         |   :x:                  |      <ul><li>For a day : 2018-01-01</li><li>For a week: 2018-W01</li><li>For a month: 2018-01</li><li>For a year: 2018</li><li>Date range: 2018-01-01/2018-01-15</li><li>Week range: 2018-W01/2018-W03</li><li>Month range: 2018-01/2018-03</li><li>Year range: 2018/2020</li></ul>             |
-|    **search**                       |   parameters(array)   |    Search parameters       |   :x:                  |      <ul><li>Pagination/Filters:</li><li>currentPage(int)</li><li>pageSize(int)</li><li>sortBy(string)</li><li>sortOrder(string)</li><li>Period:</li><li>For a day : 2018-01-01</li><li>For a week: 2018-W01</li><li>For a month: 2018-01</li><li>For a year: 2018</li><li>Date range: 2018-01-01/2018-01-15</li><li>Week range: 2018-W01/2018-W03</li><li>Month range: 2018-01/2018-03</li><li>Year range: 2018/2020</li></ul>             |
                                                      
-### AnalyticsSessionEvent                         
+### AnalyticsSessionEvents                         
                                       
 |     **Function**                    |   **Parameters**      |      **Description**       |      **Required**      |   **Allowed Values/Format**   |         
 | :---------------------------------: | :-------------------: | :------------------------: | :--------------------: | :--------------------- |
-|    **get**                          |   **-**               |    **-**                   |   **-**                |      **-**             |
+|    **search**                       |   **-**               |    **-**                   |   **-**                |      **-**             |
 |    **-**                            |   sessionId(string)   |    Session identifier      |   :heavy_check_mark:   |      **-**             |
 |    **-**                            |   parameters(array)   |    Search parameters       |   :x:                  |      <ul><li>currentPage(int)</li><li>pageSize(int)</li></ul>   |
                                           
