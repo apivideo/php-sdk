@@ -39,4 +39,7 @@ final class Video
 
     /** @var boolean */
     public $panoramic;
+
+    /** @var boolean */
+    public $mp4Support;
 }
