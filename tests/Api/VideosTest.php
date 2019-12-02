@@ -38,7 +38,8 @@ class VideosTest extends TestCase
                 "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                 "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
             },
-            "panoramic": false
+            "panoramic": false,
+            "mp4Support": false
         }';
     }
 
@@ -65,7 +66,8 @@ class VideosTest extends TestCase
                 "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                 "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
             },
-            "panoramic": false
+            "panoramic": false,
+            "mp4Support": false
         }';
     }
 
@@ -112,7 +114,8 @@ class VideosTest extends TestCase
                 "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                 "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
             },
-            "panoramic": false
+            "panoramic": false,
+            "mp4Support": false
         }';
 
 
@@ -203,7 +206,8 @@ class VideosTest extends TestCase
                         "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                         "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
                     },
-                    "panoramic": false
+                    "panoramic": false,
+                    "mp4Support": false
                 }
             ],
             "pagination": {
@@ -337,7 +341,8 @@ class VideosTest extends TestCase
                         "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                         "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
                     },
-                    "panoramic": false
+                    "panoramic": false,
+                    "mp4Support": false
                 },
                 {
                     "videoId": "viABC",
@@ -363,7 +368,8 @@ class VideosTest extends TestCase
                         "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                         "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
                     },
-                    "panoramic": false
+                    "panoramic": false,
+                    "mp4Support": false
                 },
                 {
                     "videoId": "viDEF",
@@ -389,7 +395,8 @@ class VideosTest extends TestCase
                         "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                         "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
                     },
-                    "panoramic": false
+                    "panoramic": false,
+                    "mp4Support": false
                 }
             ],
             "pagination": {
@@ -535,7 +542,8 @@ class VideosTest extends TestCase
                         "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                         "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
                     },
-                    "panoramic": false
+                    "panoramic": false,
+                    "mp4Support": false
                 },
                 {
                     "videoId": "viABC",
@@ -561,7 +569,8 @@ class VideosTest extends TestCase
                         "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                         "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
                     },
-                    "panoramic": false
+                    "panoramic": false,
+                    "mp4Support": false
                 },
                 {
                     "videoId": "viDEF",
@@ -587,7 +596,8 @@ class VideosTest extends TestCase
                         "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                         "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
                     },
-                    "panoramic": false
+                    "panoramic": false,
+                    "mp4Support": false
                 }
             ],
             "pagination": {
@@ -665,7 +675,8 @@ class VideosTest extends TestCase
                 "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                 "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
             },
-            "panoramic": false
+            "panoramic": false,
+            "mp4Support": false
         }';
 
         $response = new Response();
@@ -757,7 +768,8 @@ class VideosTest extends TestCase
                 "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                 "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
             },
-            "panoramic": false
+            "panoramic": false,
+            "mp4Support": false
         }';
 
         $response = new Response();
@@ -987,7 +999,8 @@ class VideosTest extends TestCase
                 "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                 "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
             },
-            "panoramic": true
+            "panoramic": true,
+            "mp4Support": false
         }';
 
         $response = new Response();
@@ -1043,7 +1056,8 @@ class VideosTest extends TestCase
                 "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                 "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
             },
-            "panoramic": true
+            "panoramic": true,
+            "mp4Support": false
         }';
 
         $response = new Response();
@@ -1182,7 +1196,8 @@ class VideosTest extends TestCase
                 "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                 "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
             },
-            "panoramic": true
+            "panoramic": true,
+            "mp4Support": false
         }';
 
         $response = new Response();
@@ -1228,7 +1243,8 @@ class VideosTest extends TestCase
                 "hls": "https://cdn.api.video/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8",
                 "thumbnail": "https://cdn.api.video/stream/99dc9d28-6de8-4c1e-adbe-d8e9a95ae2a3/thumbnail.jpg"
             },
-            "panoramic": true
+            "panoramic": true,
+            "mp4Support": false
         }';
 
         $response = new Response();
@@ -1309,6 +1325,8 @@ class VideosTest extends TestCase
             "tags": [],
             "metadata": [],
             "public": true,
+            "panoramic": false,
+            "mp4Support": false,
             "source": {
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
             },
@@ -1344,6 +1362,8 @@ class VideosTest extends TestCase
             "tags": [],
             "metadata": [],
             "public": true,
+            "panoramic": false,
+            "mp4Support": false,
             "source": {
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
             },
@@ -1446,7 +1466,8 @@ class VideosTest extends TestCase
             "assets": {
                 "hls": "https://localhost/stream/d441c757-a9c1-4f4c-ad79-280a707c2b77/hls/manifest.m3u8"
             },
-            "panoramic": true
+            "panoramic": true,
+            "mp4Support": false
         }';
 
         $response = new Response();

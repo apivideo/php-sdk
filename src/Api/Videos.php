@@ -409,6 +409,7 @@ class Videos extends BaseApi
             $video->playerId = $data['playerId'];
         }
         $video->panoramic    = $data['panoramic'];
+        $video->mp4Support    = $data['mp4Support'];
 
         return $video;
     }
