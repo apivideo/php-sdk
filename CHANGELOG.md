@@ -1,6 +1,10 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [1.6.1] - 2019-12-16
+### Added
+- property `Video->updatedAt`
+
 ## [1.3.0] - 2019-11-07
 ### Added
 - method `$client->videos->getStatus($videoId)` https://docs.api.video/5.1/videos/show-video-status
