@@ -26,6 +26,7 @@ class VideosTest extends TestCase
             "title": "test.mp4",
             "description": "",
             "publishedAt": "2018-05-18T17:21:11+02:00",
+            "updatedAt": "2018-05-18T17:21:11+02:00",
             "tags": [],
             "metadata": [],
             "public": true,
@@ -54,8 +55,9 @@ class VideosTest extends TestCase
             "title": "test.mp4",
             "description": "Description test",
             "publishedAt": "2018-05-18T17:21:11+02:00",
+            "updatedAt": "2018-05-18T17:21:11+02:00",
             "tags": [],
-            "metadata": [],
+"metadata": [],
             "public": true,
             "source": {
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
@@ -102,8 +104,9 @@ class VideosTest extends TestCase
             "title": "Test",
             "description": null,
             "publishedAt": "2018-05-18T17:21:11+02:00",
+            "updatedAt": "2018-05-18T17:21:11+02:00",
             "tags": [],
-            "metadata": [],
+"metadata": [],
             "public": true,
             "source": {
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
@@ -194,6 +197,7 @@ class VideosTest extends TestCase
                     "title": "Rosetta",
                     "description": null,
                     "publishedAt": "2018-05-03T17:21:11+02:00",
+                    "updatedAt": "2018-05-18T17:21:11+02:00",
                     "tags": [],
                     "public": true,
                     "metadata": [],
@@ -329,6 +333,7 @@ class VideosTest extends TestCase
                     "title": "Rosetta",
                     "description": null,
                     "publishedAt": "2018-05-03T17:21:11+02:00",
+                    "updatedAt": "2018-05-18T17:21:11+02:00",
                     "tags": [],
                     "metadata": [],
                     "public": true,
@@ -349,6 +354,7 @@ class VideosTest extends TestCase
                     "title": "Test ABC",
                     "description": "Description ABAC",
                     "publishedAt": "2018-05-03T17:21:12+02:00",
+                    "updatedAt": "2018-05-18T17:21:11+02:00",
                     "tags": [
                         "a",
                         "b",
@@ -376,6 +382,7 @@ class VideosTest extends TestCase
                     "title": "Test DEF",
                     "description": "Description DEF",
                     "publishedAt": "2018-05-03T17:21:13+02:00",
+                    "updatedAt": "2018-05-18T17:21:11+02:00",
                     "tags": [
                         "c",
                         "d",
@@ -530,6 +537,7 @@ class VideosTest extends TestCase
                     "title": "Rosetta",
                     "description": null,
                     "publishedAt": "2018-05-03T17:21:11+02:00",
+                    "updatedAt": "2018-05-18T17:21:11+02:00",
                     "tags": [],
                     "metadata": [],
                     "public": true,
@@ -550,6 +558,7 @@ class VideosTest extends TestCase
                     "title": "Test ABC",
                     "description": "Description ABAC",
                     "publishedAt": "2018-05-03T17:21:12+02:00",
+                    "updatedAt": "2018-05-18T17:21:11+02:00",
                     "tags": [
                         "a",
                         "b",
@@ -577,6 +586,7 @@ class VideosTest extends TestCase
                     "title": "Test DEF",
                     "description": "Description DEF",
                     "publishedAt": "2018-05-03T17:21:13+02:00",
+                    "updatedAt": "2018-05-18T17:21:11+02:00",
                     "tags": [
                         "c",
                         "d",
@@ -663,8 +673,9 @@ class VideosTest extends TestCase
             "title": "test.mp4",
             "description": null,
             "publishedAt": "2018-05-18T17:21:11+02:00",
+            "updatedAt": "2018-05-18T17:21:11+02:00",
             "tags": [],
-            "metadata": [],
+"metadata": [],
             "public": true,
             "source": {
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
@@ -756,6 +767,7 @@ class VideosTest extends TestCase
             "title": "test.mp4",
             "description": "DescrptionTest",
             "publishedAt": "2018-05-18T17:21:11+02:00",
+            "updatedAt": "2018-05-18T17:21:11+02:00",
             "tags": ["tag1", "tag2"],
             "metadata": [],
             "public": true,
@@ -987,8 +999,9 @@ class VideosTest extends TestCase
             "title": "test.mp4",
             "description": null,
             "publishedAt": "2018-05-18T17:21:11+02:00",
+            "updatedAt": "2018-05-18T17:21:11+02:00",
             "tags": [],
-            "metadata": [],
+"metadata": [],
             "public": true,
             "source": {
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
@@ -1044,8 +1057,9 @@ class VideosTest extends TestCase
             "title": "test.mp4",
             "description": null,
             "publishedAt": "2018-05-18T17:21:11+02:00",
+            "updatedAt": "2018-05-18T17:21:11+02:00",
             "tags": [],
-            "metadata": [],
+"metadata": [],
             "public": true,
             "source": {
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
@@ -1184,8 +1198,9 @@ class VideosTest extends TestCase
             "title": "test.mp4",
             "description": null,
             "publishedAt": "2018-05-18T17:21:11+02:00",
+            "updatedAt": "2018-05-18T17:21:11+02:00",
             "tags": [],
-            "metadata": [],
+"metadata": [],
             "public": true,
             "source": {
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
@@ -1231,8 +1246,9 @@ class VideosTest extends TestCase
             "title": "test.mp4",
             "description": null,
             "publishedAt": "2018-05-18T17:21:11+02:00",
+            "updatedAt": "2018-05-18T17:21:11+02:00",
             "tags": [],
-            "metadata": [],
+"metadata": [],
             "public": true,
             "source": {
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"
@@ -1322,8 +1338,9 @@ class VideosTest extends TestCase
             "title": "test.mp4",
             "description": null,
             "publishedAt": "2018-05-18T17:21:11+02:00",
+            "updatedAt": "2018-05-18T17:21:11+02:00",
             "tags": [],
-            "metadata": [],
+"metadata": [],
             "public": true,
             "panoramic": false,
             "mp4Support": false,
@@ -1359,8 +1376,9 @@ class VideosTest extends TestCase
             "title": "test.mp4",
             "description": null,
             "publishedAt": "2018-05-18T17:21:11+02:00",
+            "updatedAt": "2018-05-18T17:21:11+02:00",
             "tags": [],
-            "metadata": [],
+"metadata": [],
             "public": true,
             "panoramic": false,
             "mp4Support": false,
@@ -1457,8 +1475,9 @@ class VideosTest extends TestCase
             "title": "test.mp4",
             "description": null,
             "publishedAt": "2018-05-18T17:21:11+02:00",
+            "updatedAt": "2018-05-18T17:21:11+02:00",
             "tags": [],
-            "metadata": [],
+"metadata": [],
             "public": true,
             "source": {
                 "uri": "/videos/vi55mglWKqgywdX8Yu8WgDZ0/source"

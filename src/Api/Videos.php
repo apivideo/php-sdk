@@ -405,6 +405,7 @@ class Videos extends BaseApi
         $video->source      = $data['source'];
         $video->assets      = $data['assets'];
         $video->publishedAt = new DateTimeImmutable($data['publishedAt']);
+        $video->updatedAt   = new DateTimeImmutable($data['updatedAt']);
         if (array_key_exists('playerId', $data)) {
             $video->playerId = $data['playerId'];
         }

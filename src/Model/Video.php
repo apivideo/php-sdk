@@ -31,6 +31,9 @@ final class Video
     /** @var \DateTimeImmutable */
     public $publishedAt;
 
+    /** @var \DateTimeImmutable */
+    public $updatedAt;
+    
     /** @var Caption[] */
     public $captions;
 
