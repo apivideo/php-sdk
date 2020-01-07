@@ -37,7 +37,10 @@ class Captions extends BaseApi
             return null;
         }
 
-        return $this->castAll(json_decode($response->getContent(), true));
+        $json     = json_decode($response->getContent(), true);
+        $captions = $json['data'];
+
+        return $this->castAll($captions);
     }
 
 

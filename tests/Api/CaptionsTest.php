@@ -19,7 +19,7 @@ class CaptionsTest extends TestCase
     {
         parent::setUp();
         $directory = array(
-            'video' => array(),
+            'video'   => array(),
             'caption' => array(),
         );
 
@@ -110,12 +110,15 @@ class CaptionsTest extends TestCase
     public function getAll()
     {
         $captionReturn = array(
-            array(
-                'uri'     => '/videos/vi55mglWKqgywdX8Yu8WgDZ0/captions/en',
-                'src'     => 'https://cdn.api.video/stream/942642a7-389f-4ec3-97a6-f836efb3f20e/captions/en.vtt',
-                'srclang' => 'en',
-                'default' => false,
+            'data'       => array(
+                array(
+                    'uri'     => '/videos/vi55mglWKqgywdX8Yu8WgDZ0/captions/en',
+                    'src'     => 'https://cdn.api.video/stream/942642a7-389f-4ec3-97a6-f836efb3f20e/captions/en.vtt',
+                    'srclang' => 'en',
+                    'default' => false,
+                ),
             ),
+            'pagination' => '',
         );
 
         $response = new Response();
@@ -205,7 +208,8 @@ class CaptionsTest extends TestCase
         $captions = new Captions($mockedBrowser);
 
         /** @var Caption $result */
-        $result = $captions->upload($this->getValideCaption()->url(), array('videoId' => 'vi55mglWKqgywdX8Yu8WgDZ0', 'language' => 'en'));
+        $result = $captions->upload($this->getValideCaption()->url(),
+            array('videoId' => 'vi55mglWKqgywdX8Yu8WgDZ0', 'language' => 'en'));
         $this->assertSame($caption['uri'], $result->uri);
         $this->assertSame($caption['src'], $result->src);
         $this->assertSame($caption['srclang'], $result->srclang);
@@ -246,7 +250,8 @@ class CaptionsTest extends TestCase
 
         $captions = new Captions($mockedBrowser);
 
-        $result = $captions->upload($this->getValideCaption()->url(), array('videoId' => 'viglWK55mqgywdX8Yu8WgDZ0', 'language' => 'en'));
+        $result = $captions->upload($this->getValideCaption()->url(),
+            array('videoId' => 'viglWK55mqgywdX8Yu8WgDZ0', 'language' => 'en'));
 
         $this->assertNull($result);
         $error = $captions->getLastError();
@@ -295,7 +300,8 @@ class CaptionsTest extends TestCase
 
         $captions = new Captions($mockedBrowser);
 
-        $captions->upload($this->getInvalidCaption()->url(), array('videoId' => 'viglWK55mqgywdX8Yu8WgDZ0', 'language' => 'en'));
+        $captions->upload($this->getInvalidCaption()->url(),
+            array('videoId' => 'viglWK55mqgywdX8Yu8WgDZ0', 'language' => 'en'));
     }
 
     /**
@@ -399,7 +405,7 @@ class CaptionsTest extends TestCase
         $mockedBrowser->method('delete')->willReturn($response);
 
         $captions = new Captions($mockedBrowser);
-        $result = $captions->delete('vi5Kqg5mgywdX8Yu8WgDZ0', 'en');
+        $result   = $captions->delete('vi5Kqg5mgywdX8Yu8WgDZ0', 'en');
 
         $this->assertNull($result);
         $error = $captions->getLastError();
@@ -410,23 +416,23 @@ class CaptionsTest extends TestCase
     private function getMockedOAuthBrowser()
     {
         return $this->getMockBuilder('ApiVideo\Client\Buzz\OAuthBrowser')
-                    ->setMethods(array('get', 'submit', 'post', 'patch', 'delete'))
-                    ->getMock();
+            ->setMethods(array('get', 'submit', 'post', 'patch', 'delete'))
+            ->getMock();
     }
 
     private function getValideCaption()
     {
 
         return vfsStream::newFile('caption.vtt')
-                        ->withContent(LargeFileContent::withKilobytes(2))
-                        ->at($this->filesystem);
+            ->withContent(LargeFileContent::withKilobytes(2))
+            ->at($this->filesystem);
     }
 
     private function getInvalidCaption()
     {
 
         return vfsStream::newFile('testempty.vtt')
-                        ->withContent(LargeFileContent::withKilobytes(0))
-                        ->at($this->filesystem);
+            ->withContent(LargeFileContent::withKilobytes(0))
+            ->at($this->filesystem);
     }
 }
