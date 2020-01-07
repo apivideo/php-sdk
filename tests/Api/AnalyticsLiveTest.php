@@ -11,7 +11,7 @@ class AnalyticsLiveTest extends TestCase
      * @test
      * @throws ReflectionException
      */
-    public function getSucceed()
+    public function searchSuccess()
     {
 
         $analyticReturn = $this->getLiveAnalytic();
@@ -30,15 +30,11 @@ class AnalyticsLiveTest extends TestCase
         $oAuthBrowser->method('get')->willReturn($response);
 
         $AnalyticsLive = new AnalyticsLive($oAuthBrowser);
-        $analytic  = $AnalyticsLive->get('li55mglWKqgywdX8Yu8WgDZ0', '2018-07-31');
+        $collection  = $AnalyticsLive->search('li55mglWKqgywdX8Yu8WgDZ0', '2018-07-31');
 
-        $analyticExpected = json_decode($analyticReturn, true);
-        $this->assertInstanceOf('ApiVideo\Client\Model\Analytic\PlayerSession', $analytic);
-        $this->assertSame($analyticExpected['live']['liveStreamId'], $analytic->liveStreamId);
-        $this->assertSame($analyticExpected['live']['name'], $analytic->name);
-        $this->assertSame($analyticExpected['period'], $analytic->period);
-        $this->assertNotEmpty($analytic->data);
-        $this->assertCount(3, $analytic->data);
+        $this->assertInstanceOf('ApiVideo\Client\Model\Analytic\PlayerSession', $collection[0]);
+        $this->assertNotEmpty($collection);
+        $this->assertCount(3, $collection);
 
     }
 
@@ -46,7 +42,7 @@ class AnalyticsLiveTest extends TestCase
      * @test
      * @throws ReflectionException
      */
-    public function getFailed()
+    public function searchFailure()
     {
         $returned = '{
             "status": 400,
@@ -71,7 +67,7 @@ class AnalyticsLiveTest extends TestCase
         $oAuthBrowser->method('get')->willReturn($response);
 
         $AnalyticsLive = new AnalyticsLive($oAuthBrowser);
-        $analytic  = $AnalyticsLive->get('liWKqgywdX55mgl8Yu8WgDZ0');
+        $analytic  = $AnalyticsLive->search('liWKqgywdX55mgl8Yu8WgDZ0');
 
         $this->assertNull($analytic);
         $error = $AnalyticsLive->getLastError();
@@ -79,115 +75,6 @@ class AnalyticsLiveTest extends TestCase
         $this->assertSame(400, $error['status']);
         $this->assertSame(json_decode($returned, true), $error['message']);
 
-    }
-
-    /**
-     * @test
-     * @throws ReflectionException
-     */
-    public function searchSucceed()
-    {
-        $returned = $this->getCollectionAnalyticsLive();
-        $response = new Response();
-
-        $responseReflected = new ReflectionClass('Buzz\Message\Response');
-        $statusCode        = $responseReflected->getProperty('statusCode');
-        $statusCode->setAccessible(true);
-        $statusCode->setValue($response, 200);
-        $setContent = $responseReflected->getMethod('setContent');
-        $setContent->invokeArgs($response, array($returned));
-
-        $oAuthBrowser = $this->getMockedOAuthBrowser();
-
-        $oAuthBrowser->method('get')->willReturn($response);
-
-        $AnalyticsLive = new AnalyticsLive($oAuthBrowser);
-        $results = $AnalyticsLive->search();
-
-        $LivesReflected = new ReflectionClass('ApiVideo\Client\Api\Lives');
-        $castAll         = $LivesReflected->getMethod('castAll');
-        $castAll->setAccessible(true);
-
-        $AnalyticsLiveReturn = json_decode($returned, true);
-        unset($AnalyticsLiveReturn['period']);
-        $this->assertEquals(array_merge(array(), $castAll->invokeArgs($AnalyticsLive, $AnalyticsLiveReturn)), $results);
-
-
-    }
-
-    /**
-     * @test
-     * @throws ReflectionException
-     */
-    public function searchWithPaginationSucceed()
-    {
-        $returned = $this->getCollectionAnalyticsLive();
-        $response = new Response();
-
-        $responseReflected = new ReflectionClass('Buzz\Message\Response');
-        $statusCode        = $responseReflected->getProperty('statusCode');
-        $statusCode->setAccessible(true);
-        $statusCode->setValue($response, 200);
-        $setContent = $responseReflected->getMethod('setContent');
-        $setContent->invokeArgs($response, array($returned));
-
-        $oAuthBrowser = $this->getMockedOAuthBrowser();
-
-        $oAuthBrowser->method('get')->willReturn($response);
-
-        $AnalyticsLive = new AnalyticsLive($oAuthBrowser);
-        $results = $AnalyticsLive->search(array('currentPage' => 1));
-
-        $LivesReflected = new ReflectionClass('ApiVideo\Client\Api\Lives');
-        $castAll         = $LivesReflected->getMethod('castAll');
-        $castAll->setAccessible(true);
-
-        $AnalyticsLiveReturn = json_decode($returned, true);
-        unset($AnalyticsLiveReturn['period']);
-        $this->assertEquals(array_merge(array(), $castAll->invokeArgs($AnalyticsLive, $AnalyticsLiveReturn)), $results);
-
-
-    }
-
-    /**
-     * @test
-     * @throws ReflectionException
-     */
-    public function searchWithBadParametersShouldFailed()
-    {
-        $return = '{
-            "status": 400,
-            "type": "https://docs.api.Live/problems/invalid.pagination",
-            "title": "Invalid page. Must be at least equal to 1",
-            "name": "page"
-        }';
-
-        $response = new Response();
-
-        $responseReflected = new ReflectionClass('Buzz\Message\Response');
-        $statusCode        = $responseReflected->getProperty('statusCode');
-        $statusCode->setAccessible(true);
-        $statusCode->setValue($response, 400);
-        $setContent = $responseReflected->getMethod('setContent');
-        $setContent->invokeArgs($response, array($return));
-
-        $oAuthBrowser = $this->getMockedOAuthBrowser();
-
-        $oAuthBrowser->method('get')->willReturn($response);
-
-        $AnalyticsLive = new AnalyticsLive($oAuthBrowser);
-        $results = $AnalyticsLive->search(
-            array(
-                'currentPage' => 0,
-                'pageSize'    => 25,
-            )
-        );
-        $this->assertNull($results);
-        $error = $AnalyticsLive->getLastError();
-
-        $this->assertSame(400, $error['status']);
-        $return = json_decode($return, true);
-        $this->assertSame($return, $error['message']);
     }
 
     private function getMockedOAuthBrowser()
@@ -201,11 +88,6 @@ class AnalyticsLiveTest extends TestCase
     {
         return '
         {
-            "live": {
-                "liveStreamId": "li55mglWKqgywdX8Yu8WgDZ0",
-                "name": "Test"
-            },
-            "period": "2018-07-31",
             "data": [
                 {
                     "session": {
@@ -313,11 +195,6 @@ class AnalyticsLiveTest extends TestCase
             "period": "2018-08-02",
             "data": [
             {
-                "live": {
-                    "liveStreamId": "li55mglWKqgywdX8Yu8WgDZ0",
-                    "name": "Test"
-                },
-                "period": "2018-07-31",
                 "data": [
                     {
                         "session": {
