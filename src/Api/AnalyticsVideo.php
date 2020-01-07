@@ -35,8 +35,6 @@ class AnalyticsVideo extends BaseApi
         $parameters['pageSize'] = isset($parameters['pageSize']) ? $parameters['pageSize'] : 100;
         $items           = array();
 
-        var_dump($parameters);
-
         do {
             $response = $this->browser->get("/analytics/videos/$videoId?".http_build_query($parameters));
 
