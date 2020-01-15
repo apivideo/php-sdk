@@ -312,6 +312,8 @@ $client->players->update($playerId, $properties);
 // Upload player logo
 $client->players->uploadLogo('/path/to/logo.png', $playerId, 'https://api.video');
 
+// Delete a logo
+$client->players->deleteLogo($playerId);
 
 // Delete a player
 $client->players->delete($playerId);
@@ -431,6 +433,7 @@ $client->analyticsSessionEvents->getLastError();
 |    **-**                            |   source(string)      |    Image media file        |   :heavy_check_mark:   |      **-**             |
 |    **-**                            |   playerId(string)    |    Player identifier       |   :heavy_check_mark:   |      **-**             |
 |    **-**                            |   link(string)        |    Link url                 |   :x:                 |      **-**             |
+|    **deleteLogo**                   |   playerId(string)    |    Player identifier       |   :heavy_check_mark:   |      **-**             |
 |    **delete**                       |   playerId(string)    |    Player identifier       |   :heavy_check_mark:   |      **-**             |
                                       
 ### Captions                          

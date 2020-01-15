@@ -175,6 +175,23 @@ class Players extends BaseApi
      * @param string $playerId
      * @return int|null
      */
+    public function deleteLogo($playerId)
+    {
+        $response = $this->browser->delete("/players/$playerId/logo");
+
+        if (!$response->isSuccessful()) {
+            $this->registerLastError($response);
+
+            return null;
+        }
+
+        return $response->getStatusCode();
+    }
+
+    /**
+     * @param string $playerId
+     * @return int|null
+     */
     public function delete($playerId)
     {
         $response = $this->browser->delete("/players/$playerId");
