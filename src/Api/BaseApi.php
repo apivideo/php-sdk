@@ -6,6 +6,7 @@ use ApiVideo\Client\Buzz\OAuthBrowser;
 use ApiVideo\Client\Model\Account as AccountModel;
 use ApiVideo\Client\Model\Analytic\PlayerSession;
 use ApiVideo\Client\Model\Caption;
+use ApiVideo\Client\Model\Chapter;
 use ApiVideo\Client\Model\Live;
 use ApiVideo\Client\Model\Player;
 use ApiVideo\Client\Model\Video;
@@ -48,7 +49,7 @@ abstract class BaseApi
 
     /**
      * @param MessageInterface $message
-     * @return Caption|Player|Video|Live|PlayerSession|AccountModel
+     * @return Caption|Chapter|Player|Video|Live|PlayerSession|AccountModel
      */
     protected function unmarshal(MessageInterface $message)
     {
@@ -57,7 +58,7 @@ abstract class BaseApi
 
     /**
      * @param array $collection
-     * @return Caption[]|Players[]|Video[]|Live[]|PlayerSession[]
+     * @return Caption[]|Chapter[]|Players[]|Video[]|Live[]|PlayerSession[]
      */
     protected function castAll(array $collection)
     {
