@@ -524,7 +524,7 @@ $client->analyticsSessionEvents->getLastError();
                                       
 |     **Function**                    |   **Parameters**      |      **Description**       |      **Required**      |   **Allowed Values**   |         
 | :---------------------------------: | :-------------------: | :------------------------: | :--------------------: | :--------------------- |
-|    **get**                     |   **-**               | Get account informations (quota, term) |   **-**                |      **-**             |
+|    **get**                     |   **-**               | Get account informations (quota) |   **-**                |      **-**             |
 ## More on api.video
 
 A full technical documentation is available on https://docs.api.video/

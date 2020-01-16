@@ -1,9 +1,13 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [1.8.1] - 2019-01-16
+### Removed
+- remove Term from Account model
+
 ## [1.8.0] - 2019-01-15
 ### Added
-- delete logo
+- delete player logo method
 
 ## [1.7.0] - 2019-01-15
 ### Added

@@ -4,8 +4,6 @@ namespace ApiVideo\Client\Api;
 
 use ApiVideo\Client\Model\Account as AccountModel;
 use ApiVideo\Client\Model\Quota;
-use ApiVideo\Client\Model\Term;
-use DateTimeImmutable;
 use Exception;
 
 class Account extends BaseApi
@@ -36,17 +34,12 @@ class Account extends BaseApi
     {
         $account = new AccountModel();
 
-        $quota                 = new Quota();
-        $quota->quotaUsed      = $data['quota']['quotaUsed'];
+        $quota = new Quota();
+        $quota->quotaUsed = $data['quota']['quotaUsed'];
         $quota->quotaRemaining = $data['quota']['quotaRemaining'];
-        $quota->quotaTotal     = $data['quota']['quotaTotal'];
-
-        $term          = new Term();
-        $term->startAt = new DateTimeImmutable($data['startAt']);
-        $term->endAt   = new DateTimeImmutable($data['endAt']);
+        $quota->quotaTotal = $data['quota']['quotaTotal'];
 
         $account->quota = $quota;
-        $account->term  = $term;
 
         return $account;
     }
