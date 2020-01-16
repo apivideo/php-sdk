@@ -40,6 +40,7 @@ class Account extends BaseApi
         $quota->quotaTotal = $data['quota']['quotaTotal'];
 
         $account->quota = $quota;
+        $account->features = $data['features'];
 
         return $account;
     }
