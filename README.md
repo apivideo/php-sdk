@@ -150,7 +150,7 @@ $client->chapters->upload(
 );
 
 // Get video chapter by language
-$caption = $client->chapters->get($video->videoId, 'en');
+$chapter = $client->chapters->get($video->videoId, 'en');
 
 //Delete chapter by language
 $client->chapters->delete($video->videoId, 'en');
@@ -275,7 +275,7 @@ $client->captions->getLastError();
  *********************************
 */
 
-// Get caption for a video
+// Get chapter for a video
 $client->chapters->get($videoId, $language);
 
 // Get all chapters for a video
