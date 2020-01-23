@@ -1,6 +1,10 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [1.8.3] - 2019-01-23
+### Removed
+- remove unused language property on Player Model
+
 ## [1.8.2] - 2019-01-16
 ### Added
 - add Features from Account model

@@ -228,7 +228,6 @@ class Players extends BaseApi
         $player->backgroundTop         = $data['backgroundTop'];
         $player->backgroundBottom      = $data['backgroundBottom'];
         $player->backgroundText        = $data['backgroundText'];
-        $player->language              = $data['language'];
         $player->enableApi             = $data['enableApi'];
         $player->enableControls        = $data['enableControls'];
         $player->forceAutoplay         = $data['forceAutoplay'];

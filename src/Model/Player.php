@@ -52,9 +52,6 @@ final class Player
     /** @var string */
     public $backgroundText;
 
-    /** @var string */
-    public $language;
-
     /** @var boolean */
     public $enableApi;
 

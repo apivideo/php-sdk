@@ -35,7 +35,6 @@ class PlayersTest extends TestCase
             "backgroundTop": "rgba(72, 4, 45, 1)",
             "backgroundBottom": "rgba(94, 95, 89, 1)",
             "backgroundText": "rgba(255, 255, 255, .95)",
-            "language": "en",
             "enableApi": true,
             "enableControls": true,
             "forceAutoplay": false,
@@ -77,7 +76,6 @@ class PlayersTest extends TestCase
         $this->assertSame($playerArray['backgroundTop'], $player->backgroundTop);
         $this->assertSame($playerArray['backgroundBottom'], $player->backgroundBottom);
         $this->assertSame($playerArray['backgroundText'], $player->backgroundText);
-        $this->assertSame($playerArray['language'], $player->language);
         $this->assertSame($playerArray['enableApi'], $player->enableApi);
         $this->assertSame($playerArray['enableControls'], $player->enableControls);
         $this->assertSame($playerArray['forceAutoplay'], $player->forceAutoplay);
@@ -139,7 +137,6 @@ class PlayersTest extends TestCase
                     "backgroundTop": "rgba(72, 4, 45, 1)",
                     "backgroundBottom": "rgba(94, 95, 89, 1)",
                     "backgroundText": "rgba(255, 255, 255, .95)",
-                    "language": "en",
                     "enableApi": true,
                     "enableControls": true,
                     "forceAutoplay": false,
@@ -263,7 +260,6 @@ class PlayersTest extends TestCase
                     "backgroundTop": "rgba(72, 4, 45, 1)",
                     "backgroundBottom": "rgba(94, 95, 89, 1)",
                     "backgroundText": "rgba(255, 255, 255, .95)",
-                    "language": "en",
                     "enableApi": true,
                     "enableControls": true,
                     "forceAutoplay": false,
@@ -414,7 +410,6 @@ class PlayersTest extends TestCase
             "backgroundTop": "rgba(72, 4, 45, 1)",
             "backgroundBottom": "rgba(94, 95, 89, 1)",
             "backgroundText": "rgba(255, 255, 255, .95)",
-            "language": "en",
             "enableApi": true,
             "enableControls": true,
             "forceAutoplay": false,
@@ -454,7 +449,6 @@ class PlayersTest extends TestCase
         $this->assertSame($playerArray['backgroundTop'], $player->backgroundTop);
         $this->assertSame($playerArray['backgroundBottom'], $player->backgroundBottom);
         $this->assertSame($playerArray['backgroundText'], $player->backgroundText);
-        $this->assertSame($playerArray['language'], $player->language);
         $this->assertSame($playerArray['enableApi'], $player->enableApi);
         $this->assertSame($playerArray['enableControls'], $player->enableControls);
         $this->assertSame($playerArray['forceAutoplay'], $player->forceAutoplay);
@@ -523,7 +517,6 @@ class PlayersTest extends TestCase
             "backgroundTop": "rgba(72, 4, 45, 1)",
             "backgroundBottom": "rgba(94, 95, 89, 1)",
             "backgroundText": "rgba(255, 255, 255, .95)",
-            "language": "en",
             "enableApi": true,
             "enableControls": true,
             "forceAutoplay": true,
@@ -574,7 +567,6 @@ class PlayersTest extends TestCase
             "backgroundTop": "rgba(72, 4, 45, 1)",
             "backgroundBottom": "rgba(94, 95, 89, 1)",
             "backgroundText": "rgba(255, 255, 255, .95)",
-            "language": "en",
             "enableApi": true,
             "enableControls": true,
             "forceAutoplay": false,
@@ -600,7 +592,6 @@ class PlayersTest extends TestCase
             "backgroundTop": "rgba(72, 4, 45, 1)",
             "backgroundBottom": "rgba(94, 95, 89, 1)",
             "backgroundText": "rgba(255, 255, 255, .95)",
-            "language": "en",
             "enableApi": true,
             "enableControls": true,
             "forceAutoplay": true,
