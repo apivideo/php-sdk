@@ -6,7 +6,6 @@ namespace ApiVideo\Client\Api;
 use ApiVideo\Client\Model\Analytic\PlayerSession;
 use DateTime;
 use Exception;
-use InvalidArgumentException;
 
 class AnalyticsLive extends BaseApi
 {

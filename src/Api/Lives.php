@@ -6,7 +6,6 @@ use ApiVideo\Client\Model\Live;
 use Buzz\Exception\RequestException;
 use Buzz\Message\Form\FormUpload;
 use InvalidArgumentException;
-use function array_key_exists;
 
 class Lives extends BaseApi
 {
