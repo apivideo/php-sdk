@@ -1,6 +1,10 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [1.8.5] - 2020-05-15
+### Fixed
+- reduce chunk size to avoid reaching uploading limit
+
 ## [1.8.3] - 2019-01-23
 ### Removed
 - remove unused language property on Player Model
