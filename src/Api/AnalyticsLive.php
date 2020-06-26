@@ -45,7 +45,7 @@ class AnalyticsLive extends BaseApi
 
             $pagination = $json['pagination'];
             $pagination['currentPage']++;
-        } while ($pagination['pagesTotal'] > $pagination['currentPage']);
+        } while ($pagination['pagesTotal'] >= $pagination['currentPage']);
 
         $allAnalytics = call_user_func_array('array_merge', $allAnalytics);
 

@@ -73,7 +73,7 @@ class Lives extends BaseApi
 
             $pagination = $json['pagination'];
             $pagination['currentPage']++;
-        } while ($pagination['pagesTotal'] > $pagination['currentPage']);
+        } while ($pagination['pagesTotal'] >= $pagination['currentPage']);
         $allLives = call_user_func_array('array_merge', $allLives);
 
         if (null === $callback) {

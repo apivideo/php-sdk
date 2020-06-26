@@ -54,7 +54,7 @@ class AnalyticsVideo extends BaseApi
 
             $pagination = $json['pagination'];
             $pagination['currentPage']++;
-        } while ($pagination['pagesTotal'] > $pagination['currentPage']);
+        } while ($pagination['pagesTotal'] >= $pagination['currentPage']);
 
         $items = call_user_func_array('array_merge', $items);
 

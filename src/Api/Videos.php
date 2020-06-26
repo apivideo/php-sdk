@@ -111,7 +111,7 @@ class Videos extends BaseApi
             $pagination = $json['pagination'];
             $pagination['currentPage']++;
             $params['currentPage'] = $pagination['currentPage'];
-        } while ($pagination['pagesTotal'] > $pagination['currentPage']);
+        } while ($pagination['pagesTotal'] >= $pagination['currentPage']);
         $allVideos = call_user_func_array('array_merge', $allVideos);
 
         if (null === $callback) {
