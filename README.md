@@ -1,3 +1,4 @@
+![](https://github.com/apivideo/API_OAS_file/blob/master/apivideo_banner.png)
 # api.video PHP SDK
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ApiVideo/php-sdk/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ApiVideo/php-sdk/?branch=master)
