@@ -51,32 +51,35 @@ final class Client
     /**
      * Create client for production environment.
      * @param string $apiKey
+     * @param string $applicationName
      * @return Client
      */
-    public static function create($apiKey)
+    public static function create($apiKey, $applicationName = "")
     {
-        return new Client($apiKey, 'https://ws.api.video');
+        return new Client($apiKey, 'https://ws.api.video', $applicationName);
     }
 
     /**
      * Create client for sandbox environment.
      * @param string $apiKey
+     * @param string $applicationName
      * @return Client
      */
-    public static function createSandbox($apiKey)
+    public static function createSandbox($apiKey, $applicationName = "")
     {
-        return new Client($apiKey, 'https://sandbox.api.video');
+        return new Client($apiKey, 'https://sandbox.api.video', $applicationName);
     }
 
     /**
      * @param string $apiKey
      * @param string $baseUri
+     * @param string $applicationName
      * @deprecated Use Client::create() or Client::createSandbox() instead
      */
-    public function __construct($apiKey, $baseUri = 'https://ws.api.video')
+    public function __construct($apiKey, $baseUri = 'https://ws.api.video', $applicationName = "")
     {
         $client = extension_loaded('curl') ? new Curl : new FileGetContents;
-        $browser = new OAuthBrowser($client);
+        $browser = new OAuthBrowser($client, null, $applicationName);
         $browser->setBaseUri($baseUri);
         $browser->authenticate($apiKey);
 

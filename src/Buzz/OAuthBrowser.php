@@ -26,12 +26,13 @@ class OAuthBrowser extends Browser
 
     const SDK_VERSION = "1.8.6";
 
-    public function __construct(ClientInterface $client = null, FactoryInterface $factory = null)
+    public function __construct(ClientInterface $client = null, FactoryInterface $factory = null, $applicationName = "")
     {
         parent::__construct($client, $factory);
 
-        $this->headers = array('User-Agent' => 'api.video SDK (php; v:' . self::SDK_VERSION . ')');
+        $this->headers = array('User-Agent' => 'api.video SDK (php; v:' . self::SDK_VERSION . '; ' . $applicationName . ')');
     }
+
     /**
      *
      * @param string $baseUri
