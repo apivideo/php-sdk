@@ -4,6 +4,8 @@ namespace ApiVideo\Client\Buzz;
 
 use ApiVideo\Client\Exception\AuthenticationFailed;
 use Buzz\Browser;
+use Buzz\Client\ClientInterface;
+use Buzz\Message\Factory\FactoryInterface;
 use Buzz\Message\MessageInterface;
 use Buzz\Message\RequestInterface;
 use Buzz\Message\Response;
@@ -17,10 +19,19 @@ class OAuthBrowser extends Browser
     private $isAuthenticated = false;
 
     /** @var array */
-    private $headers = array();
+    private $headers;
 
     /** @var string */
     private $baseUri;
+
+    const SDK_VERSION = "1.8.6";
+
+    public function __construct(ClientInterface $client = null, FactoryInterface $factory = null, $applicationName = "")
+    {
+        parent::__construct($client, $factory);
+
+        $this->headers = array('User-Agent' => 'api.video SDK (php; v:' . self::SDK_VERSION . '; ' . $applicationName . ')');
+    }
 
     /**
      *
