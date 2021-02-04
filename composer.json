@@ -1,7 +1,7 @@
 {
     "name": "api-video/php-sdk",
     "description": "PHP client for api.video web services.",
-    "version": "1.8.6",
+    "version": "1.8.7",
     "license": "MIT",
     "type": "library",
     "autoload": {

@@ -24,7 +24,7 @@ class OAuthBrowser extends Browser
     /** @var string */
     private $baseUri;
 
-    const SDK_VERSION = "1.8.6";
+    const SDK_VERSION = "1.8.7";
 
     public function __construct(ClientInterface $client = null, FactoryInterface $factory = null, $applicationName = "")
     {
