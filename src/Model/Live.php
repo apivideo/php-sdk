@@ -21,6 +21,9 @@ class Live
     /** @var boolean */
     public $broadcasting;
 
+    /** @var boolean */
+    public $public;
+
     /** @var array */
     public $assets = array();
 

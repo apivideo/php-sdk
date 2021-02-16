@@ -47,6 +47,7 @@ class LivesTest extends TestCase
             "name": "Test",
             "record": false,
             "broadcasting": false,
+            "public": false,
             "assets": {
                 "iframe": "<iframe src=\"https://embed.api.video/live-streams/li55mglWKqgywdX8Yu8WgDZ0\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" allowfullscreen=\"\"></iframe>",
                 "player": "https://embed.api.video/live-streams/li55mglWKqgywdX8Yu8WgDZ0",
@@ -77,6 +78,7 @@ class LivesTest extends TestCase
         $this->assertSame('Test', $live->name);
         $this->assertFalse($live->record);
         $this->assertFalse($live->broadcasting);
+        $this->assertFalse($live->public);
         $this->assertSame(
             'https://live.api.video/li55mglWKqgywdX8Yu8WgDZ0.m3u8',
             $live->assets['hls']
@@ -126,6 +128,7 @@ class LivesTest extends TestCase
                     "name": "Test",
                     "record": false,
                     "broadcasting": false,
+                    "public": true,
                     "assets": {
                         "iframe": "<iframe src=\"https://embed.api.video/live-streams/li55mglWKqgywdX8Yu8WgDZ0\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" allowfullscreen=\"\"></iframe>",
                         "player": "https://embed.api.video/live-streams/li55mglWKqgywdX8Yu8WgDZ0",
@@ -254,6 +257,7 @@ class LivesTest extends TestCase
                     "name": "Test",
                     "record": false,
                     "broadcasting": false,
+                    "public": true,
                     "assets": {
                         "iframe": "<iframe src=\"https://embed.api.video/live-streams/li55mglWKqgywdX8Yu8WgDZ0\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" allowfullscreen=\"\"></iframe>",
                         "player": "https://embed.api.video/live-streams/li55mglWKqgywdX8Yu8WgDZ0",
@@ -267,6 +271,7 @@ class LivesTest extends TestCase
                     "name": "Test2",
                     "record": false,
                     "broadcasting": false,
+                    "public": true,
                     "assets": {
                         "iframe": "<iframe src=\"https://embed.api.video/live-streams/li85mglWKqgywdX8Yu8WgDZ0\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" allowfullscreen=\"\"></iframe>",
                         "player": "https://embed.api.video/live-streams/li85mglWKqgywdX8Yu8WgDZ0",
@@ -280,6 +285,7 @@ class LivesTest extends TestCase
                     "name": "Test3",
                     "record": false,
                     "broadcasting": false,
+                    "public": true,
                     "assets": {
                         "iframe": "<iframe src=\"https://embed.api.video/live-streams/li87mglWKqgywdX8Yu8WgDZ0\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" allowfullscreen=\"\"></iframe>",
                         "player": "https://embed.api.video/live-streams/li87mglWKqgywdX8Yu8WgDZ0",
@@ -420,6 +426,7 @@ class LivesTest extends TestCase
                     "name": "Test",
                     "record": false,
                     "broadcasting": false,
+                    "public": true,
                     "assets": {
                         "iframe": "<iframe src=\"https://embed.api.video/live-streams/li55mglWKqgywdX8Yu8WgDZ0\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" allowfullscreen=\"\"></iframe>",
                         "player": "https://embed.api.video/live-streams/li55mglWKqgywdX8Yu8WgDZ0",
@@ -433,6 +440,7 @@ class LivesTest extends TestCase
                     "name": "Test2",
                     "record": false,
                     "broadcasting": false,
+                    "public": true,
                     "assets": {
                         "iframe": "<iframe src=\"https://embed.api.video/live-streams/li85mglWKqgywdX8Yu8WgDZ0\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" allowfullscreen=\"\"></iframe>",
                         "player": "https://embed.api.video/live-streams/li85mglWKqgywdX8Yu8WgDZ0",
@@ -446,6 +454,7 @@ class LivesTest extends TestCase
                     "name": "Test3",
                     "record": false,
                     "broadcasting": false,
+                    "public": true,
                     "assets": {
                         "iframe": "<iframe src=\"https://embed.api.video/live-streams/li87mglWKqgywdX8Yu8WgDZ0\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" allowfullscreen=\"\"></iframe>",
                         "player": "https://embed.api.video/live-streams/li87mglWKqgywdX8Yu8WgDZ0",
@@ -518,6 +527,7 @@ class LivesTest extends TestCase
             "name": "Test",
             "record": false,
             "broadcasting": false,
+            "public": true,
             "assets": {
                 "iframe": "<iframe src=\"https://embed.api.video/live-streams/li55mglWKqgywdX8Yu8WgDZ0\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" allowfullscreen=\"\"></iframe>",
                 "player": "https://embed.api.video/live-streams/li55mglWKqgywdX8Yu8WgDZ0",
@@ -566,6 +576,7 @@ class LivesTest extends TestCase
             "name": "Test",
             "record": false,
             "broadcasting": false,
+            "public": true,
             "assets": {
                 "iframe": "<iframe src=\"https://embed.api.video/live-streams/li55mglWKqgywdX8Yu8WgDZ0\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" allowfullscreen=\"\"></iframe>",
                 "player": "https://embed.api.video/live-streams/li55mglWKqgywdX8Yu8WgDZ0",
@@ -581,6 +592,7 @@ class LivesTest extends TestCase
             "name": "Test",
             "record": false,
             "broadcasting": true,
+            "public": true,
             "assets": {
                 "iframe": "<iframe src=\"https://embed.api.video/live-streams/li55mglWKqgywdX8Yu8WgDZ0\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" allowfullscreen=\"\"></iframe>",
                 "player": "https://embed.api.video/live-streams/li55mglWKqgywdX8Yu8WgDZ0",
@@ -636,6 +648,7 @@ class LivesTest extends TestCase
             "name": "Test",
             "record": false,
             "broadcasting": false,
+            "public": true,
             "assets": {
                 "iframe": "<iframe src=\"https://embed.api.video/live-streams/li55mglWKqgywdX8Yu8WgDZ0\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" allowfullscreen=\"\"></iframe>",
                 "player": "https://embed.api.video/live-streams/li55mglWKqgywdX8Yu8WgDZ0",
@@ -720,6 +733,7 @@ class LivesTest extends TestCase
             "name": "Test",
             "record": false,
             "broadcasting": false,
+            "public": true,
             "assets": {
                 "iframe": "<iframe src=\"https://embed.api.video/live-streams/li55mglWKqgywdX8Yu8WgDZ0\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" allowfullscreen=\"\"></iframe>",
                 "player": "https://embed.api.video/live-streams/li55mglWKqgywdX8Yu8WgDZ0",
@@ -750,6 +764,7 @@ class LivesTest extends TestCase
             "name": "Test",
             "record": false,
             "broadcasting": false,
+            "public": true,
             "assets": {
                 "iframe": "<iframe src=\"https://embed.api.video/live-streams/li55mglWKqgywdX8Yu8WgDZ0\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" allowfullscreen=\"\"></iframe>",
                 "player": "https://embed.api.video/live-streams/li55mglWKqgywdX8Yu8WgDZ0",

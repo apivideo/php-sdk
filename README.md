@@ -341,6 +341,12 @@ $client->lives->create($name, $properties = array());
 // Update live properties
 $client->lives->update($liveStreamId, $properties = array());
 
+// Set live public
+$client->lives->setPublic($liveStreamId);
+
+// Set live private
+$client->lives->setPrivate($liveStreamId);
+
 // Delete live (file and data)
 $client->lives->delete($liveStreamId);
 
@@ -485,8 +491,10 @@ $client->analyticsSessionEvents->getLastError();
 |    **-**                            |   source(string)      |    Image media file        |   :heavy_check_mark:   |      **-**             |
 |    **-**                            |   liveStreamId(string)     |    Live identifier        |   :heavy_check_mark:   |      **-**             |
 |    **update**                       |   **-**               |    **-**                   |   **-**                |      **-**             |
-|    **-**                            |   liveStreamId()string     |    Live identifier        |   :heavy_check_mark:   |      **-**             |
+|    **-**                            |   liveStreamId(string)     |    Live identifier        |   :heavy_check_mark:   |      **-**             |
 |    **-**                            |   properties(array)   |    Live properties        |   :heavy_check_mark:   |      <ul><li>title(string)</li><li>description(string)</li><li>tags(array(string))</li><li>playerId(string)</li><li>metadata(array(<br/>array(<br/>'key' => 'Key1', <br/>'value' => 'value1'<br/>), <br/>array(<br/>'key' => 'Key2',<br/> 'value' => 'value2'<br/>)<br/>)</li></ul>  |
+|    **setPublic**                    |   liveStreamId(string)     |    Live identifier        |   :heavy_check_mark:   |      **-**             |
+|    **setPrivate**                   |   liveStreamId(string)     |    Live identifier        |   :heavy_check_mark:   |      **-**             |
 |    **delete**                       |   liveStreamId(string)     |    Live identifier        |   :heavy_check_mark:   |      **-**             |
                                                      
 ### AnalyticsVideo                         

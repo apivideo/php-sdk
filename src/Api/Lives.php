@@ -166,6 +166,49 @@ class Lives extends BaseApi
         return $this->unmarshal($response);
     }
 
+
+    /**
+     * @param string $liveStreamId
+     * @return Live|null
+     */
+    public function setPublic($liveStreamId)
+    {
+        $response = $this->browser->patch(
+            "/live-streams/$liveStreamId",
+            array(),
+            json_encode(array('public' => true))
+        );
+
+        if (!$response->isSuccessful()) {
+            $this->registerLastError($response);
+
+            return null;
+        }
+
+        return $this->unmarshal($response);
+    }
+
+    /**
+     * @param string $liveStreamId
+     * @return Live|null
+     */
+    public function setPrivate($liveStreamId)
+    {
+        $response = $this->browser->patch(
+            "/live-streams/$liveStreamId",
+            array(),
+            json_encode(array('public' => false))
+        );
+
+        if (!$response->isSuccessful()) {
+            $this->registerLastError($response);
+
+            return null;
+        }
+
+        return $this->unmarshal($response);
+    }
+
     /**
      * @param string $liveStreamId
      * @return int|null
@@ -195,6 +238,7 @@ class Lives extends BaseApi
         $live->streamKey    = $data['streamKey'];
         $live->record       = $data['record'];
         $live->broadcasting = $data['broadcasting'];
+        $live->public       = $data['public'];
         $live->assets       = $data['assets'];
         if (array_key_exists('playerId', $data)) {
             $live->playerId = $data['playerId'];
