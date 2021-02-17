@@ -1,6 +1,10 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [1.8.8] - 2021-02-16
+### Added
+- property `Live->public`
+
 ## [1.8.7] - 2021-01-18
 ### Added
 - add User-Agent header in API requests
