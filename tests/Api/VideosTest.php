@@ -187,6 +187,143 @@ class VideosTest extends TestCase
      * @test
      * @throws \ReflectionException
      */
+    public function getStatusSucceed()
+    {
+        $statusReturn = '{
+    "ingest": {
+        "status": "uploaded",
+        "filesize": 6732820,
+        "receivedBytes": []
+    },
+    "encoding": {
+        "playable": true,
+        "qualities": [
+            {
+                "type": "hls",
+                "quality": "240p",
+                "status": "encoded"
+            },
+            {
+                "type": "hls",
+                "quality": "360p",
+                "status": "encoded"
+            }
+        ],
+        "metadata": {
+            "width": 1080,
+            "height": 1920,
+            "bitrate": 3995,
+            "duration": 13,
+            "framerate": 24000,
+            "samplerate": 48000,
+            "videoCodec": "h264",
+            "audioCodec": "aac",
+            "aspectRatio": ""
+        }
+    }
+}';
+
+        $response = new Response();
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode        = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response, 200);
+        $setContent = $responseReflected->getMethod('setContent');
+        $setContent->invokeArgs($response, array($statusReturn));
+
+
+        $oAuthBrowser = $this->getMockedOAuthBrowser();
+        $oAuthBrowser->method('get')->willReturn($response);
+
+        $videos = new Videos($oAuthBrowser);
+        $video  = $videos->getStatus('vi55mglWKqgywdX8Yu8WgDZ0');
+
+        $this->assertInstanceOf('ApiVideo\Client\Model\VideoStatus', $video);
+        $this->assertSame(6732820, $video->ingest->fileSize);
+        $this->assertSame('uploaded', $video->ingest->status);
+        $this->assertSame(array(), $video->ingest->receivedBytes);
+
+        $this->assertSame(true, $video->encoding->playable);
+        $this->assertSame('hls', $video->encoding->qualities[0]['type']);
+        $this->assertSame('240p', $video->encoding->qualities[0]['quality']);
+        $this->assertSame('encoded', $video->encoding->qualities[0]['status']);
+        $this->assertSame('hls', $video->encoding->qualities[1]['type']);
+        $this->assertSame('360p', $video->encoding->qualities[1]['quality']);
+        $this->assertSame('encoded', $video->encoding->qualities[1]['status']);
+        $this->assertSame(1080, $video->encoding->metadata['width']);
+        $this->assertSame(1920, $video->encoding->metadata['height']);
+        $this->assertSame(3995, $video->encoding->metadata['bitrate']);
+        $this->assertSame(13, $video->encoding->metadata['duration']);
+        $this->assertSame(24000, $video->encoding->metadata['framerate']);
+        $this->assertSame(48000, $video->encoding->metadata['samplerate']);
+        $this->assertSame("h264", $video->encoding->metadata['videoCodec']);
+        $this->assertSame("aac", $video->encoding->metadata['audioCodec']);
+        $this->assertSame("", $video->encoding->metadata['aspectRatio']);
+
+    }
+
+    /**
+     * @test
+     * @throws \ReflectionException
+     */
+    public function getStatusNoUpload()
+    {
+        $statusReturn = '{
+    "ingest": [],
+    "encoding": {
+        "playable": false,
+        "qualities": [],
+        "metadata": {
+            "width": null,
+            "height": null,
+            "bitrate": null,
+            "duration": null,
+            "framerate": null,
+            "samplerate": null,
+            "videoCodec": null,
+            "audioCodec": null,
+            "aspectRatio": null
+        }
+    }
+}';
+
+        $response = new Response();
+
+        $responseReflected = new ReflectionClass('Buzz\Message\Response');
+        $statusCode        = $responseReflected->getProperty('statusCode');
+        $statusCode->setAccessible(true);
+        $statusCode->setValue($response, 200);
+        $setContent = $responseReflected->getMethod('setContent');
+        $setContent->invokeArgs($response, array($statusReturn));
+
+
+        $oAuthBrowser = $this->getMockedOAuthBrowser();
+        $oAuthBrowser->method('get')->willReturn($response);
+
+        $videos = new Videos($oAuthBrowser);
+        $video  = $videos->getStatus('vi55mglWKqgywdX8Yu8WgDZ0');
+
+        $this->assertInstanceOf('ApiVideo\Client\Model\VideoStatus', $video);
+        $this->assertNull($video->ingest);
+
+        $this->assertSame(false, $video->encoding->playable);
+        $this->assertSame(array(), $video->encoding->qualities);
+        $this->assertNull($video->encoding->metadata['width']);
+        $this->assertNull($video->encoding->metadata['height']);
+        $this->assertNull($video->encoding->metadata['bitrate']);
+        $this->assertNull($video->encoding->metadata['duration']);
+        $this->assertNull($video->encoding->metadata['framerate']);
+        $this->assertNull($video->encoding->metadata['samplerate']);
+        $this->assertNull($video->encoding->metadata['videoCodec']);
+        $this->assertNull($video->encoding->metadata['audioCodec']);
+        $this->assertNull($video->encoding->metadata['aspectRatio']);
+    }
+
+    /**
+     * @test
+     * @throws \ReflectionException
+     */
     public function searchSucceed()
     {
         $videoReturn1 = '
