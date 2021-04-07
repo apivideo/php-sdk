@@ -1,6 +1,10 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [1.8.9] - 2021-04-07
+### Fixed
+- fatal error when getting the status and no video was uploaded
+  
 ## [1.8.8] - 2021-02-16
 ### Added
 - property `Live->public`
